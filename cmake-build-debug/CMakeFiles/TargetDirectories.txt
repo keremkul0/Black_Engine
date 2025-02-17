@@ -1,0 +1,10 @@
+C:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/CMakeFiles/glad.dir
+C:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/CMakeFiles/Black_Engine.dir
+C:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/CMakeFiles/edit_cache.dir
+C:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/CMakeFiles/rebuild_cache.dir
+C:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src/CMakeFiles/glfw.dir
+C:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src/CMakeFiles/update_mappings.dir
+C:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src/CMakeFiles/edit_cache.dir
+C:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src/CMakeFiles/rebuild_cache.dir
