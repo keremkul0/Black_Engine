@@ -1,9 +1,9 @@
 # ninja log v6
-2	418	7615190053593073	CMakeFiles/Black_Engine.dir/main.cpp.obj	1c23cc8e96697ff8
+15	733	7615234624674112	CMakeFiles/Black_Engine.dir/main.cpp.obj	41be1109e3be3baa
 40	1998	7615203365317129	external/glfw/src/CMakeFiles/glfw.dir/osmesa_context.c.obj	aa79bf4995cd7829
 1998	3830	7615203384894700	external/glfw/src/CMakeFiles/glfw.dir/null_window.c.obj	692b10196c797156
 36	2089	7615203365271910	external/glfw/src/CMakeFiles/glfw.dir/egl_context.c.obj	41d8c404bcb1ba42
-420	543	7615190057792692	Black_Engine.exe	2397e4ce3cc2bd3b
+733	878	7615234631861286	Black_Engine.exe	cd05e53681943d27
 2099	3967	7615203385903633	external/glfw/src/CMakeFiles/glfw.dir/win32_time.c.obj	d74a142d93d479ee
 24	1970	7615203365150188	external/glfw/src/CMakeFiles/glfw.dir/platform.c.obj	8a917b99de4939c9
 10	2046	7615203365011812	external/glfw/src/CMakeFiles/glfw.dir/context.c.obj	675d3c7cbfa4f4fe
@@ -25,5 +25,3 @@
 3773	5009	7615203402640104	external/glfw/src/CMakeFiles/glfw.dir/win32_monitor.c.obj	13dacda8ab88ace1
 3830	5043	7615203403221229	external/glfw/src/CMakeFiles/glfw.dir/wgl_context.c.obj	c1be2e1bba61567d
 21	104	7615204890161070	external/glfw/src/libglfw3.a	f4e5c63cd314d20c
-7	918	7615210384037443	CMakeFiles/Black_Engine.dir/main.cpp.obj	41be1109e3be3baa
-919	1130	7615210393154010	Black_Engine.exe	cd05e53681943d27
