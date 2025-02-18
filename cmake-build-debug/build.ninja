@@ -52,7 +52,7 @@ build cmake_object_order_depends_target_glad: phony || .
 build CMakeFiles/glad.dir/external/glad/src/glad.c.obj: C_COMPILER__glad_unscanned_Debug C$:/Users/Kerem/CLionProjects/Black_Engine/external/glad/src/glad.c || cmake_object_order_depends_target_glad
   DEP_FILE = CMakeFiles\glad.dir\external\glad\src\glad.c.obj.d
   FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glad/include
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glad/include
   OBJECT_DIR = CMakeFiles\glad.dir
   OBJECT_FILE_DIR = CMakeFiles\glad.dir\external\glad\src
 
@@ -84,7 +84,7 @@ build cmake_object_order_depends_target_Black_Engine: phony || cmake_object_orde
 build CMakeFiles/Black_Engine.dir/main.cpp.obj: CXX_COMPILER__Black_Engine_unscanned_Debug C$:/Users/Kerem/CLionProjects/Black_Engine/main.cpp || cmake_object_order_depends_target_Black_Engine
   DEP_FILE = CMakeFiles\Black_Engine.dir\main.cpp.obj.d
   FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glad/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glad/include
   OBJECT_DIR = CMakeFiles\Black_Engine.dir
   OBJECT_FILE_DIR = CMakeFiles\Black_Engine.dir
 
@@ -175,7 +175,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/context.c.obj: C_COMPILER__glfw_unsc
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\context.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -183,7 +183,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/init.c.obj: C_COMPILER__glfw_unscann
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\init.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -191,7 +191,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/input.c.obj: C_COMPILER__glfw_unscan
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\input.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -199,7 +199,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/monitor.c.obj: C_COMPILER__glfw_unsc
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\monitor.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -207,7 +207,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/platform.c.obj: C_COMPILER__glfw_uns
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\platform.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -215,7 +215,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/vulkan.c.obj: C_COMPILER__glfw_unsca
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\vulkan.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -223,7 +223,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/window.c.obj: C_COMPILER__glfw_unsca
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\window.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -231,7 +231,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/egl_context.c.obj: C_COMPILER__glfw_
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\egl_context.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -239,7 +239,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/osmesa_context.c.obj: C_COMPILER__gl
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\osmesa_context.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -247,7 +247,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/null_init.c.obj: C_COMPILER__glfw_un
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\null_init.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -255,7 +255,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/null_monitor.c.obj: C_COMPILER__glfw
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\null_monitor.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -263,7 +263,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/null_window.c.obj: C_COMPILER__glfw_
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\null_window.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -271,7 +271,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/null_joystick.c.obj: C_COMPILER__glf
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\null_joystick.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -279,7 +279,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/win32_module.c.obj: C_COMPILER__glfw
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\win32_module.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -287,7 +287,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/win32_time.c.obj: C_COMPILER__glfw_u
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\win32_time.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -295,7 +295,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/win32_thread.c.obj: C_COMPILER__glfw
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\win32_thread.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -303,7 +303,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/win32_init.c.obj: C_COMPILER__glfw_u
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\win32_init.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -311,7 +311,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/win32_joystick.c.obj: C_COMPILER__gl
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\win32_joystick.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -319,7 +319,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/win32_monitor.c.obj: C_COMPILER__glf
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\win32_monitor.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -327,7 +327,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/win32_window.c.obj: C_COMPILER__glfw
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\win32_window.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -335,7 +335,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/wgl_context.c.obj: C_COMPILER__glfw_
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\wgl_context.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 

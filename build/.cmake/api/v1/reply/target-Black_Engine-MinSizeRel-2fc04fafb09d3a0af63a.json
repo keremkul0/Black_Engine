@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "Black_Engine.exe"
+			"path" : "MinSizeRel/Black_Engine.exe"
 		},
 		{
-			"path" : "Black_Engine.pdb"
+			"path" : "MinSizeRel/Black_Engine.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -15,7 +15,7 @@
 		[
 			"add_executable",
 			"target_link_libraries",
-			"target_include_directories"
+			"include_directories"
 		],
 		"files" : 
 		[
@@ -29,19 +29,25 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 24,
+				"line" : 31,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 33,
+				"line" : 40,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 0,
-				"line" : 27,
+				"line" : 7,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 8,
 				"parent" : 0
 			}
 		]
@@ -52,22 +58,22 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-g -std=gnu++20 -fdiagnostics-color=always"
+					"fragment" : "/DWIN32 /D_WINDOWS /EHsc /O1 /Ob1 /DNDEBUG -std:c++20 -MD"
 				}
 			],
 			"includes" : 
 			[
 				{
 					"backtrace" : 3,
+					"path" : "C:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include"
+				},
+				{
+					"backtrace" : 4,
 					"path" : "C:/Users/Kerem/CLionProjects/Black_Engine/external/glm"
 				},
 				{
 					"backtrace" : 2,
 					"path" : "C:/Users/Kerem/CLionProjects/Black_Engine/external/glad/include"
-				},
-				{
-					"backtrace" : 2,
-					"path" : "C:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include"
 				}
 			],
 			"language" : "CXX",
@@ -94,6 +100,9 @@
 		{
 			"backtrace" : 2,
 			"id" : "glfw::@ca12bac854c2ac6b2230"
+		},
+		{
+			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
 		}
 	],
 	"id" : "Black_Engine::@6890427a1f51a3e7e1df",
@@ -102,30 +111,30 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "-g",
+				"fragment" : "/DWIN32 /D_WINDOWS /EHsc /O1 /Ob1 /DNDEBUG -MD",
 				"role" : "flags"
 			},
 			{
-				"fragment" : "",
+				"fragment" : "/machine:X86 /INCREMENTAL:NO /subsystem:console",
 				"role" : "flags"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "libglad.a",
+				"fragment" : "MinSizeRel\\glad.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "external\\glfw\\src\\libglfw3.a",
+				"fragment" : "external\\glfw\\src\\MinSizeRel\\glfw3.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "-lopengl32",
+				"fragment" : "opengl32.lib",
 				"role" : "libraries"
 			},
 			{
-				"fragment" : "-lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32",
+				"fragment" : "kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib",
 				"role" : "libraries"
 			}
 		],

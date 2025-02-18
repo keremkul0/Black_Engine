@@ -1,0 +1,7 @@
+C:/Users/Kerem/CLionProjects/Black_Engine/build/CMakeFiles/glad.dir
+C:/Users/Kerem/CLionProjects/Black_Engine/build/CMakeFiles/Black_Engine.dir
+C:/Users/Kerem/CLionProjects/Black_Engine/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/Kerem/CLionProjects/Black_Engine/build/CMakeFiles/ZERO_CHECK.dir
+C:/Users/Kerem/CLionProjects/Black_Engine/build/external/glfw/CMakeFiles/ALL_BUILD.dir
+C:/Users/Kerem/CLionProjects/Black_Engine/build/external/glfw/src/CMakeFiles/glfw.dir
+C:/Users/Kerem/CLionProjects/Black_Engine/build/external/glfw/src/CMakeFiles/update_mappings.dir

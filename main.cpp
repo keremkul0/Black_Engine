@@ -104,7 +104,7 @@ int main() {
     glfwMakeContextCurrent(window);
 
     // GLAD
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+    if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
         std::cerr << "Failed to initialize GLAD\n";
         return -1;
     }
@@ -161,11 +161,11 @@ int main() {
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     // Pozisyon (layout=0)
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), static_cast<void *>(nullptr));
     glEnableVertexAttribArray(0);
 
     // Renk (layout=1)
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), reinterpret_cast<void *>(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
     glBindVertexArray(0);
@@ -180,7 +180,7 @@ int main() {
 
         // Model-View-Projection
         glm::mat4 model = glm::rotate(glm::mat4(1.0f),
-                                      (float)glfwGetTime() * glm::radians(50.0f),
+                                      static_cast<float>(glfwGetTime()) * glm::radians(50.0f),
                                       glm::vec3(0.5f, 1.0f, 0.0f));
         glm::mat4 view = glm::translate(glm::mat4(1.0f),
                                         glm::vec3(0.0f, 0.0f, -3.0f));
@@ -194,7 +194,7 @@ int main() {
         glUseProgram(shaderProgram);
 
         // uniform'ı shader'a gönder
-        unsigned int mvpLoc = glGetUniformLocation(shaderProgram, "MVP");
+        const unsigned int mvpLoc = glGetUniformLocation(shaderProgram, "MVP");
         glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, glm::value_ptr(MVP));
 
         glBindVertexArray(VAO);
