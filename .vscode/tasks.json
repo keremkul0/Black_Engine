@@ -1,0 +1,39 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "create-build-directory",
+            "type": "shell",
+            "command": "if (-Not (Test-Path '${workspaceFolder}/../build')) { New-Item -ItemType Directory -Path '${workspaceFolder}/../build' }",
+            "problemMatcher": []
+        },
+        {
+            "label": "clean-cmake-cache",
+            "type": "shell",
+            "command": "if (Test-Path '${workspaceFolder}/../build/CMakeCache.txt') { Remove-Item -Recurse -Force '${workspaceFolder}/../build/CMakeCache.txt' }",
+            "problemMatcher": []
+        },
+        {
+            "label": "cmake",
+            "type": "shell",
+            "command": "cmake",
+            "options": {
+                "cwd": "${workspaceFolder}/../build"
+            },
+            "args": ["-G", "MinGW Makefiles", "${workspaceFolder}"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": ["create-build-directory", "clean-cmake-cache"]
+        },
+        {
+            "label": "make",
+            "type": "shell",
+            "command": "mingw32-make",
+            "options": {
+                "cwd": "${workspaceFolder}/../build"
+            }
+        }
+    ]
+}
