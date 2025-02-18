@@ -3,6 +3,13 @@ project(Black_Engine)
 
 set(CMAKE_CXX_STANDARD 20)
 
+# Include directories
+include_directories(${CMAKE_SOURCE_DIR}/external/glfw/include)
+include_directories(${CMAKE_SOURCE_DIR}/external/glm)
+
+# Set build directory
+set(BUILD_DIR ${CMAKE_SOURCE_DIR}/../build)
+
 # GLFW'de gereksiz örnekler, testler, dokümantasyon kapatılıyor.
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
