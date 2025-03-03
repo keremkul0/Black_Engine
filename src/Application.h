@@ -1,34 +1,16 @@
 #pragma once
-#include <GLFW/glfw3.h>
-#include "Scene.h"
-#include "Shader.h"
 
-struct GLFWwindow;
+#include <glm/glm.hpp>
+
+// Global kamera matrisleri (silinebilir obje değil, sabit kamera gibi davranacak)
+extern glm::mat4 gViewMatrix;
+extern glm::mat4 gProjectionMatrix;
 
 class Application
 {
 public:
-    Application();
-    ~Application();
+    Application() = default;
+    ~Application() = default;
 
-    bool Init();
-    void Run();
-    void Shutdown();
-
-private:
-    // Pencere göstergesi
-    GLFWwindow* window = nullptr;
-
-    // Sahne
-    Scene scene;
-
-    Shader* m_Shader = nullptr;
-    // Ekran boyutu
-    int width = 1280;
-    int height = 720;
-
-    // private fonksiyonlar
-    void ProcessInput();
-    void RenderFrame();
-    void RenderGUI();
+    int Run();
 };

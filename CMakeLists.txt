@@ -39,16 +39,23 @@ target_include_directories(imgui PUBLIC
 add_executable(Black_Engine
         src/main.cpp
         src/Application.cpp
-        src/scene.cpp
-        src/Shader.h
-        src/Shader.cpp
-        src/Scene.cpp
-        src/Scene.h
+        src/Application.h
+        src/Engine/Render/Shader.h
+        src/Engine/Render/Shader.cpp
+        src/Engine/Render/Mesh.cpp
+        src/Engine/Render/Mesh.h
+        src/Engine/Render/Primitives.cpp
+        src/Engine/Render/Primitives.h
+        src/Engine/Scene/Scene.cpp
+        src/Engine/Scene/Scene.h
         src/Engine/Component/BaseComponent.h
-        src/Engine/Entity/GameObject.h
-        src/Engine/Entity/GameObject.cpp
         src/Engine/Component/BaseComponent.cpp
         src/Engine/Component/TransformComponent.cpp
+        src/Engine/Component/TransformComponent.h
+        src/Engine/Component/MeshRendererComponent.cpp
+        src/Engine/Component/MeshRendererComponent.h
+        src/Engine/Entity/GameObject.h
+        src/Engine/Entity/GameObject.cpp
 )
 
 target_include_directories(Black_Engine PRIVATE
