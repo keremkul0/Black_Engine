@@ -3,13 +3,13 @@
  url = https://github.com/google/googletest.git
 
 [submodule "external/imgui"]
- path = external/imgui
- url = https://github.com/ocornut/imgui.git
+	path = external/imgui
+	url = https://github.com/ocornut/imgui.git
 
 [submodule "external/glfw"]
- path = external/glfw
- url = https://github.com/glfw/glfw.git
+	path = external/glfw
+	url = https://github.com/glfw/glfw.git
 
 [submodule "external/glm"]
- path = external/glm
- url = https://github.com/g-truc/glm.git
+	path = external/glm
+	url = https://github.com/g-truc/glm.git
