@@ -1,5 +1,0 @@
-TransformTest.DefaultValues 2 0.0056607
-TransformTest.UpdateMovesPosition 2 0.005459
-ComponentTest.AddComponent 2 0.00558675
-ComponentTest.UpdateCallsComponents 2 0.0060446
----
