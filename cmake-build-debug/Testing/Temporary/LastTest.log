@@ -1,3 +1,111 @@
-Start testing: Feb 18 18:21 Türkiye Standart Saati
+Start testing: Mar 03 09:34 Türkiye Standart Saati
 ----------------------------------------------------------
-End testing: Feb 18 18:21 Türkiye Standart Saati
+1/4 Testing: TransformTest.DefaultValues
+1/4 Test: TransformTest.DefaultValues
+Command: "C:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/tests/unit_tests.exe" "--gtest_filter=TransformTest.DefaultValues" "--gtest_also_run_disabled_tests"
+Directory: C:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/tests
+"TransformTest.DefaultValues" start time: Mar 03 09:34 Türkiye Standart Saati
+Output:
+----------------------------------------------------------
+Running main() from C:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googletest/src/gtest_main.cc
+Note: Google Test filter = TransformTest.DefaultValues
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from TransformTest
+[ RUN      ] TransformTest.DefaultValues
+[       OK ] TransformTest.DefaultValues (0 ms)
+[----------] 1 test from TransformTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"TransformTest.DefaultValues" end time: Mar 03 09:34 Türkiye Standart Saati
+"TransformTest.DefaultValues" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/4 Testing: TransformTest.UpdateMovesPosition
+2/4 Test: TransformTest.UpdateMovesPosition
+Command: "C:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/tests/unit_tests.exe" "--gtest_filter=TransformTest.UpdateMovesPosition" "--gtest_also_run_disabled_tests"
+Directory: C:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/tests
+"TransformTest.UpdateMovesPosition" start time: Mar 03 09:34 Türkiye Standart Saati
+Output:
+----------------------------------------------------------
+Running main() from C:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googletest/src/gtest_main.cc
+Note: Google Test filter = TransformTest.UpdateMovesPosition
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from TransformTest
+[ RUN      ] TransformTest.UpdateMovesPosition
+[       OK ] TransformTest.UpdateMovesPosition (0 ms)
+[----------] 1 test from TransformTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"TransformTest.UpdateMovesPosition" end time: Mar 03 09:34 Türkiye Standart Saati
+"TransformTest.UpdateMovesPosition" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/4 Testing: ComponentTest.AddComponent
+3/4 Test: ComponentTest.AddComponent
+Command: "C:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/tests/unit_tests.exe" "--gtest_filter=ComponentTest.AddComponent" "--gtest_also_run_disabled_tests"
+Directory: C:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/tests
+"ComponentTest.AddComponent" start time: Mar 03 09:34 Türkiye Standart Saati
+Output:
+----------------------------------------------------------
+Running main() from C:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googletest/src/gtest_main.cc
+Note: Google Test filter = ComponentTest.AddComponent
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from ComponentTest
+[ RUN      ] ComponentTest.AddComponent
+[       OK ] ComponentTest.AddComponent (0 ms)
+[----------] 1 test from ComponentTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"ComponentTest.AddComponent" end time: Mar 03 09:34 Türkiye Standart Saati
+"ComponentTest.AddComponent" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/4 Testing: ComponentTest.UpdateCallsComponents
+4/4 Test: ComponentTest.UpdateCallsComponents
+Command: "C:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/tests/unit_tests.exe" "--gtest_filter=ComponentTest.UpdateCallsComponents" "--gtest_also_run_disabled_tests"
+Directory: C:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/tests
+"ComponentTest.UpdateCallsComponents" start time: Mar 03 09:34 Türkiye Standart Saati
+Output:
+----------------------------------------------------------
+Running main() from C:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googletest/src/gtest_main.cc
+Note: Google Test filter = ComponentTest.UpdateCallsComponents
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from ComponentTest
+[ RUN      ] ComponentTest.UpdateCallsComponents
+[       OK ] ComponentTest.UpdateCallsComponents (0 ms)
+[----------] 1 test from ComponentTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"ComponentTest.UpdateCallsComponents" end time: Mar 03 09:34 Türkiye Standart Saati
+"ComponentTest.UpdateCallsComponents" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Mar 03 09:34 Türkiye Standart Saati

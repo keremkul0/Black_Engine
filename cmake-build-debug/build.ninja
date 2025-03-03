@@ -52,7 +52,7 @@ build cmake_object_order_depends_target_glad: phony || .
 build CMakeFiles/glad.dir/external/glad/src/glad.c.obj: C_COMPILER__glad_unscanned_Debug C$:/Users/Kerem/CLionProjects/Black_Engine/external/glad/src/glad.c || cmake_object_order_depends_target_glad
   DEP_FILE = CMakeFiles\glad.dir\external\glad\src\glad.c.obj.d
   FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glad/include
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glad/include
   OBJECT_DIR = CMakeFiles\glad.dir
   OBJECT_FILE_DIR = CMakeFiles\glad.dir\external\glad\src
 
@@ -73,20 +73,129 @@ build libglad.a: C_STATIC_LIBRARY_LINKER__glad_Debug CMakeFiles/glad.dir/externa
   TARGET_PDB = glad.a.dbg
 
 # =============================================================================
+# Object build statements for STATIC_LIBRARY target imgui
+
+
+#############################################
+# Order-only phony target for imgui
+
+build cmake_object_order_depends_target_imgui: phony || .
+
+build CMakeFiles/imgui.dir/external/imgui/imgui.cpp.obj: CXX_COMPILER__imgui_unscanned_Debug C$:/Users/Kerem/CLionProjects/Black_Engine/external/imgui/imgui.cpp || cmake_object_order_depends_target_imgui
+  DEP_FILE = CMakeFiles\imgui.dir\external\imgui\imgui.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui/backends -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include
+  OBJECT_DIR = CMakeFiles\imgui.dir
+  OBJECT_FILE_DIR = CMakeFiles\imgui.dir\external\imgui
+
+build CMakeFiles/imgui.dir/external/imgui/imgui_draw.cpp.obj: CXX_COMPILER__imgui_unscanned_Debug C$:/Users/Kerem/CLionProjects/Black_Engine/external/imgui/imgui_draw.cpp || cmake_object_order_depends_target_imgui
+  DEP_FILE = CMakeFiles\imgui.dir\external\imgui\imgui_draw.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui/backends -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include
+  OBJECT_DIR = CMakeFiles\imgui.dir
+  OBJECT_FILE_DIR = CMakeFiles\imgui.dir\external\imgui
+
+build CMakeFiles/imgui.dir/external/imgui/imgui_tables.cpp.obj: CXX_COMPILER__imgui_unscanned_Debug C$:/Users/Kerem/CLionProjects/Black_Engine/external/imgui/imgui_tables.cpp || cmake_object_order_depends_target_imgui
+  DEP_FILE = CMakeFiles\imgui.dir\external\imgui\imgui_tables.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui/backends -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include
+  OBJECT_DIR = CMakeFiles\imgui.dir
+  OBJECT_FILE_DIR = CMakeFiles\imgui.dir\external\imgui
+
+build CMakeFiles/imgui.dir/external/imgui/imgui_widgets.cpp.obj: CXX_COMPILER__imgui_unscanned_Debug C$:/Users/Kerem/CLionProjects/Black_Engine/external/imgui/imgui_widgets.cpp || cmake_object_order_depends_target_imgui
+  DEP_FILE = CMakeFiles\imgui.dir\external\imgui\imgui_widgets.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui/backends -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include
+  OBJECT_DIR = CMakeFiles\imgui.dir
+  OBJECT_FILE_DIR = CMakeFiles\imgui.dir\external\imgui
+
+build CMakeFiles/imgui.dir/external/imgui/backends/imgui_impl_glfw.cpp.obj: CXX_COMPILER__imgui_unscanned_Debug C$:/Users/Kerem/CLionProjects/Black_Engine/external/imgui/backends/imgui_impl_glfw.cpp || cmake_object_order_depends_target_imgui
+  DEP_FILE = CMakeFiles\imgui.dir\external\imgui\backends\imgui_impl_glfw.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui/backends -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include
+  OBJECT_DIR = CMakeFiles\imgui.dir
+  OBJECT_FILE_DIR = CMakeFiles\imgui.dir\external\imgui\backends
+
+build CMakeFiles/imgui.dir/external/imgui/backends/imgui_impl_opengl3.cpp.obj: CXX_COMPILER__imgui_unscanned_Debug C$:/Users/Kerem/CLionProjects/Black_Engine/external/imgui/backends/imgui_impl_opengl3.cpp || cmake_object_order_depends_target_imgui
+  DEP_FILE = CMakeFiles\imgui.dir\external\imgui\backends\imgui_impl_opengl3.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui/backends -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include
+  OBJECT_DIR = CMakeFiles\imgui.dir
+  OBJECT_FILE_DIR = CMakeFiles\imgui.dir\external\imgui\backends
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target imgui
+
+
+#############################################
+# Link the static library libimgui.a
+
+build libimgui.a: CXX_STATIC_LIBRARY_LINKER__imgui_Debug CMakeFiles/imgui.dir/external/imgui/imgui.cpp.obj CMakeFiles/imgui.dir/external/imgui/imgui_draw.cpp.obj CMakeFiles/imgui.dir/external/imgui/imgui_tables.cpp.obj CMakeFiles/imgui.dir/external/imgui/imgui_widgets.cpp.obj CMakeFiles/imgui.dir/external/imgui/backends/imgui_impl_glfw.cpp.obj CMakeFiles/imgui.dir/external/imgui/backends/imgui_impl_opengl3.cpp.obj
+  LANGUAGE_COMPILE_FLAGS = -g
+  OBJECT_DIR = CMakeFiles\imgui.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_FILE = libimgui.a
+  TARGET_PDB = imgui.a.dbg
+
+# =============================================================================
 # Object build statements for EXECUTABLE target Black_Engine
 
 
 #############################################
 # Order-only phony target for Black_Engine
 
-build cmake_object_order_depends_target_Black_Engine: phony || cmake_object_order_depends_target_glad cmake_object_order_depends_target_glfw
+build cmake_object_order_depends_target_Black_Engine: phony || cmake_object_order_depends_target_glad cmake_object_order_depends_target_glfw cmake_object_order_depends_target_imgui
 
-build CMakeFiles/Black_Engine.dir/main.cpp.obj: CXX_COMPILER__Black_Engine_unscanned_Debug C$:/Users/Kerem/CLionProjects/Black_Engine/main.cpp || cmake_object_order_depends_target_Black_Engine
-  DEP_FILE = CMakeFiles\Black_Engine.dir\main.cpp.obj.d
+build CMakeFiles/Black_Engine.dir/src/main.cpp.obj: CXX_COMPILER__Black_Engine_unscanned_Debug C$:/Users/Kerem/CLionProjects/Black_Engine/src/main.cpp || cmake_object_order_depends_target_Black_Engine
+  DEP_FILE = CMakeFiles\Black_Engine.dir\src\main.cpp.obj.d
   FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glad/include
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glad/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui/backends -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include
   OBJECT_DIR = CMakeFiles\Black_Engine.dir
-  OBJECT_FILE_DIR = CMakeFiles\Black_Engine.dir
+  OBJECT_FILE_DIR = CMakeFiles\Black_Engine.dir\src
+
+build CMakeFiles/Black_Engine.dir/src/Application.cpp.obj: CXX_COMPILER__Black_Engine_unscanned_Debug C$:/Users/Kerem/CLionProjects/Black_Engine/src/Application.cpp || cmake_object_order_depends_target_Black_Engine
+  DEP_FILE = CMakeFiles\Black_Engine.dir\src\Application.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glad/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui/backends -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include
+  OBJECT_DIR = CMakeFiles\Black_Engine.dir
+  OBJECT_FILE_DIR = CMakeFiles\Black_Engine.dir\src
+
+build CMakeFiles/Black_Engine.dir/src/Scene.cpp.obj: CXX_COMPILER__Black_Engine_unscanned_Debug C$:/Users/Kerem/CLionProjects/Black_Engine/src/Scene.cpp || cmake_object_order_depends_target_Black_Engine
+  DEP_FILE = CMakeFiles\Black_Engine.dir\src\Scene.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glad/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui/backends -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include
+  OBJECT_DIR = CMakeFiles\Black_Engine.dir
+  OBJECT_FILE_DIR = CMakeFiles\Black_Engine.dir\src
+
+build CMakeFiles/Black_Engine.dir/src/Shader.cpp.obj: CXX_COMPILER__Black_Engine_unscanned_Debug C$:/Users/Kerem/CLionProjects/Black_Engine/src/Shader.cpp || cmake_object_order_depends_target_Black_Engine
+  DEP_FILE = CMakeFiles\Black_Engine.dir\src\Shader.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glad/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui/backends -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include
+  OBJECT_DIR = CMakeFiles\Black_Engine.dir
+  OBJECT_FILE_DIR = CMakeFiles\Black_Engine.dir\src
+
+build CMakeFiles/Black_Engine.dir/src/Engine/Entity/GameObject.cpp.obj: CXX_COMPILER__Black_Engine_unscanned_Debug C$:/Users/Kerem/CLionProjects/Black_Engine/src/Engine/Entity/GameObject.cpp || cmake_object_order_depends_target_Black_Engine
+  DEP_FILE = CMakeFiles\Black_Engine.dir\src\Engine\Entity\GameObject.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glad/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui/backends -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include
+  OBJECT_DIR = CMakeFiles\Black_Engine.dir
+  OBJECT_FILE_DIR = CMakeFiles\Black_Engine.dir\src\Engine\Entity
+
+build CMakeFiles/Black_Engine.dir/src/Engine/Component/BaseComponent.cpp.obj: CXX_COMPILER__Black_Engine_unscanned_Debug C$:/Users/Kerem/CLionProjects/Black_Engine/src/Engine/Component/BaseComponent.cpp || cmake_object_order_depends_target_Black_Engine
+  DEP_FILE = CMakeFiles\Black_Engine.dir\src\Engine\Component\BaseComponent.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glad/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui/backends -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include
+  OBJECT_DIR = CMakeFiles\Black_Engine.dir
+  OBJECT_FILE_DIR = CMakeFiles\Black_Engine.dir\src\Engine\Component
+
+build CMakeFiles/Black_Engine.dir/src/Engine/Component/TransformComponent.cpp.obj: CXX_COMPILER__Black_Engine_unscanned_Debug C$:/Users/Kerem/CLionProjects/Black_Engine/src/Engine/Component/TransformComponent.cpp || cmake_object_order_depends_target_Black_Engine
+  DEP_FILE = CMakeFiles\Black_Engine.dir\src\Engine\Component\TransformComponent.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glad/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui/backends -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include
+  OBJECT_DIR = CMakeFiles\Black_Engine.dir
+  OBJECT_FILE_DIR = CMakeFiles\Black_Engine.dir\src\Engine\Component
 
 
 # =============================================================================
@@ -96,15 +205,27 @@ build CMakeFiles/Black_Engine.dir/main.cpp.obj: CXX_COMPILER__Black_Engine_unsca
 #############################################
 # Link the executable Black_Engine.exe
 
-build Black_Engine.exe: CXX_EXECUTABLE_LINKER__Black_Engine_Debug CMakeFiles/Black_Engine.dir/main.cpp.obj | libglad.a external/glfw/src/libglfw3.a || external/glfw/src/libglfw3.a libglad.a
+build Black_Engine.exe: CXX_EXECUTABLE_LINKER__Black_Engine_Debug CMakeFiles/Black_Engine.dir/src/main.cpp.obj CMakeFiles/Black_Engine.dir/src/Application.cpp.obj CMakeFiles/Black_Engine.dir/src/Scene.cpp.obj CMakeFiles/Black_Engine.dir/src/Shader.cpp.obj CMakeFiles/Black_Engine.dir/src/Engine/Entity/GameObject.cpp.obj CMakeFiles/Black_Engine.dir/src/Engine/Component/BaseComponent.cpp.obj CMakeFiles/Black_Engine.dir/src/Engine/Component/TransformComponent.cpp.obj | libglad.a libimgui.a external/glfw/src/libglfw3.a || external/glfw/src/libglfw3.a libglad.a libimgui.a
   FLAGS = -g
-  LINK_LIBRARIES = libglad.a  external/glfw/src/libglfw3.a  -lopengl32  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  LINK_LIBRARIES = libglad.a  libimgui.a  external/glfw/src/libglfw3.a  -lopengl32  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\Black_Engine.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
   TARGET_FILE = Black_Engine.exe
   TARGET_IMPLIB = libBlack_Engine.dll.a
   TARGET_PDB = Black_Engine.exe.dbg
+
+
+#############################################
+# Utility command for test
+
+build CMakeFiles/test.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\ctest.exe" --force-new-ctest-process "
+  DESC = Running tests...
+  pool = console
+  restat = 1
+
+build test: phony CMakeFiles/test.util
 
 
 #############################################
@@ -129,10 +250,64 @@ build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
 
 build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 
+
+#############################################
+# Utility command for list_install_components
+
+build list_install_components: phony
+
+
+#############################################
+# Utility command for install
+
+build CMakeFiles/install.util: CUSTOM_COMMAND all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" -P cmake_install.cmake"
+  DESC = Install the project...
+  pool = console
+  restat = 1
+
+build install: phony CMakeFiles/install.util
+
+
+#############################################
+# Utility command for install/local
+
+build CMakeFiles/install/local.util: CUSTOM_COMMAND all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake"
+  DESC = Installing only the local directory...
+  pool = console
+  restat = 1
+
+build install/local: phony CMakeFiles/install/local.util
+
+
+#############################################
+# Utility command for install/strip
+
+build CMakeFiles/install/strip.util: CUSTOM_COMMAND all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake"
+  DESC = Installing the project stripped...
+  pool = console
+  restat = 1
+
+build install/strip: phony CMakeFiles/install/strip.util
+
 # =============================================================================
 # Write statements declared in CMakeLists.txt:
 # C:/Users/Kerem/CLionProjects/Black_Engine/CMakeLists.txt
 # =============================================================================
+
+
+#############################################
+# Utility command for test
+
+build external/glfw/CMakeFiles/test.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\external\glfw && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\ctest.exe" --force-new-ctest-process "
+  DESC = Running tests...
+  pool = console
+  restat = 1
+
+build external/glfw/test: phony external/glfw/CMakeFiles/test.util
 
 
 #############################################
@@ -157,6 +332,48 @@ build external/glfw/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
 
 build external/glfw/rebuild_cache: phony external/glfw/CMakeFiles/rebuild_cache.util
 
+
+#############################################
+# Utility command for list_install_components
+
+build external/glfw/list_install_components: phony
+
+
+#############################################
+# Utility command for install
+
+build external/glfw/CMakeFiles/install.util: CUSTOM_COMMAND external/glfw/all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\external\glfw && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" -P cmake_install.cmake"
+  DESC = Install the project...
+  pool = console
+  restat = 1
+
+build external/glfw/install: phony external/glfw/CMakeFiles/install.util
+
+
+#############################################
+# Utility command for install/local
+
+build external/glfw/CMakeFiles/install/local.util: CUSTOM_COMMAND external/glfw/all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\external\glfw && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake"
+  DESC = Installing only the local directory...
+  pool = console
+  restat = 1
+
+build external/glfw/install/local: phony external/glfw/CMakeFiles/install/local.util
+
+
+#############################################
+# Utility command for install/strip
+
+build external/glfw/CMakeFiles/install/strip.util: CUSTOM_COMMAND external/glfw/all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\external\glfw && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake"
+  DESC = Installing the project stripped...
+  pool = console
+  restat = 1
+
+build external/glfw/install/strip: phony external/glfw/CMakeFiles/install/strip.util
+
 # =============================================================================
 # Write statements declared in CMakeLists.txt:
 # C:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/CMakeLists.txt
@@ -175,7 +392,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/context.c.obj: C_COMPILER__glfw_unsc
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\context.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -183,7 +400,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/init.c.obj: C_COMPILER__glfw_unscann
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\init.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -191,7 +408,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/input.c.obj: C_COMPILER__glfw_unscan
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\input.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -199,7 +416,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/monitor.c.obj: C_COMPILER__glfw_unsc
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\monitor.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -207,7 +424,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/platform.c.obj: C_COMPILER__glfw_uns
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\platform.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -215,7 +432,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/vulkan.c.obj: C_COMPILER__glfw_unsca
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\vulkan.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -223,7 +440,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/window.c.obj: C_COMPILER__glfw_unsca
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\window.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -231,7 +448,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/egl_context.c.obj: C_COMPILER__glfw_
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\egl_context.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -239,7 +456,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/osmesa_context.c.obj: C_COMPILER__gl
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\osmesa_context.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -247,7 +464,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/null_init.c.obj: C_COMPILER__glfw_un
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\null_init.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -255,7 +472,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/null_monitor.c.obj: C_COMPILER__glfw
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\null_monitor.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -263,7 +480,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/null_window.c.obj: C_COMPILER__glfw_
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\null_window.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -271,7 +488,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/null_joystick.c.obj: C_COMPILER__glf
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\null_joystick.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -279,7 +496,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/win32_module.c.obj: C_COMPILER__glfw
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\win32_module.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -287,7 +504,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/win32_time.c.obj: C_COMPILER__glfw_u
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\win32_time.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -295,7 +512,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/win32_thread.c.obj: C_COMPILER__glfw
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\win32_thread.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -303,7 +520,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/win32_init.c.obj: C_COMPILER__glfw_u
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\win32_init.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -311,7 +528,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/win32_joystick.c.obj: C_COMPILER__gl
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\win32_joystick.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -319,7 +536,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/win32_monitor.c.obj: C_COMPILER__glf
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\win32_monitor.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -327,7 +544,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/win32_window.c.obj: C_COMPILER__glfw
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\win32_window.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -335,7 +552,7 @@ build external/glfw/src/CMakeFiles/glfw.dir/wgl_context.c.obj: C_COMPILER__glfw_
   DEFINES = -DUNICODE -DWINVER=0x0501 -D_GLFW_WIN32 -D_UNICODE
   DEP_FILE = external\glfw\src\CMakeFiles\glfw.dir\wgl_context.c.obj.d
   FLAGS = -g -std=c99 -fdiagnostics-color=always -Wall
-  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src -IC:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/glfw/src
   OBJECT_DIR = external\glfw\src\CMakeFiles\glfw.dir
   OBJECT_FILE_DIR = external\glfw\src\CMakeFiles\glfw.dir
 
@@ -363,6 +580,18 @@ build external/glfw/src/update_mappings: phony external/glfw/src/CMakeFiles/upda
 
 
 #############################################
+# Utility command for test
+
+build external/glfw/src/CMakeFiles/test.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\external\glfw\src && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\ctest.exe" --force-new-ctest-process "
+  DESC = Running tests...
+  pool = console
+  restat = 1
+
+build external/glfw/src/test: phony external/glfw/src/CMakeFiles/test.util
+
+
+#############################################
 # Utility command for edit_cache
 
 build external/glfw/src/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
@@ -386,6 +615,48 @@ build external/glfw/src/rebuild_cache: phony external/glfw/src/CMakeFiles/rebuil
 
 
 #############################################
+# Utility command for list_install_components
+
+build external/glfw/src/list_install_components: phony
+
+
+#############################################
+# Utility command for install
+
+build external/glfw/src/CMakeFiles/install.util: CUSTOM_COMMAND external/glfw/src/all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\external\glfw\src && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" -P cmake_install.cmake"
+  DESC = Install the project...
+  pool = console
+  restat = 1
+
+build external/glfw/src/install: phony external/glfw/src/CMakeFiles/install.util
+
+
+#############################################
+# Utility command for install/local
+
+build external/glfw/src/CMakeFiles/install/local.util: CUSTOM_COMMAND external/glfw/src/all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\external\glfw\src && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake"
+  DESC = Installing only the local directory...
+  pool = console
+  restat = 1
+
+build external/glfw/src/install/local: phony external/glfw/src/CMakeFiles/install/local.util
+
+
+#############################################
+# Utility command for install/strip
+
+build external/glfw/src/CMakeFiles/install/strip.util: CUSTOM_COMMAND external/glfw/src/all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\external\glfw\src && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake"
+  DESC = Installing the project stripped...
+  pool = console
+  restat = 1
+
+build external/glfw/src/install/strip: phony external/glfw/src/CMakeFiles/install/strip.util
+
+
+#############################################
 # Custom command for external\glfw\src\CMakeFiles\update_mappings
 
 build external/glfw/src/CMakeFiles/update_mappings | ${cmake_ninja_workdir}external/glfw/src/CMakeFiles/update_mappings: CUSTOM_COMMAND
@@ -393,15 +664,585 @@ build external/glfw/src/CMakeFiles/update_mappings | ${cmake_ninja_workdir}exter
   DESC = Updating gamepad mappings from upstream repository
 
 # =============================================================================
+# Write statements declared in CMakeLists.txt:
+# C:/Users/Kerem/CLionProjects/Black_Engine/CMakeLists.txt
+# =============================================================================
+
+
+#############################################
+# Utility command for test
+
+build external/googletest/CMakeFiles/test.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\external\googletest && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\ctest.exe" --force-new-ctest-process "
+  DESC = Running tests...
+  pool = console
+  restat = 1
+
+build external/googletest/test: phony external/googletest/CMakeFiles/test.util
+
+
+#############################################
+# Utility command for edit_cache
+
+build external/googletest/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\external\googletest && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build external/googletest/edit_cache: phony external/googletest/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build external/googletest/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\external\googletest && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" --regenerate-during-build -SC:\Users\Kerem\CLionProjects\Black_Engine -BC:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug"
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build external/googletest/rebuild_cache: phony external/googletest/CMakeFiles/rebuild_cache.util
+
+
+#############################################
+# Utility command for list_install_components
+
+build external/googletest/list_install_components: phony
+
+
+#############################################
+# Utility command for install
+
+build external/googletest/CMakeFiles/install.util: CUSTOM_COMMAND external/googletest/all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\external\googletest && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" -P cmake_install.cmake"
+  DESC = Install the project...
+  pool = console
+  restat = 1
+
+build external/googletest/install: phony external/googletest/CMakeFiles/install.util
+
+
+#############################################
+# Utility command for install/local
+
+build external/googletest/CMakeFiles/install/local.util: CUSTOM_COMMAND external/googletest/all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\external\googletest && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake"
+  DESC = Installing only the local directory...
+  pool = console
+  restat = 1
+
+build external/googletest/install/local: phony external/googletest/CMakeFiles/install/local.util
+
+
+#############################################
+# Utility command for install/strip
+
+build external/googletest/CMakeFiles/install/strip.util: CUSTOM_COMMAND external/googletest/all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\external\googletest && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake"
+  DESC = Installing the project stripped...
+  pool = console
+  restat = 1
+
+build external/googletest/install/strip: phony external/googletest/CMakeFiles/install/strip.util
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# C:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/CMakeLists.txt
+# =============================================================================
+
+# =============================================================================
+# Object build statements for STATIC_LIBRARY target gmock
+
+
+#############################################
+# Order-only phony target for gmock
+
+build cmake_object_order_depends_target_gmock: phony || cmake_object_order_depends_target_gtest
+
+build external/googletest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.obj: CXX_COMPILER__gmock_unscanned_Debug C$:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googlemock/src/gmock-all.cc || cmake_object_order_depends_target_gmock
+  DEP_FILE = external\googletest\googlemock\CMakeFiles\gmock.dir\src\gmock-all.cc.obj.d
+  FLAGS = -g -std=c++20 -fdiagnostics-color=always -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googlemock/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googlemock -isystem C:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googletest/include -isystem C:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googletest
+  OBJECT_DIR = external\googletest\googlemock\CMakeFiles\gmock.dir
+  OBJECT_FILE_DIR = external\googletest\googlemock\CMakeFiles\gmock.dir\src
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target gmock
+
+
+#############################################
+# Link the static library lib\libgmock.a
+
+build lib/libgmock.a: CXX_STATIC_LIBRARY_LINKER__gmock_Debug external/googletest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.obj || lib/libgtest.a
+  LANGUAGE_COMPILE_FLAGS = -g
+  OBJECT_DIR = external\googletest\googlemock\CMakeFiles\gmock.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_FILE = lib\libgmock.a
+  TARGET_PDB = gmock.a.dbg
+
+# =============================================================================
+# Object build statements for STATIC_LIBRARY target gmock_main
+
+
+#############################################
+# Order-only phony target for gmock_main
+
+build cmake_object_order_depends_target_gmock_main: phony || cmake_object_order_depends_target_gmock cmake_object_order_depends_target_gtest
+
+build external/googletest/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.obj: CXX_COMPILER__gmock_main_unscanned_Debug C$:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googlemock/src/gmock_main.cc || cmake_object_order_depends_target_gmock_main
+  DEP_FILE = external\googletest\googlemock\CMakeFiles\gmock_main.dir\src\gmock_main.cc.obj.d
+  FLAGS = -g -std=c++20 -fdiagnostics-color=always -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers
+  INCLUDES = -isystem C:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googlemock/include -isystem C:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googlemock -isystem C:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googletest/include -isystem C:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googletest
+  OBJECT_DIR = external\googletest\googlemock\CMakeFiles\gmock_main.dir
+  OBJECT_FILE_DIR = external\googletest\googlemock\CMakeFiles\gmock_main.dir\src
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target gmock_main
+
+
+#############################################
+# Link the static library lib\libgmock_main.a
+
+build lib/libgmock_main.a: CXX_STATIC_LIBRARY_LINKER__gmock_main_Debug external/googletest/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.obj || lib/libgmock.a lib/libgtest.a
+  LANGUAGE_COMPILE_FLAGS = -g
+  OBJECT_DIR = external\googletest\googlemock\CMakeFiles\gmock_main.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_FILE = lib\libgmock_main.a
+  TARGET_PDB = gmock_main.a.dbg
+
+
+#############################################
+# Utility command for test
+
+build external/googletest/googlemock/CMakeFiles/test.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\external\googletest\googlemock && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\ctest.exe" --force-new-ctest-process "
+  DESC = Running tests...
+  pool = console
+  restat = 1
+
+build external/googletest/googlemock/test: phony external/googletest/googlemock/CMakeFiles/test.util
+
+
+#############################################
+# Utility command for edit_cache
+
+build external/googletest/googlemock/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\external\googletest\googlemock && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build external/googletest/googlemock/edit_cache: phony external/googletest/googlemock/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build external/googletest/googlemock/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\external\googletest\googlemock && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" --regenerate-during-build -SC:\Users\Kerem\CLionProjects\Black_Engine -BC:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug"
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build external/googletest/googlemock/rebuild_cache: phony external/googletest/googlemock/CMakeFiles/rebuild_cache.util
+
+
+#############################################
+# Utility command for list_install_components
+
+build external/googletest/googlemock/list_install_components: phony
+
+
+#############################################
+# Utility command for install
+
+build external/googletest/googlemock/CMakeFiles/install.util: CUSTOM_COMMAND external/googletest/googlemock/all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\external\googletest\googlemock && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" -P cmake_install.cmake"
+  DESC = Install the project...
+  pool = console
+  restat = 1
+
+build external/googletest/googlemock/install: phony external/googletest/googlemock/CMakeFiles/install.util
+
+
+#############################################
+# Utility command for install/local
+
+build external/googletest/googlemock/CMakeFiles/install/local.util: CUSTOM_COMMAND external/googletest/googlemock/all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\external\googletest\googlemock && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake"
+  DESC = Installing only the local directory...
+  pool = console
+  restat = 1
+
+build external/googletest/googlemock/install/local: phony external/googletest/googlemock/CMakeFiles/install/local.util
+
+
+#############################################
+# Utility command for install/strip
+
+build external/googletest/googlemock/CMakeFiles/install/strip.util: CUSTOM_COMMAND external/googletest/googlemock/all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\external\googletest\googlemock && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake"
+  DESC = Installing the project stripped...
+  pool = console
+  restat = 1
+
+build external/googletest/googlemock/install/strip: phony external/googletest/googlemock/CMakeFiles/install/strip.util
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# C:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googlemock/CMakeLists.txt
+# =============================================================================
+
+# =============================================================================
+# Object build statements for STATIC_LIBRARY target gtest
+
+
+#############################################
+# Order-only phony target for gtest
+
+build cmake_object_order_depends_target_gtest: phony || .
+
+build external/googletest/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.obj: CXX_COMPILER__gtest_unscanned_Debug C$:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googletest/src/gtest-all.cc || cmake_object_order_depends_target_gtest
+  DEP_FILE = external\googletest\googletest\CMakeFiles\gtest.dir\src\gtest-all.cc.obj.d
+  FLAGS = -g -std=c++20 -fdiagnostics-color=always -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googletest/include -IC:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googletest
+  OBJECT_DIR = external\googletest\googletest\CMakeFiles\gtest.dir
+  OBJECT_FILE_DIR = external\googletest\googletest\CMakeFiles\gtest.dir\src
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target gtest
+
+
+#############################################
+# Link the static library lib\libgtest.a
+
+build lib/libgtest.a: CXX_STATIC_LIBRARY_LINKER__gtest_Debug external/googletest/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.obj
+  LANGUAGE_COMPILE_FLAGS = -g
+  OBJECT_DIR = external\googletest\googletest\CMakeFiles\gtest.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_FILE = lib\libgtest.a
+  TARGET_PDB = gtest.a.dbg
+
+# =============================================================================
+# Object build statements for STATIC_LIBRARY target gtest_main
+
+
+#############################################
+# Order-only phony target for gtest_main
+
+build cmake_object_order_depends_target_gtest_main: phony || cmake_object_order_depends_target_gtest
+
+build external/googletest/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.obj: CXX_COMPILER__gtest_main_unscanned_Debug C$:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googletest/src/gtest_main.cc || cmake_object_order_depends_target_gtest_main
+  DEP_FILE = external\googletest\googletest\CMakeFiles\gtest_main.dir\src\gtest_main.cc.obj.d
+  FLAGS = -g -std=c++20 -fdiagnostics-color=always -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers
+  INCLUDES = -isystem C:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googletest/include -isystem C:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googletest
+  OBJECT_DIR = external\googletest\googletest\CMakeFiles\gtest_main.dir
+  OBJECT_FILE_DIR = external\googletest\googletest\CMakeFiles\gtest_main.dir\src
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target gtest_main
+
+
+#############################################
+# Link the static library lib\libgtest_main.a
+
+build lib/libgtest_main.a: CXX_STATIC_LIBRARY_LINKER__gtest_main_Debug external/googletest/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.obj || lib/libgtest.a
+  LANGUAGE_COMPILE_FLAGS = -g
+  OBJECT_DIR = external\googletest\googletest\CMakeFiles\gtest_main.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_FILE = lib\libgtest_main.a
+  TARGET_PDB = gtest_main.a.dbg
+
+
+#############################################
+# Utility command for test
+
+build external/googletest/googletest/CMakeFiles/test.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\external\googletest\googletest && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\ctest.exe" --force-new-ctest-process "
+  DESC = Running tests...
+  pool = console
+  restat = 1
+
+build external/googletest/googletest/test: phony external/googletest/googletest/CMakeFiles/test.util
+
+
+#############################################
+# Utility command for edit_cache
+
+build external/googletest/googletest/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\external\googletest\googletest && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build external/googletest/googletest/edit_cache: phony external/googletest/googletest/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build external/googletest/googletest/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\external\googletest\googletest && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" --regenerate-during-build -SC:\Users\Kerem\CLionProjects\Black_Engine -BC:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug"
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build external/googletest/googletest/rebuild_cache: phony external/googletest/googletest/CMakeFiles/rebuild_cache.util
+
+
+#############################################
+# Utility command for list_install_components
+
+build external/googletest/googletest/list_install_components: phony
+
+
+#############################################
+# Utility command for install
+
+build external/googletest/googletest/CMakeFiles/install.util: CUSTOM_COMMAND external/googletest/googletest/all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\external\googletest\googletest && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" -P cmake_install.cmake"
+  DESC = Install the project...
+  pool = console
+  restat = 1
+
+build external/googletest/googletest/install: phony external/googletest/googletest/CMakeFiles/install.util
+
+
+#############################################
+# Utility command for install/local
+
+build external/googletest/googletest/CMakeFiles/install/local.util: CUSTOM_COMMAND external/googletest/googletest/all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\external\googletest\googletest && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake"
+  DESC = Installing only the local directory...
+  pool = console
+  restat = 1
+
+build external/googletest/googletest/install/local: phony external/googletest/googletest/CMakeFiles/install/local.util
+
+
+#############################################
+# Utility command for install/strip
+
+build external/googletest/googletest/CMakeFiles/install/strip.util: CUSTOM_COMMAND external/googletest/googletest/all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\external\googletest\googletest && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake"
+  DESC = Installing the project stripped...
+  pool = console
+  restat = 1
+
+build external/googletest/googletest/install/strip: phony external/googletest/googletest/CMakeFiles/install/strip.util
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# C:/Users/Kerem/CLionProjects/Black_Engine/CMakeLists.txt
+# =============================================================================
+
+# =============================================================================
+# Object build statements for EXECUTABLE target unit_tests
+
+
+#############################################
+# Order-only phony target for unit_tests
+
+build cmake_object_order_depends_target_unit_tests: phony || cmake_object_order_depends_target_engine_lib cmake_object_order_depends_target_gtest cmake_object_order_depends_target_gtest_main cmake_object_order_depends_target_imgui
+
+build tests/CMakeFiles/unit_tests.dir/TestsComponents/TestComponents.cpp.obj: CXX_COMPILER__unit_tests_unscanned_Debug C$:/Users/Kerem/CLionProjects/Black_Engine/tests/TestsComponents/TestComponents.cpp || cmake_object_order_depends_target_unit_tests
+  DEP_FILE = tests\CMakeFiles\unit_tests.dir\TestsComponents\TestComponents.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/tests/../src -IC:/Users/Kerem/CLionProjects/Black_Engine/tests/../external/imgui -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui/backends -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -isystem C:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googletest/include -isystem C:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googletest
+  OBJECT_DIR = tests\CMakeFiles\unit_tests.dir
+  OBJECT_FILE_DIR = tests\CMakeFiles\unit_tests.dir\TestsComponents
+
+build tests/CMakeFiles/unit_tests.dir/TestsComponents/TestTransform.cpp.obj: CXX_COMPILER__unit_tests_unscanned_Debug C$:/Users/Kerem/CLionProjects/Black_Engine/tests/TestsComponents/TestTransform.cpp || cmake_object_order_depends_target_unit_tests
+  DEP_FILE = tests\CMakeFiles\unit_tests.dir\TestsComponents\TestTransform.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm -IC:/Users/Kerem/CLionProjects/Black_Engine/tests/../src -IC:/Users/Kerem/CLionProjects/Black_Engine/tests/../external/imgui -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui -IC:/Users/Kerem/CLionProjects/Black_Engine/external/imgui/backends -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/include -isystem C:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googletest/include -isystem C:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googletest
+  OBJECT_DIR = tests\CMakeFiles\unit_tests.dir
+  OBJECT_FILE_DIR = tests\CMakeFiles\unit_tests.dir\TestsComponents
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target unit_tests
+
+
+#############################################
+# Link the executable tests\unit_tests.exe
+
+build tests/unit_tests.exe tests/unit_tests[1]_tests.cmake | ${cmake_ninja_workdir}tests/unit_tests[1]_tests.cmake: CXX_EXECUTABLE_LINKER__unit_tests_Debug tests/CMakeFiles/unit_tests.dir/TestsComponents/TestComponents.cpp.obj tests/CMakeFiles/unit_tests.dir/TestsComponents/TestTransform.cpp.obj | lib/libgtest.a lib/libgtest_main.a tests/libengine_lib.a libimgui.a lib/libgtest.a || lib/libgtest.a lib/libgtest_main.a libimgui.a tests/libengine_lib.a
+  FLAGS = -g
+  LINK_LIBRARIES = lib/libgtest.a  lib/libgtest_main.a  tests/libengine_lib.a  libimgui.a  lib/libgtest.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  OBJECT_DIR = tests\CMakeFiles\unit_tests.dir
+  POST_BUILD = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\tests && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" -D TEST_TARGET=unit_tests -D TEST_EXECUTABLE=C:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/tests/unit_tests.exe -D TEST_EXECUTOR= -D TEST_WORKING_DIR=C:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/tests -D TEST_EXTRA_ARGS= -D TEST_PROPERTIES= -D TEST_PREFIX= -D TEST_SUFFIX= -D TEST_FILTER= -D NO_PRETTY_TYPES=FALSE -D NO_PRETTY_VALUES=FALSE -D TEST_LIST=unit_tests_TESTS -D CTEST_FILE=C:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/tests/unit_tests[1]_tests.cmake -D TEST_DISCOVERY_TIMEOUT=5 -D TEST_XML_OUTPUT_DIR= -P "C:/Program Files/JetBrains/CLion 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/GoogleTestAddTests.cmake""
+  PRE_LINK = cd .
+  RESTAT = 1
+  TARGET_FILE = tests\unit_tests.exe
+  TARGET_IMPLIB = tests\libunit_tests.dll.a
+  TARGET_PDB = unit_tests.exe.dbg
+
+# =============================================================================
+# Object build statements for STATIC_LIBRARY target engine_lib
+
+
+#############################################
+# Order-only phony target for engine_lib
+
+build cmake_object_order_depends_target_engine_lib: phony || .
+
+build tests/CMakeFiles/engine_lib.dir/__/src/Engine/Entity/GameObject.cpp.obj: CXX_COMPILER__engine_lib_unscanned_Debug C$:/Users/Kerem/CLionProjects/Black_Engine/src/Engine/Entity/GameObject.cpp || cmake_object_order_depends_target_engine_lib
+  DEP_FILE = tests\CMakeFiles\engine_lib.dir\__\src\Engine\Entity\GameObject.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/tests/../src -IC:/Users/Kerem/CLionProjects/Black_Engine/tests/../external/imgui -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm
+  OBJECT_DIR = tests\CMakeFiles\engine_lib.dir
+  OBJECT_FILE_DIR = tests\CMakeFiles\engine_lib.dir\__\src\Engine\Entity
+
+build tests/CMakeFiles/engine_lib.dir/__/src/Engine/Component/BaseComponent.cpp.obj: CXX_COMPILER__engine_lib_unscanned_Debug C$:/Users/Kerem/CLionProjects/Black_Engine/src/Engine/Component/BaseComponent.cpp || cmake_object_order_depends_target_engine_lib
+  DEP_FILE = tests\CMakeFiles\engine_lib.dir\__\src\Engine\Component\BaseComponent.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/tests/../src -IC:/Users/Kerem/CLionProjects/Black_Engine/tests/../external/imgui -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm
+  OBJECT_DIR = tests\CMakeFiles\engine_lib.dir
+  OBJECT_FILE_DIR = tests\CMakeFiles\engine_lib.dir\__\src\Engine\Component
+
+build tests/CMakeFiles/engine_lib.dir/__/src/Engine/Component/TransformComponent.cpp.obj: CXX_COMPILER__engine_lib_unscanned_Debug C$:/Users/Kerem/CLionProjects/Black_Engine/src/Engine/Component/TransformComponent.cpp || cmake_object_order_depends_target_engine_lib
+  DEP_FILE = tests\CMakeFiles\engine_lib.dir\__\src\Engine\Component\TransformComponent.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/Kerem/CLionProjects/Black_Engine/tests/../src -IC:/Users/Kerem/CLionProjects/Black_Engine/tests/../external/imgui -IC:/Users/Kerem/CLionProjects/Black_Engine/external/glm
+  OBJECT_DIR = tests\CMakeFiles\engine_lib.dir
+  OBJECT_FILE_DIR = tests\CMakeFiles\engine_lib.dir\__\src\Engine\Component
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target engine_lib
+
+
+#############################################
+# Link the static library tests\libengine_lib.a
+
+build tests/libengine_lib.a: CXX_STATIC_LIBRARY_LINKER__engine_lib_Debug tests/CMakeFiles/engine_lib.dir/__/src/Engine/Entity/GameObject.cpp.obj tests/CMakeFiles/engine_lib.dir/__/src/Engine/Component/BaseComponent.cpp.obj tests/CMakeFiles/engine_lib.dir/__/src/Engine/Component/TransformComponent.cpp.obj
+  LANGUAGE_COMPILE_FLAGS = -g
+  OBJECT_DIR = tests\CMakeFiles\engine_lib.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_FILE = tests\libengine_lib.a
+  TARGET_PDB = engine_lib.a.dbg
+
+
+#############################################
+# Utility command for test
+
+build tests/CMakeFiles/test.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\tests && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\ctest.exe" --force-new-ctest-process "
+  DESC = Running tests...
+  pool = console
+  restat = 1
+
+build tests/test: phony tests/CMakeFiles/test.util
+
+
+#############################################
+# Utility command for edit_cache
+
+build tests/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\tests && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build tests/edit_cache: phony tests/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build tests/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\tests && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" --regenerate-during-build -SC:\Users\Kerem\CLionProjects\Black_Engine -BC:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug"
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build tests/rebuild_cache: phony tests/CMakeFiles/rebuild_cache.util
+
+
+#############################################
+# Utility command for list_install_components
+
+build tests/list_install_components: phony
+
+
+#############################################
+# Utility command for install
+
+build tests/CMakeFiles/install.util: CUSTOM_COMMAND tests/all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\tests && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" -P cmake_install.cmake"
+  DESC = Install the project...
+  pool = console
+  restat = 1
+
+build tests/install: phony tests/CMakeFiles/install.util
+
+
+#############################################
+# Utility command for install/local
+
+build tests/CMakeFiles/install/local.util: CUSTOM_COMMAND tests/all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\tests && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake"
+  DESC = Installing only the local directory...
+  pool = console
+  restat = 1
+
+build tests/install/local: phony tests/CMakeFiles/install/local.util
+
+
+#############################################
+# Utility command for install/strip
+
+build tests/CMakeFiles/install/strip.util: CUSTOM_COMMAND tests/all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Kerem\CLionProjects\Black_Engine\cmake-build-debug\tests && "C:\Program Files\JetBrains\CLion 2024.3.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake"
+  DESC = Installing the project stripped...
+  pool = console
+  restat = 1
+
+build tests/install/strip: phony tests/CMakeFiles/install/strip.util
+
+# =============================================================================
 # Target aliases.
 
 build Black_Engine: phony Black_Engine.exe
+
+build engine_lib: phony tests/libengine_lib.a
 
 build glad: phony libglad.a
 
 build glfw: phony external/glfw/src/libglfw3.a
 
+build gmock: phony lib/libgmock.a
+
+build gmock_main: phony lib/libgmock_main.a
+
+build gtest: phony lib/libgtest.a
+
+build gtest_main: phony lib/libgtest_main.a
+
+build imgui: phony libimgui.a
+
+build libengine_lib.a: phony tests/libengine_lib.a
+
 build libglfw3.a: phony external/glfw/src/libglfw3.a
+
+build libgmock.a: phony lib/libgmock.a
+
+build libgmock_main.a: phony lib/libgmock_main.a
+
+build libgtest.a: phony lib/libgtest.a
+
+build libgtest_main.a: phony lib/libgtest_main.a
+
+build unit_tests: phony tests/unit_tests.exe
+
+build unit_tests.exe: phony tests/unit_tests.exe
 
 build update_mappings: phony external/glfw/src/update_mappings
 
@@ -413,7 +1254,7 @@ build update_mappings: phony external/glfw/src/update_mappings
 #############################################
 # Folder: C:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug
 
-build all: phony libglad.a Black_Engine.exe external/glfw/all
+build all: phony libglad.a libimgui.a Black_Engine.exe external/glfw/all external/googletest/all tests/all
 
 # =============================================================================
 
@@ -430,20 +1271,48 @@ build external/glfw/all: phony external/glfw/src/all
 build external/glfw/src/all: phony external/glfw/src/libglfw3.a
 
 # =============================================================================
+
+#############################################
+# Folder: C:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/googletest
+
+build external/googletest/all: phony external/googletest/googlemock/all
+
+# =============================================================================
+
+#############################################
+# Folder: C:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/googletest/googlemock
+
+build external/googletest/googlemock/all: phony lib/libgmock.a lib/libgmock_main.a external/googletest/googletest/all
+
+# =============================================================================
+
+#############################################
+# Folder: C:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/external/googletest/googletest
+
+build external/googletest/googletest/all: phony lib/libgtest.a lib/libgtest_main.a
+
+# =============================================================================
+
+#############################################
+# Folder: C:/Users/Kerem/CLionProjects/Black_Engine/cmake-build-debug/tests
+
+build tests/all: phony tests/unit_tests.exe tests/libengine_lib.a
+
+# =============================================================================
 # Built-in targets
 
 
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/BasicConfigVersion-SameMajorVersion.cmake.in C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeCXXInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeCommonLanguageInclude.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeDependentOption.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeGenericSystem.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeInitializeConfigs.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeLanguageInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakePackageConfigHelpers.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeRCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeSystemSpecificInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeSystemSpecificInitialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CheckCSourceCompiles.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CheckIncludeFile.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CheckLibraryExists.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Compiler/GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Compiler/GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Compiler/GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/FindPackageHandleStandardArgs.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/FindPackageMessage.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/FindThreads.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/GNUInstallDirs.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Internal/CheckSourceCompiles.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows-GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows-GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows-GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows-Initialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows-windres.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/WindowsPaths.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/WriteBasicConfigVersionFile.cmake C$:/Users/Kerem/CLionProjects/Black_Engine/CMakeLists.txt C$:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/CMakeLists.txt C$:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/CMake/glfw3.pc.in C$:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/CMake/glfw3Config.cmake.in C$:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src/CMakeLists.txt CMakeCache.txt CMakeFiles/3.30.5/CMakeCCompiler.cmake CMakeFiles/3.30.5/CMakeCXXCompiler.cmake CMakeFiles/3.30.5/CMakeRCCompiler.cmake CMakeFiles/3.30.5/CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/BasicConfigVersion-SameMajorVersion.cmake.in C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeCXXInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeCommonLanguageInclude.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeDependentOption.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeGenericSystem.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeInitializeConfigs.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeLanguageInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakePackageConfigHelpers.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeRCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeSystemSpecificInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeSystemSpecificInitialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CheckCSourceCompiles.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CheckIncludeFile.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CheckLibraryExists.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Compiler/GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Compiler/GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Compiler/GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/FindPackageHandleStandardArgs.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/FindPackageMessage.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/FindThreads.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/GNUInstallDirs.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/GoogleTest.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Internal/CheckSourceCompiles.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows-GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows-GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows-GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows-Initialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows-windres.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/WindowsPaths.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/WriteBasicConfigVersionFile.cmake C$:/Users/Kerem/CLionProjects/Black_Engine/CMakeLists.txt C$:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/CMakeLists.txt C$:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/CMake/glfw3.pc.in C$:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/CMake/glfw3Config.cmake.in C$:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src/CMakeLists.txt C$:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/CMakeLists.txt C$:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googlemock/CMakeLists.txt C$:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googlemock/cmake/gmock.pc.in C$:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googlemock/cmake/gmock_main.pc.in C$:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googletest/CMakeLists.txt C$:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googletest/cmake/Config.cmake.in C$:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googletest/cmake/gtest.pc.in C$:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googletest/cmake/gtest_main.pc.in C$:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googletest/cmake/internal_utils.cmake C$:/Users/Kerem/CLionProjects/Black_Engine/tests/CMakeLists.txt CMakeCache.txt CMakeFiles/3.30.5/CMakeCCompiler.cmake CMakeFiles/3.30.5/CMakeCXXCompiler.cmake CMakeFiles/3.30.5/CMakeRCCompiler.cmake CMakeFiles/3.30.5/CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/BasicConfigVersion-SameMajorVersion.cmake.in C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeCXXInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeCommonLanguageInclude.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeDependentOption.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeGenericSystem.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeInitializeConfigs.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeLanguageInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakePackageConfigHelpers.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeRCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeSystemSpecificInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeSystemSpecificInitialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CheckCSourceCompiles.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CheckIncludeFile.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CheckLibraryExists.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Compiler/GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Compiler/GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Compiler/GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/FindPackageHandleStandardArgs.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/FindPackageMessage.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/FindThreads.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/GNUInstallDirs.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Internal/CheckSourceCompiles.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows-GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows-GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows-GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows-Initialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows-windres.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/WindowsPaths.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/WriteBasicConfigVersionFile.cmake C$:/Users/Kerem/CLionProjects/Black_Engine/CMakeLists.txt C$:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/CMakeLists.txt C$:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/CMake/glfw3.pc.in C$:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/CMake/glfw3Config.cmake.in C$:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src/CMakeLists.txt CMakeCache.txt CMakeFiles/3.30.5/CMakeCCompiler.cmake CMakeFiles/3.30.5/CMakeCXXCompiler.cmake CMakeFiles/3.30.5/CMakeRCCompiler.cmake CMakeFiles/3.30.5/CMakeSystem.cmake: phony
+build C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/BasicConfigVersion-SameMajorVersion.cmake.in C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeCXXInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeCommonLanguageInclude.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeDependentOption.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeGenericSystem.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeInitializeConfigs.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeLanguageInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakePackageConfigHelpers.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeRCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeSystemSpecificInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CMakeSystemSpecificInitialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CheckCSourceCompiles.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CheckIncludeFile.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/CheckLibraryExists.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Compiler/GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Compiler/GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Compiler/GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/FindPackageHandleStandardArgs.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/FindPackageMessage.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/FindThreads.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/GNUInstallDirs.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/GoogleTest.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Internal/CheckSourceCompiles.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows-GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows-GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows-GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows-Initialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows-windres.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/Windows.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/Platform/WindowsPaths.cmake C$:/Program$ Files/JetBrains/CLion$ 2024.3.3/bin/cmake/win/x64/share/cmake-3.30/Modules/WriteBasicConfigVersionFile.cmake C$:/Users/Kerem/CLionProjects/Black_Engine/CMakeLists.txt C$:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/CMakeLists.txt C$:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/CMake/glfw3.pc.in C$:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/CMake/glfw3Config.cmake.in C$:/Users/Kerem/CLionProjects/Black_Engine/external/glfw/src/CMakeLists.txt C$:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/CMakeLists.txt C$:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googlemock/CMakeLists.txt C$:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googlemock/cmake/gmock.pc.in C$:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googlemock/cmake/gmock_main.pc.in C$:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googletest/CMakeLists.txt C$:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googletest/cmake/Config.cmake.in C$:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googletest/cmake/gtest.pc.in C$:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googletest/cmake/gtest_main.pc.in C$:/Users/Kerem/CLionProjects/Black_Engine/external/googletest/googletest/cmake/internal_utils.cmake C$:/Users/Kerem/CLionProjects/Black_Engine/tests/CMakeLists.txt CMakeCache.txt CMakeFiles/3.30.5/CMakeCCompiler.cmake CMakeFiles/3.30.5/CMakeCXXCompiler.cmake CMakeFiles/3.30.5/CMakeRCCompiler.cmake CMakeFiles/3.30.5/CMakeSystem.cmake: phony
 
 
 #############################################
