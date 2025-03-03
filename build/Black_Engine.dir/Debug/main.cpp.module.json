@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "Black_Engine.dir\\Debug\\main.obj",
+            "outputs": [
+                "C:\\Users\\Kerem\\CLionProjects\\Black_Engine\\build\\Black_Engine.dir\\Debug\\vc143.pdb",
+                "Black_Engine.dir\\Debug\\"
+            ],
+            "requires": []
+        }
+    ]
+}

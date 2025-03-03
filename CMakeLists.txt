@@ -3,23 +3,18 @@ project(Black_Engine)
 
 set(CMAKE_CXX_STANDARD 20)
 
-# Include directories
-include_directories(${CMAKE_SOURCE_DIR}/external/glfw/include)
-include_directories(${CMAKE_SOURCE_DIR}/external/glm)
+option(BUILD_TESTS "Build the test suite" ON)
+if(COMMAND cmake_policy)
+    cmake_policy(SET CMP0003 NEW)
+endif()
 
-# Set build directory
-set(BUILD_DIR ${CMAKE_SOURCE_DIR}/../build)
-
-# GLFW'de gereksiz örnekler, testler, dokümantasyon kapatılıyor.
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
 
-# GLFW'yi alt proje olarak ekle. (external/glfw içinde kendi CMakeLists'i var)
 add_subdirectory(external/glfw)
 
-# GLAD'i static kütüphane olarak ekle.
 add_library(glad STATIC
         external/glad/src/glad.c
 )
@@ -27,18 +22,48 @@ target_include_directories(glad PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/external/glad/include
 )
 
-# Ana proje (executable)
-add_executable(Black_Engine main.cpp)
+add_library(imgui STATIC
+        external/imgui/imgui.cpp
+        external/imgui/imgui_draw.cpp
+        external/imgui/imgui_tables.cpp
+        external/imgui/imgui_widgets.cpp
+        external/imgui/backends/imgui_impl_glfw.cpp
+        external/imgui/backends/imgui_impl_opengl3.cpp
+)
+target_include_directories(imgui PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui
+        ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui/backends
+        ${CMAKE_CURRENT_SOURCE_DIR}/external/glfw/include
+)
 
-# GLM header-only. Sadece include yolunu ekliyoruz.
+add_executable(Black_Engine
+        src/main.cpp
+        src/Application.cpp
+        src/scene.cpp
+        src/Shader.h
+        src/Shader.cpp
+        src/Scene.cpp
+        src/Scene.h
+        src/Engine/Component/BaseComponent.h
+        src/Engine/Entity/GameObject.h
+        src/Engine/Entity/GameObject.cpp
+        src/Engine/Component/BaseComponent.cpp
+        src/Engine/Component/TransformComponent.cpp
+)
+
 target_include_directories(Black_Engine PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/external/glm
 )
 
-# Windows için OpenGL fonksiyonları: opengl32 eklenir.
-# (Linux'ta -lGL, macOS'ta farklı ayarlar gerekir.)
 target_link_libraries(Black_Engine PRIVATE
         glad
+        imgui
         glfw
         opengl32
 )
+
+if (BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(external/googletest)
+    add_subdirectory(tests)
+endif()

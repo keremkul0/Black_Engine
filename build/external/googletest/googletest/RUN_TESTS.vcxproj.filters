@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Kerem\CLionProjects\Black_Engine\build\CMakeFiles\39e60c508e536fd12ef0639cc17ac4d7\RUN_TESTS_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{512F920A-DB98-34E1-89D8-BAC47B0B8677}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
