@@ -56,6 +56,12 @@ add_executable(Black_Engine
         src/Engine/Component/MeshRendererComponent.h
         src/Engine/Entity/GameObject.h
         src/Engine/Entity/GameObject.cpp
+        src/Core/Camera/Camera.h
+        src/Core/Camera/Camera.cpp
+        src/Core/InputManager/InputManager.h
+        src/Core/InputManager/InputManager.cpp
+        src/Core/WindowManager/WindowManager.h
+        src/Core/WindowManager/WindowManager.cpp
 )
 
 target_include_directories(Black_Engine PRIVATE

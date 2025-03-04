@@ -1,16 +1,34 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include "Core/WindowManager/WindowManager.h"
+#include "Core/Camera/Camera.h"
+#include "Engine/Scene/Scene.h"
+#include <memory>
 
-// Global kamera matrisleri (silinebilir obje değil, sabit kamera gibi davranacak)
-extern glm::mat4 gViewMatrix;
-extern glm::mat4 gProjectionMatrix;
-
-class Application
-{
+class Application {
 public:
-    Application() = default;
-    ~Application() = default;
+    Application();
+    ~Application();
 
     int Run();
+
+    // Getter for camera (used by callbacks)
+    Camera* GetCamera() { return m_Camera.get(); }
+
+private:
+    // Initialize the scene with objects
+    void SetupScene();
+
+    // Process input based on delta time
+    void ProcessInput(float deltaTime);
+
+    // Window and core systems
+    std::unique_ptr<WindowManager> m_WindowManager;
+    std::unique_ptr<Camera> m_Camera;
+
+    // Scene management
+    std::unique_ptr<Scene> m_Scene;
+
+    // Projection matrix
+    glm::mat4 m_ProjectionMatrix;
 };
