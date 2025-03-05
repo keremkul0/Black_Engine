@@ -4,20 +4,26 @@
 #include "Engine/Component/MeshRendererComponent.h"
 #include "Engine/Render/Primitives.h"
 #include "Engine/Render/Shader.h"
-
+#include "Core/ImGui/ImGuiLayer.h"
+#include "Editor/UI/EditorLayout.h" // Editor layout include ekleyin
 #include <glm/gtc/matrix_transform.hpp>
 #include <GLFW/glfw3.h>
-#include <iostream>
+#include "Editor/UI/Panels/HierarchyPanel.h"
+#include "Editor/UI/Panels/InspectorPanel.h"
+#include "Editor/UI/Panels/ScenePanel.h"
+#include "Editor/UI/Panels/GamePanel.h"
+
+// ImGui için ana pencere referansı - ImGuiLayer.cpp için gerekli
+GLFWwindow *g_Window = nullptr;
 
 // External references to maintain compatibility with existing code
 glm::mat4 gViewMatrix(1.0f);
 glm::mat4 gProjectionMatrix(1.0f);
 
 // Scroll callback function
-static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+static void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
     // Get the Application instance from window user pointer
-    Application* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
-    if (app) {
+    if (auto *app = static_cast<Application *>(glfwGetWindowUserPointer(window))) {
         app->GetCamera()->ProcessMouseScroll(yoffset);
     }
 }
@@ -25,12 +31,17 @@ static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) 
 Application::Application()
     : m_WindowManager(std::make_unique<WindowManager>()),
       m_Camera(std::make_unique<Camera>()),
-      m_Scene(std::make_unique<Scene>()) {
+      m_Scene(std::make_shared<Scene>()),
+      m_EditorLayout(nullptr) {
+    // EditorLayout başlangıçta null
 }
 
 Application::~Application() {
     // Input manager cleanup
     InputManager::Cleanup();
+
+    // ImGui temizleme işlemi
+    ImGuiLayer::Shutdown();
 }
 
 int Application::Run() {
@@ -39,33 +50,42 @@ int Application::Run() {
         return -1;
     }
 
+    // Global pencere referansını ayarla - ImGui için gerekli
+    g_Window = m_WindowManager->GetWindow();
+
     // Initialize input manager
     InputManager::Initialize(m_WindowManager->GetWindow());
 
     // Set up window user pointer for callbacks
-    GLFWwindow* window = m_WindowManager->GetWindow();
+    GLFWwindow *window = m_WindowManager->GetWindow();
     glfwSetWindowUserPointer(window, this);
     m_WindowManager->SetScrollCallback(scroll_callback);
 
     // Set up projection matrix
-    float aspectRatio = static_cast<float>(m_WindowManager->GetWidth()) /
-                        static_cast<float>(m_WindowManager->GetHeight());
+    const float aspectRatio = static_cast<float>(m_WindowManager->GetWidth()) /
+                              static_cast<float>(m_WindowManager->GetHeight());
     m_ProjectionMatrix = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 100.0f);
 
     // Update global projection matrix for compatibility
     gProjectionMatrix = m_ProjectionMatrix;
 
+    // ImGui başlatma
+    ImGuiLayer::Init();
+
+    // Editor Layout ayarları
+    SetupEditorUI();
+
     // Set up the scene
     SetupScene();
 
     // Main loop variables
-    float lastTime = static_cast<float>(glfwGetTime());
+    auto lastTime = static_cast<float>(glfwGetTime());
 
     // Main loop
     while (!m_WindowManager->ShouldClose()) {
         // Calculate delta time
-        float currentTime = static_cast<float>(glfwGetTime());
-        float deltaTime = currentTime - lastTime;
+        const auto currentTime = static_cast<float>(glfwGetTime());
+        const float deltaTime = currentTime - lastTime;
         lastTime = currentTime;
 
         // Process input
@@ -83,13 +103,36 @@ int Application::Run() {
         m_Scene->UpdateAll(deltaTime);
         m_Scene->DrawAll();
 
+        // ImGui frame başlat
+        ImGuiLayer::Begin();
+
+        // UI render işlemleri
+        if (m_EditorLayout) {
+            m_EditorLayout->RenderLayout();
+        }
+
+        // ImGui frame bitir - unutmayın!
+        ImGuiLayer::End();
+
         m_WindowManager->SwapBuffers();
     }
 
     return 0;
 }
 
-void Application::SetupScene() {
+void Application::SetupEditorUI() {
+    // Editor Layout oluşturma
+    m_EditorLayout = std::make_unique<EditorLayout>();
+
+    // Add panels
+    m_EditorLayout->AddPanel<HierarchyPanel>("Hierarchy", m_Scene);
+    m_EditorLayout->AddPanel<InspectorPanel>("Inspector");
+    auto scenePanel = m_EditorLayout->AddPanel<ScenePanel>("Scene");
+    scenePanel->SetScene(m_Scene);
+    m_EditorLayout->AddPanel<GamePanel>("Game");
+}
+
+void Application::SetupScene() const {
     // Add a cube
     const std::string shaderPath = "../src/shaders/";
     const auto defaultShader = std::make_shared<Shader>(
@@ -106,7 +149,8 @@ void Application::SetupScene() {
     renderer->shader = defaultShader;
 }
 
-void Application::ProcessInput(float deltaTime) {
+void Application::ProcessInput(const float deltaTime) const {
+    // (İçerik değişmedi)
     // Keyboard movement
     if (InputManager::IsKeyPressed(GLFW_KEY_W))
         m_Camera->ProcessKeyboard(0 /* FORWARD */, deltaTime);
@@ -151,18 +195,17 @@ void Application::ProcessInput(float deltaTime) {
         // Calculate the right and up vectors for proper screen-space panning
         glm::vec3 right = m_Camera->GetFront();
         right = glm::normalize(glm::cross(right, glm::vec3(0.0f, 1.0f, 0.0f)));
-        glm::vec3 up = glm::normalize(glm::cross(right, m_Camera->GetFront()));
+        const glm::vec3 up = glm::normalize(glm::cross(right, m_Camera->GetFront()));
 
         // Create pan vector based on mouse movement
-        glm::vec3 panDelta = -right * static_cast<float>(deltaX) * panSpeed +
-                              up * static_cast<float>(deltaY) * panSpeed;
+        const glm::vec3 panDelta = -right * static_cast<float>(deltaX) * panSpeed +
+                                   up * static_cast<float>(deltaY) * panSpeed;
 
         // Add a custom Pan method to directly move the camera
         m_Camera->Pan(panDelta);
 
         InputManager::SetCursor(InputManager::HAND_CURSOR);
-    }
-    else {
+    } else {
         InputManager::SetCursor(InputManager::DEFAULT_CURSOR);
     }
 }

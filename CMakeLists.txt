@@ -30,6 +30,7 @@ add_library(imgui STATIC
         external/imgui/backends/imgui_impl_glfw.cpp
         external/imgui/backends/imgui_impl_opengl3.cpp
 )
+
 target_include_directories(imgui PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui
         ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui/backends
@@ -62,10 +63,25 @@ add_executable(Black_Engine
         src/Core/InputManager/InputManager.cpp
         src/Core/WindowManager/WindowManager.h
         src/Core/WindowManager/WindowManager.cpp
+        src/Editor/UI/Panels/Panel.h
+        src/Editor/UI/Panels/Panel.cpp
+        src/Editor/UI/EditorLayout.h
+        src/Editor/UI/EditorLayout.cpp
+        src/Editor/UI/Panels/HierarchyPanel.h
+        src/Editor/UI/Panels/InspectorPanel.h
+        src/Editor/UI/Panels/ScenePanel.h
+        src/Editor/UI/Panels/GamePanel.h
+        src/Core/ImGui/ImGuiLayer.h
+        src/Core/ImGui/ImGuiLayer.cpp
+        src/Editor/UI/Panels/HierarchyPanel.cpp
+        src/Editor/UI/Panels/GamePanel.cpp
+        src/Editor/UI/Panels/ScenePanel.cpp
+        src/Editor/UI/Panels/InspectorPanel.cpp
 )
 
 target_include_directories(Black_Engine PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/external/glm
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
 target_link_libraries(Black_Engine PRIVATE
