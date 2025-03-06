@@ -1,5 +1,6 @@
 #pragma once
 #include "Panel.h"
+#include "Engine/Scene/Scene.h"
 #include <string>
 #include <glad/glad.h>
 #include "imgui.h"
@@ -7,16 +8,33 @@
 class GamePanel : public Panel {
 public:
     GamePanel(const std::string& title);
-    ~GamePanel(); // Add destructor declaration
+    ~GamePanel() override;
+
+    // Get framebuffer ID to render into
+    unsigned int GetFramebufferID() const { return m_FramebufferID; }
+
+    // Get current dimensions
+    ImVec2 GetViewportSize() const { return ImVec2(m_ViewportWidth, m_ViewportHeight); }
+
+    // Add scene reference
+    void SetScene(const std::shared_ptr<Scene>& scene);
 
 protected:
     void DrawContent() override;
+    bool OnInputEvent(const InputEvent& event) override;
 
 private:
     void SetupFramebuffer();
-    void ResizeFramebuffer(float width, float height);
+    void CleanupFramebuffer();
 
-    unsigned int m_FramebufferID = 0;  // Use unsigned int instead of GLuint
-    unsigned int m_TextureID = 0;      // Use unsigned int instead of GLuint
-    ImVec2 m_LastSize = ImVec2(0, 0);
+    unsigned int m_FramebufferID = 0;
+    unsigned int m_TextureID = 0;
+    unsigned int m_RenderbufferID = 0;
+
+    // Track viewport size without ImVec2
+    int m_ViewportWidth = 800;
+    int m_ViewportHeight = 600;
+
+    // Add scene reference
+    std::shared_ptr<Scene> m_Scene;
 };

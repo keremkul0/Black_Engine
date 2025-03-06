@@ -7,7 +7,7 @@
 class HierarchyPanel : public Panel {
 public:
     HierarchyPanel(const std::string& title, std::shared_ptr<Scene> scene);
-
+    bool OnInputEvent(const InputEvent& event) override;
 protected:
     void DrawContent() override;
     void DrawNode(const std::shared_ptr<GameObject>& object);

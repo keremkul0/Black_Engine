@@ -1,18 +1,37 @@
-// src/Editor/UI/Panels/Panel.h
 #pragma once
 #include <string>
+#include "Core/InputManager/InputEvent.h"
+#include "imgui.h"
 
 class Panel {
 public:
-    explicit Panel(const std::string& title) : m_Title(title), m_IsOpen(true), m_IsActive(true) {}
+    explicit Panel(const std::string &title) : m_Title(title), m_IsOpen(true), m_IsActive(true), m_IsFocused(false),
+                                               m_IsHovered(false) {
+    }
+
     virtual ~Panel() = default;
 
-    virtual void Render();  // No longer pure virtual
+    virtual void Render();
+
+    // Returns true if the event was handled
+    virtual bool OnInputEvent(const InputEvent &event) { return false; }
+
+    // Declaration only - implementation moved to .cpp
+    virtual bool IsActiveForInput() const;
+
+    bool IsFocused() const { return m_IsFocused; }
+    bool IsHovered() const { return m_IsHovered; }
 
     void SetActive(bool active);
+
     bool IsActive() const;
-    const std::string& GetTitle() const;
-    bool& IsOpen() { return m_IsOpen; }
+
+    virtual void OnUpdate(float deltaTime) {
+    }
+
+    bool &IsOpen() { return m_IsOpen; }
+
+    const std::string &GetTitle() const;
 
 protected:
     // This is what derived panels will implement
@@ -21,4 +40,6 @@ protected:
     std::string m_Title;
     bool m_IsOpen;
     bool m_IsActive;
+    bool m_IsFocused;
+    bool m_IsHovered;
 };

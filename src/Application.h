@@ -6,34 +6,26 @@
 #include "Editor/UI/EditorLayout.h"
 #include <memory>
 
+#include "Core/InputSystem/InputSystem.h"
+
 class Application {
 public:
     Application();
 
     ~Application();
 
+
+    bool Initialize();
     int Run();
 
-    // Getter for camera (used by callbacks)
-    Camera *GetCamera() { return m_Camera.get(); }
 
 private:
-    void SetupEditorUI();
-
-    // Initialize the scene with objects
-    void SetupScene() const;
-
-    // Process input based on delta time
-    void ProcessInput(float deltaTime) const;
-
-    // Add UI setup method
-    void SetupUI();
-
 
     // Window and core systems
     std::unique_ptr<WindowManager> m_WindowManager;
     std::unique_ptr<Camera> m_Camera;
     std::unique_ptr<EditorLayout> m_EditorLayout;
+    std::unique_ptr<InputSystem> m_InputSystem;
     // Scene management
     std::shared_ptr<Scene> m_Scene;
 

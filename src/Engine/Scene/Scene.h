@@ -16,9 +16,10 @@ public:
     Scene() = default;
     ~Scene() = default;
 
-    // Inline olarak tanımlarsak, 'GameObject' tanımını görmesi gerekir.
-    // Dolayısıyla "#include GameObject.h" bu dosyada olmalı.
-    const std::vector<std::shared_ptr<GameObject>>& GetGameObjects() const {
+    void LoadDefaultScene();
+    bool LoadSceneFromFile(const std::string& path);
+
+    [[nodiscard]] const std::vector<std::shared_ptr<GameObject>>& GetGameObjects() const {
         return m_GameObjects;
     }
 

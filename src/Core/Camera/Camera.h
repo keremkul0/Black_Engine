@@ -16,8 +16,10 @@ public:
 
     void SetPosition(const glm::vec3 &position);
 
-    void SetTarget(const glm::vec3 &target);
+    void LookAt(const glm::vec3 &target);
 
+    void SetTarget(const glm::vec3 &target);
+    void SetFront(const glm::vec3& front) { m_Front = front; }
     glm::mat4 GetViewMatrix() const;
 
     glm::vec3 GetPosition() const { return position; }
@@ -35,7 +37,7 @@ private:
     glm::vec3 up;
     glm::vec3 right;
     glm::vec3 worldUp;
-
+    glm::vec3 m_Front = glm::vec3(0.0f, 0.0f, -1.0f);
     // Euler angles
     float yaw;
     float pitch;

@@ -77,6 +77,9 @@ add_executable(Black_Engine
         src/Editor/UI/Panels/GamePanel.cpp
         src/Editor/UI/Panels/ScenePanel.cpp
         src/Editor/UI/Panels/InspectorPanel.cpp
+        src/Core/InputManager/InputEvent.h
+        src/Core/InputSystem/InputSystem.h
+        src/Core/InputSystem/InputSystem.cpp
 )
 
 target_include_directories(Black_Engine PRIVATE

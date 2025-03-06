@@ -1,30 +1,49 @@
-// src/Editor/UI/Panels/Panel.cpp
-    #include "Panel.h"
-    #include "imgui.h"
+#include "Panel.h"
+#include "imgui.h"
+#include <iostream>
 
-    void Panel::Render() {
-        if (!m_IsActive) return;
+void Panel::Render() {
+    if (!m_IsActive || !m_IsOpen)
+        return;
 
-        // ImGui panel flags
-        ImGuiWindowFlags windowFlags =
-            ImGuiWindowFlags_NoCollapse |
-            ImGuiWindowFlags_NoNavFocus;
+    // Begin window with docking enabled
+    ImGuiWindowFlags windowFlags = ImGuiWindowFlags_None;
 
-        // Begin panel window
-        if (ImGui::Begin(m_Title.c_str(), &m_IsOpen, windowFlags)) {
-            DrawContent();
-        }
-        ImGui::End();
+    // Start panel window
+    if (ImGui::Begin(m_Title.c_str(), &m_IsOpen, windowFlags)) {
+        // Update focus and hover states with more thorough checks
+        m_IsFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_ChildWindows |
+                                             ImGuiFocusedFlags_RootWindow);
+        m_IsHovered = ImGui::IsWindowHovered(ImGuiHoveredFlags_ChildWindows |
+                                             ImGuiHoveredFlags_AllowWhenBlockedByPopup |
+                                             ImGuiHoveredFlags_RootWindow);
+
+        // Draw panel-specific content
+        DrawContent();
     }
+    ImGui::End();
+}
 
-    void Panel::SetActive(bool active) {
-        m_IsActive = active;
+// Moved implementation from header to cpp file
+bool Panel::IsActiveForInput() const {
+    // For floating windows, check if any part of the window hierarchy is focused
+    if (m_IsOpen && m_IsFocused) {
+        return true;
     }
+    // Also check if mouse is hovering over this panel
+    return m_IsOpen && m_IsHovered;
+}
 
-    bool Panel::IsActive() const {
-        return m_IsActive;
-    }
+void Panel::SetActive(bool active) {
+    m_IsActive = active;
+}
 
-    const std::string& Panel::GetTitle() const {
-        return m_Title;
-    }
+bool Panel::IsActive() const {
+    return m_IsActive;
+}
+
+const std::string &Panel::GetTitle() const {
+    return m_Title;
+}
+
+

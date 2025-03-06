@@ -1,5 +1,8 @@
 
 #include "HierarchyPanel.h"
+
+#include <iostream>
+
 #include "imgui.h"
 
 HierarchyPanel::HierarchyPanel(const std::string& title, std::shared_ptr<Scene> scene)
@@ -76,4 +79,28 @@ void HierarchyPanel::DrawNode(const std::shared_ptr<GameObject>& object) {
         }
         ImGui::TreePop();
     }
+}
+
+bool HierarchyPanel::OnInputEvent(const InputEvent& event) {
+    // Log that we received an input event in HierarchyPanel
+    std::cout << "HierarchyPanel::OnInputEvent - Event Type: " << static_cast<int>(event.type) << std::endl;
+
+    // For now, just return false to indicate we didn't handle the event
+    // This will let it propagate to other systems
+    return false;
+
+    // If we want to handle certain events later, we can add specific handlers:
+    /*
+    switch (event.type) {
+        case InputEventType::KeyDown:
+            // Handle key press
+            break;
+
+        case InputEventType::MouseDown:
+            // Handle mouse click
+            break;
+
+        // Other event types
+    }
+    */
 }
