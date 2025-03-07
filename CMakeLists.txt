@@ -80,6 +80,7 @@ add_executable(Black_Engine
         src/Core/InputManager/InputEvent.h
         src/Core/InputSystem/InputSystem.h
         src/Core/InputSystem/InputSystem.cpp
+        src/Core/InputManager/IInputEventReceiver.h
 )
 
 target_include_directories(Black_Engine PRIVATE

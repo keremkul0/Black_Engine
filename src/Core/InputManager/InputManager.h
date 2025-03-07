@@ -1,6 +1,5 @@
 #pragma once
 #include <GLFW/glfw3.h>
-#include <memory>
 
 class InputManager {
 public:
@@ -22,7 +21,6 @@ public:
     static float GetScrollOffset();
     static void SetScrollOffset(float offset);
     static void ResetScrollOffset();
-    // Cursor management
     static void SetCursor(CursorType cursorType);
 
 private:

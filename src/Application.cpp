@@ -66,7 +66,7 @@ bool Application::Initialize() {
     m_EditorLayout->SetupDefaultLayout(m_Scene);
 
     // Register editor layout with input system
-    m_InputSystem->RegisterUIEventHandler(m_EditorLayout.get());
+    m_InputSystem->RegisterEventReceiver(m_EditorLayout.get());
 
     // Load default scene
     m_Scene->LoadDefaultScene();
@@ -74,7 +74,7 @@ bool Application::Initialize() {
     return true;
 }
 
-int Application::Run() {
+int Application::Run() const {
     // Main loop variables
     auto lastTime = static_cast<float>(glfwGetTime());
 

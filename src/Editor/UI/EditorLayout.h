@@ -5,12 +5,13 @@
 #include <string>
 #include "Panels/Panel.h"
 #include "Core/InputManager/InputEvent.h"
+#include "Core/InputManager/IInputEventReceiver.h"
 #include "Engine/Scene/Scene.h"
 
-class EditorLayout {
+class EditorLayout final : public IInputEventReceiver {
 public:
     EditorLayout();
-    ~EditorLayout() = default;
+    ~EditorLayout() override = default;
 
     void SetupDefaultLayout(const std::shared_ptr<Scene> &scene);
     static void SetupCustomLayout(const std::string &layoutName, const std::shared_ptr<Scene> &scene);
@@ -34,7 +35,7 @@ public:
     void EnableDockspace(bool enable);
 
     // Process input events for UI
-    void ProcessInput(const InputEvent &event);
+    void ProcessInput(const InputEvent& event) override;
 
     // Save/load layout configuration
     void SaveLayoutConfig(const std::string &filename);
@@ -61,10 +62,9 @@ std::shared_ptr<T> EditorLayout::AddPanel(const std::string &name, Args &&... ar
 
 template<typename T>
 std::shared_ptr<T> EditorLayout::GetPanel(const std::string &name) {
-    static_assert(std::is_base_of<Panel, T>::value, "T must derive from Panel");
+    static_assert(std::is_base_of_v<Panel, T>, "T must derive from Panel");
 
-    auto it = m_Panels.find(name);
-    if (it != m_Panels.end()) {
+    if (auto it = m_Panels.find(name); it != m_Panels.end()) {
         return std::dynamic_pointer_cast<T>(it->second);
     }
     return nullptr;

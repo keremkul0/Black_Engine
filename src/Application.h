@@ -16,7 +16,7 @@ public:
 
 
     bool Initialize();
-    int Run();
+    int Run() const;
 
 
 private:

@@ -17,7 +17,7 @@ bool InputManager::IsMouseButtonJustReleased(int button) {
 }
 
 float InputManager::GetScrollOffset() {
-    float offset = s_ScrollOffset;
+    const float offset = s_ScrollOffset;
     s_ScrollOffset = 0.0f;
     return offset;
 }
