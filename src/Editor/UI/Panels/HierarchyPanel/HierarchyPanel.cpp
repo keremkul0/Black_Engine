@@ -3,9 +3,10 @@
 #include <iostream>
 
 #include "imgui.h"
+#include "Editor/UI/Panels/Panel.h"
 
 HierarchyPanel::HierarchyPanel(const std::string& title, std::shared_ptr<Scene> scene)
-    : Panel(title), m_Scene(scene), m_SelectedObject(nullptr) {}
+    : ::Panel(title), m_Scene(scene), m_SelectedObject(nullptr) {}
 
 void HierarchyPanel::DrawContent() {
     ImGui::InputText("Search", m_SearchBuffer, IM_ARRAYSIZE(m_SearchBuffer));

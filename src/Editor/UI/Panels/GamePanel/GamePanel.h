@@ -1,9 +1,8 @@
 #pragma once
-#include "Panel.h"
+#include <memory>
+#include "../Panel.h"
 #include "Engine/Scene/Scene.h"
-#include <string>
-#include <glad/glad.h>
-#include "imgui.h"
+
 
 class GamePanel : public Panel {
 public:

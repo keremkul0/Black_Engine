@@ -1,5 +1,5 @@
 #pragma once
-#include "Panel.h"
+#include "../Panel.h"
 #include "Engine/Scene/Scene.h"
 #include "Engine/Entity/GameObject.h"
 #include <memory>

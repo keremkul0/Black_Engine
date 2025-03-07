@@ -1,10 +1,11 @@
 #include "EditorLayout.h"
 #include "imgui.h"
 #include "imgui_internal.h"
-#include "Panels/GamePanel.h"
-#include "Panels/HierarchyPanel.h"
-#include "Panels/InspectorPanel.h"
-#include "Panels/ScenePanel.h"
+#include "Editor/UI/Panels/GamePanel/GamePanel.h"
+#include "Editor/UI/Panels/HierarchyPanel/HierarchyPanel.h"
+#include "Editor/UI/Panels/InspectorPanel/InspectorPanel.h"
+#include "Editor/UI/Panels/ScenePanel/ScenePanel.h"
+
 
 EditorLayout::EditorLayout() : m_DockspaceID(0), m_FirstFrame(true), m_DockspaceInitialized(false) {
 }

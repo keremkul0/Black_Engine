@@ -3,7 +3,7 @@
 #include "Core/WindowManager/WindowManager.h"
 #include "Core/Camera/Camera.h"
 #include "Engine/Scene/Scene.h"
-#include "Editor/UI/EditorLayout.h"
+#include "Editor/UI/Layout/EditorLayout.h"
 #include <memory>
 
 #include "Core/InputSystem/InputSystem.h"

@@ -1,10 +1,11 @@
 #pragma once
 #include <imgui.h>
-#include "Panel.h"
 #include "Engine/Scene/Scene.h"
 #include "Core/Camera/Camera.h"
 #include <memory>
 #include <glm/vec3.hpp>
+
+#include "Editor/UI/Panels/Panel.h"
 
 class ScenePanel : public Panel {
 public:

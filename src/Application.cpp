@@ -2,7 +2,7 @@
 #include "Core/InputManager/InputManager.h"
 #include "Engine/Component/TransformComponent.h"
 #include "Core/ImGui/ImGuiLayer.h"
-#include "Editor/UI/EditorLayout.h"
+#include "Editor/UI//Layout/EditorLayout.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <GLFW/glfw3.h>
 

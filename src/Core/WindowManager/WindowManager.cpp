@@ -8,7 +8,7 @@ WindowManager::~WindowManager() {
     Shutdown();
 }
 
-bool WindowManager::Initialize(int width, int height, const std::string& title) {
+bool WindowManager::Initialize(const int width, const int height, const std::string& title) {
     // Initialize GLFW
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
@@ -53,7 +53,7 @@ bool WindowManager::ShouldClose() const {
     return glfwWindowShouldClose(m_Window);
 }
 
-void WindowManager::SwapBuffers() {
+void WindowManager::SwapBuffers() const {
     glfwSwapBuffers(m_Window);
 }
 
@@ -61,6 +61,6 @@ void WindowManager::PollEvents() {
     glfwPollEvents();
 }
 
-void WindowManager::SetScrollCallback(GLFWscrollfun callback) {
+void WindowManager::SetScrollCallback(const GLFWscrollfun callback) const {
     glfwSetScrollCallback(m_Window, callback);
 }

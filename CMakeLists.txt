@@ -65,18 +65,18 @@ add_executable(Black_Engine
         src/Core/WindowManager/WindowManager.cpp
         src/Editor/UI/Panels/Panel.h
         src/Editor/UI/Panels/Panel.cpp
-        src/Editor/UI/EditorLayout.h
-        src/Editor/UI/EditorLayout.cpp
-        src/Editor/UI/Panels/HierarchyPanel.h
-        src/Editor/UI/Panels/InspectorPanel.h
-        src/Editor/UI/Panels/ScenePanel.h
-        src/Editor/UI/Panels/GamePanel.h
+        src/Editor/UI/Layout/EditorLayout.h
+        src/Editor/UI/Layout/EditorLayout.cpp
+        src/Editor/UI/Panels/HierarchyPanel/HierarchyPanel.h
+        src/Editor/UI/Panels/InspectorPanel/InspectorPanel.h
+        src/Editor/UI/Panels/ScenePanel/ScenePanel.h
+        src/Editor/UI/Panels/GamePanel/GamePanel.h
         src/Core/ImGui/ImGuiLayer.h
         src/Core/ImGui/ImGuiLayer.cpp
-        src/Editor/UI/Panels/HierarchyPanel.cpp
-        src/Editor/UI/Panels/GamePanel.cpp
-        src/Editor/UI/Panels/ScenePanel.cpp
-        src/Editor/UI/Panels/InspectorPanel.cpp
+        src/Editor/UI/Panels/HierarchyPanel/HierarchyPanel.cpp
+        src/Editor/UI/Panels/GamePanel/GamePanel.cpp
+        src/Editor/UI/Panels/ScenePanel/ScenePanel.cpp
+        src/Editor/UI/Panels/InspectorPanel/InspectorPanel.cpp
         src/Core/InputManager/InputEvent.h
         src/Core/InputSystem/InputSystem.h
         src/Core/InputSystem/InputSystem.cpp
