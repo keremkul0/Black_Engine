@@ -1,111 +1,160 @@
-#include "Application.h"
-#include "Core/InputManager/InputManager.h"
-#include "Engine/Component/TransformComponent.h"
-#include "Core/ImGui/ImGuiLayer.h"
-#include "Editor/UI/EditorLayout.h"
-#include <glm/gtc/matrix_transform.hpp>
+#include <iostream>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <imgui.h>
+#include <backends/imgui_impl_glfw.h>
+#include <backends/imgui_impl_opengl3.h>
+#include <glm/glm.hpp>
+#include "Application.h"
 
-// ImGui için ana pencere referansı - ImGuiLayer.cpp için gerekli
-GLFWwindow *g_Window = nullptr;
+#include "Shader.h"
 
-// External references to maintain compatibility with existing code
-glm::mat4 gViewMatrix(1.0f);
-glm::mat4 gProjectionMatrix(1.0f);
-
-// Scroll callback function
-static void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
-    // Only store the scroll offset, don't directly control camera
-    InputManager::SetScrollOffset(static_cast<float>(yoffset));
+static void GLFWErrorCallback(int error, const char* description)
+{
+    std::cerr << "GLFW Error " << error << ": " << description << std::endl;
 }
 
 Application::Application()
-    : m_WindowManager(std::make_unique<WindowManager>()),
-      m_Camera(std::make_unique<Camera>()),
-      m_EditorLayout(nullptr),
-      m_InputSystem(std::make_unique<InputSystem>()),
-      m_Scene(std::make_shared<Scene>()) {
+{
 }
 
-Application::~Application() {
-    // Input manager cleanup
-    InputManager::Cleanup();
-
-    // ImGui temizleme işlemi
-    ImGuiLayer::Shutdown();
+Application::~Application()
+{
 }
 
-bool Application::Initialize() {
-    // Initialize window
-    if (!m_WindowManager->Initialize(1280, 720, "Black Engine")) {
+bool Application::Init()
+{
+    if (!glfwInit())
+    {
+        std::cerr << "Failed to init GLFW\n";
+        return false;
+    }
+    glfwSetErrorCallback(GLFWErrorCallback);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+    window = glfwCreateWindow(width, height, "Black Engine", nullptr, nullptr);
+    if (!window)
+    {
+        std::cerr << "Failed to create window\n";
+        glfwTerminate();
+        return false;
+    }
+    glfwMakeContextCurrent(window);
+
+    if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
+    {
+        std::cerr << "Failed to initialize GLAD\n";
         return false;
     }
 
-    // Global window reference for ImGui
-    g_Window = m_WindowManager->GetWindow();
+    glfwSwapInterval(1);
+    glEnable(GL_DEPTH_TEST);
 
-    // Initialize input manager
-    InputManager::Initialize(m_WindowManager->GetWindow());
-    m_InputSystem->Initialize(m_WindowManager->GetWindow());
-    // Set up window callbacks
-    GLFWwindow *window = m_WindowManager->GetWindow();
-    glfwSetWindowUserPointer(window, this);
-    m_WindowManager->SetScrollCallback(scroll_callback);
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 330");
 
-    // Set up projection matrix
-    const float aspectRatio = static_cast<float>(m_WindowManager->GetWidth()) /
-                              static_cast<float>(m_WindowManager->GetHeight());
-    m_ProjectionMatrix = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 100.0f);
-    gProjectionMatrix = m_ProjectionMatrix;
+    const char* vertexSrc = R"(
+        #version 330 core
+        layout (location = 0) in vec3 aPos;
+        layout (location = 1) in vec3 aColor;
+        out vec3 vColor;
+        uniform mat4 MVP;
+        void main()
+        {
+            vColor = aColor;
+            gl_Position = MVP * vec4(aPos, 1.0);
+        }
+        )";
 
-    // Initialize ImGui
-    ImGuiLayer::Init();
+            // Fragment shader (pseudo-code)
+    const char* fragmentSrc = R"(
+        #version 330 core
+        in vec3 vColor;
+        out vec4 FragColor;
+        void main()
+        {
+            FragColor = vec4(vColor, 1.0);
+        }
+        )";
 
-    // Initialize editor UI
-    m_EditorLayout = std::make_unique<EditorLayout>();
-    m_EditorLayout->SetupDefaultLayout(m_Scene);
-
-    // Register editor layout with input system
-    m_InputSystem->RegisterUIEventHandler(m_EditorLayout.get());
-
-    // Load default scene
-    m_Scene->LoadDefaultScene();
-    // Set up the scene
+    // 3) Shader nesnesi oluşturalım (Application class içinde üye değişken olabilir)
+    m_Shader = new Shader(vertexSrc, fragmentSrc);
+    // Scene tarafında küp geometrisini hazırlat
+    Scene::InitCubeGeometry();
     return true;
 }
 
-int Application::Run() {
-    // Main loop variables
-    auto lastTime = static_cast<float>(glfwGetTime());
+void Application::Run()
+{
+    while (!glfwWindowShouldClose(window))
+    {
+        glfwPollEvents();
+        ProcessInput();
 
-    // Main loop
-    while (!m_WindowManager->ShouldClose()) {
-        const auto currentTime = static_cast<float>(glfwGetTime());
-        const float deltaTime = currentTime - lastTime;
-        lastTime = currentTime;
-
-        // Process input
-        m_WindowManager->PollEvents();
-        m_InputSystem->ProcessInput(deltaTime);
-
-        // Clear screen
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.2f, 0.2f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Update and draw the scene
-        m_Scene->UpdateAll(deltaTime);
-        m_Scene->DrawAll();
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
 
-        // Render UI
-        ImGuiLayer::Begin();
-        if (m_EditorLayout) {
-            m_EditorLayout->UpdateAllPanels(deltaTime); // Add this line
-            m_EditorLayout->RenderLayout();
-        }
-        ImGuiLayer::End();
+        RenderFrame();
+        RenderGUI();
 
-        m_WindowManager->SwapBuffers();
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        glfwSwapBuffers(window);
     }
+    Shutdown();
+}
 
-    return 0;
+void Application::ProcessInput()
+{
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    {
+        glfwSetWindowShouldClose(window, true);
+    }
+    // Additional input handling, e.g. camera movement or object interaction
+}
+
+void Application::RenderFrame()
+{
+    // Update cube rotations based on current time
+    float currentTime = glfwGetTime();
+    scene.UpdateCubeRotations(currentTime);
+
+    // Use the shader program
+    m_Shader->use();
+
+    // Draw the rotating cubes
+    scene.DrawAllCubes(m_Shader->getID(), width, height);
+}
+void Application::Shutdown()
+{
+    delete m_Shader;
+    m_Shader = nullptr;
+    Scene::CleanUpCubeGeometry();
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+    glfwDestroyWindow(window);
+    glfwTerminate();
+}
+
+void Application::RenderGUI()
+{
+    ImGui::Begin("Scene Controls");
+    if (ImGui::Button("Add Cube"))
+    {
+        scene.AddCube(glm::vec3(0.0f, 0.0f, 0.0f));
+    }
+    ImGui::Text("Cube Count: %d", (int)scene.GetCubes().size());
+    ImGui::End();
 }

@@ -1,34 +1,34 @@
 #pragma once
+#include <GLFW/glfw3.h>
+#include "Scene.h"
+#include "Shader.h"
 
-#include "Core/WindowManager/WindowManager.h"
-#include "Core/Camera/Camera.h"
-#include "Engine/Scene/Scene.h"
-#include "Editor/UI/EditorLayout.h"
-#include <memory>
+struct GLFWwindow;
 
-#include "Core/InputSystem/InputSystem.h"
-
-class Application {
+class Application
+{
 public:
     Application();
-
     ~Application();
 
-
-    bool Initialize();
-    int Run();
-
+    bool Init();
+    void Run();
+    void Shutdown();
 
 private:
+    // Pencere göstergesi
+    GLFWwindow* window = nullptr;
 
-    // Window and core systems
-    std::unique_ptr<WindowManager> m_WindowManager;
-    std::unique_ptr<Camera> m_Camera;
-    std::unique_ptr<EditorLayout> m_EditorLayout;
-    std::unique_ptr<InputSystem> m_InputSystem;
-    // Scene management
-    std::shared_ptr<Scene> m_Scene;
+    // Sahne
+    Scene scene;
 
-    // Projection matrix
-    glm::mat4 m_ProjectionMatrix{};
+    Shader* m_Shader = nullptr;
+    // Ekran boyutu
+    int width = 1280;
+    int height = 720;
+
+    // private fonksiyonlar
+    void ProcessInput();
+    void RenderFrame();
+    void RenderGUI();
 };

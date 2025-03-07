@@ -30,7 +30,6 @@ add_library(imgui STATIC
         external/imgui/backends/imgui_impl_glfw.cpp
         external/imgui/backends/imgui_impl_opengl3.cpp
 )
-
 target_include_directories(imgui PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui
         ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui/backends
@@ -40,51 +39,20 @@ target_include_directories(imgui PUBLIC
 add_executable(Black_Engine
         src/main.cpp
         src/Application.cpp
-        src/Application.h
-        src/Engine/Render/Shader.h
-        src/Engine/Render/Shader.cpp
-        src/Engine/Render/Mesh.cpp
-        src/Engine/Render/Mesh.h
-        src/Engine/Render/Primitives.cpp
-        src/Engine/Render/Primitives.h
-        src/Engine/Scene/Scene.cpp
-        src/Engine/Scene/Scene.h
+        src/scene.cpp
+        src/Shader.h
+        src/Shader.cpp
+        src/Scene.cpp
+        src/Scene.h
         src/Engine/Component/BaseComponent.h
-        src/Engine/Component/BaseComponent.cpp
-        src/Engine/Component/TransformComponent.cpp
-        src/Engine/Component/TransformComponent.h
-        src/Engine/Component/MeshRendererComponent.cpp
-        src/Engine/Component/MeshRendererComponent.h
         src/Engine/Entity/GameObject.h
         src/Engine/Entity/GameObject.cpp
-        src/Core/Camera/Camera.h
-        src/Core/Camera/Camera.cpp
-        src/Core/InputManager/InputManager.h
-        src/Core/InputManager/InputManager.cpp
-        src/Core/WindowManager/WindowManager.h
-        src/Core/WindowManager/WindowManager.cpp
-        src/Editor/UI/Panels/Panel.h
-        src/Editor/UI/Panels/Panel.cpp
-        src/Editor/UI/EditorLayout.h
-        src/Editor/UI/EditorLayout.cpp
-        src/Editor/UI/Panels/HierarchyPanel.h
-        src/Editor/UI/Panels/InspectorPanel.h
-        src/Editor/UI/Panels/ScenePanel.h
-        src/Editor/UI/Panels/GamePanel.h
-        src/Core/ImGui/ImGuiLayer.h
-        src/Core/ImGui/ImGuiLayer.cpp
-        src/Editor/UI/Panels/HierarchyPanel.cpp
-        src/Editor/UI/Panels/GamePanel.cpp
-        src/Editor/UI/Panels/ScenePanel.cpp
-        src/Editor/UI/Panels/InspectorPanel.cpp
-        src/Core/InputManager/InputEvent.h
-        src/Core/InputSystem/InputSystem.h
-        src/Core/InputSystem/InputSystem.cpp
+        src/Engine/Component/BaseComponent.cpp
+        src/Engine/Component/TransformComponent.cpp
 )
 
 target_include_directories(Black_Engine PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/external/glm
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
 target_link_libraries(Black_Engine PRIVATE
