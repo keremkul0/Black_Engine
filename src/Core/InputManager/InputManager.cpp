@@ -8,7 +8,6 @@ float InputManager::s_ScrollOffset = 0.0f;
 bool InputManager::s_MouseButtonsCurrentState[3] = {false, false, false};
 bool InputManager::s_MouseButtonsPreviousState[3] = {false, false, false};
 
-// Implement the new methods
 bool InputManager::IsMouseButtonJustPressed(int button) {
     return s_MouseButtonsCurrentState[button] && !s_MouseButtonsPreviousState[button];
 }
@@ -19,7 +18,7 @@ bool InputManager::IsMouseButtonJustReleased(int button) {
 
 float InputManager::GetScrollOffset() {
     float offset = s_ScrollOffset;
-    s_ScrollOffset = 0.0f; // Reset after reading
+    s_ScrollOffset = 0.0f;
     return offset;
 }
 
@@ -41,7 +40,6 @@ void InputManager::Cleanup() {
 }
 
 void InputManager::Update() {
-    // Store previous frame button states
     for (int i = 0; i < 3; i++) {
         s_MouseButtonsPreviousState[i] = s_MouseButtonsCurrentState[i];
         s_MouseButtonsCurrentState[i] = glfwGetMouseButton(s_Window, i) == GLFW_PRESS;
@@ -85,3 +83,5 @@ void InputManager::DestroyCursors() {
     glfwDestroyCursor(s_EyeCursor);
     glfwDestroyCursor(s_DefaultCursor);
 }
+
+//TODO: Implement additional cursor types if needed

@@ -1,7 +1,6 @@
 #include "Camera.h"
 #include <GLFW/glfw3.h>  // For key definitions
 
-// Directions
 enum CameraMovement {
     FORWARD,
     BACKWARD,
@@ -81,11 +80,9 @@ void Camera::Pan(const glm::vec3 &offset) {
 }
 
 void Camera::SetPosition(const glm::vec3 &position) {
-    // Set the camera position
     this->position = position;
 }
 
 void Camera::SetTarget(const glm::vec3 &target) {
-    // Set where the camera is looking at
     this->front = glm::normalize(target - this->position);
 }

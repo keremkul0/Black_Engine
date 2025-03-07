@@ -192,9 +192,9 @@ void EditorLayout::EnableDockspace(bool enable) {
 }
 
 void EditorLayout::SaveLayoutConfig(const std::string &filename) {
-    //TODO Implementation pending
+    //TODO: Implement saving layout configuration
 }
 
 void EditorLayout::LoadLayoutConfig(const std::string &filename) {
-    //TODO Implementation pending
+    //TODO: Implement loading layout configuration
 }

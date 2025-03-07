@@ -6,7 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <GLFW/glfw3.h>
 
-// ImGui için ana pencere referansı - ImGuiLayer.cpp için gerekli
+// Main window reference for ImGui - required for ImGuiLayer.cpp
 GLFWwindow *g_Window = nullptr;
 
 // External references to maintain compatibility with existing code
@@ -31,7 +31,7 @@ Application::~Application() {
     // Input manager cleanup
     InputManager::Cleanup();
 
-    // ImGui temizleme işlemi
+    // ImGui cleanup
     ImGuiLayer::Shutdown();
 }
 

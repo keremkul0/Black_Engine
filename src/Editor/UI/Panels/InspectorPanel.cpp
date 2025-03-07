@@ -1,4 +1,3 @@
-
 #include "InspectorPanel.h"
 #include "Engine/Component/BaseComponent.h"
 #include "Engine/Component/TransformComponent.h"
@@ -11,7 +10,6 @@ InspectorPanel::InspectorPanel()
 
 InspectorPanel::InspectorPanel(const std::string& title)
     : Panel(title), m_SelectedObject(nullptr) {}
-
 
 void InspectorPanel::SetSelectedObject(std::shared_ptr<GameObject> object) {
     m_SelectedObject = object;
@@ -101,3 +99,5 @@ void InspectorPanel::DrawComponentUI(BaseComponent* component) {
         ImGui::Text("Component properties will appear here");
     }
 }
+
+//TODO: Implement additional component types if needed
