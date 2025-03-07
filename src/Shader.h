@@ -1,11 +1,3 @@
-//
-// Created by Kerem on 3.03.2025.
-//
-
-#ifndef SHADER_H
-#define SHADER_H
-
-#endif //SHADER_H
 #pragma once
 
 #include <string>

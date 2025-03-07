@@ -1,6 +1,3 @@
-//
-// Created by Kerem on 3.03.2025.
-//
 #include "Scene.h"
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>

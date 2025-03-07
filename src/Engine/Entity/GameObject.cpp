@@ -1,7 +1,3 @@
-//
-// Created by Kerem on 3.03.2025.
-//
-// GameObject.cpp
 #include "GameObject.h"
 #include "../Component/BaseComponent.h" // tam tanım
 

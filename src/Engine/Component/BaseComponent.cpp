@@ -1,3 +1,4 @@
-//
-// Created by Kerem on 3.03.2025.
-//
+#include "BaseComponent.h"
+
+// BaseComponent class implementation
+// (Currently, there is no additional implementation needed for BaseComponent)
