@@ -1,15 +1,15 @@
-// GameObject.h
+
 #ifndef GAME_OBJECT_H
 #define GAME_OBJECT_H
 
 #include <vector>
-#include <memory>
+#include <memory> // This includes std::enable_shared_from_this
 #include <string>
 #include <algorithm>
 
-class BaseComponent; // sadece işaretçi tutmak için forward declare
+class BaseComponent; // forward declaration
 
-class GameObject
+class GameObject : public std::enable_shared_from_this<GameObject>
 {
 public:
     std::string name;
@@ -17,10 +17,13 @@ public:
 
     std::vector<std::shared_ptr<BaseComponent>> components;
 
+    // Use the public name property consistently
+    const std::string& GetName() const { return name; }
+
     GameObject() = default;
     virtual ~GameObject() = default;
 
-    // Template metodlar da mecburen header'da kalacak
+    // Template methods
     template<typename T, typename... TArgs>
     std::shared_ptr<T> AddComponent(TArgs&&... args) {
         auto component = std::make_shared<T>(std::forward<TArgs>(args)...);
@@ -54,10 +57,19 @@ public:
         return false;
     }
 
-    // Sadece imzalar (signature):
+    void AddChild(std::shared_ptr<GameObject> child);
+    void RemoveChild(std::shared_ptr<GameObject> child);
+    const std::vector<std::shared_ptr<GameObject>>& GetChildren() const { return m_Children; }
+    std::shared_ptr<GameObject> GetParent() const { return m_Parent.lock(); }
+
     virtual void Update(float deltaTime);
     virtual void Draw();
     virtual void OnInspectorGUI();
+
+private:
+    // Removing m_Name as it's redundant with public name field
+    std::vector<std::shared_ptr<GameObject>> m_Children;
+    std::weak_ptr<GameObject> m_Parent; // Weak reference to avoid circular dependencies
 };
 
 #endif
