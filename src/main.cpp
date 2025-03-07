@@ -1,11 +1,11 @@
 #include "Application.h"
 
-int main()
-{
+int main() {
     Application app;
-    if (!app.Init())
-        return -1;
 
-    app.Run();
-    return 0;
+    if (!app.Initialize()) {
+        return -1;
+    }
+
+    return app.Run();
 }

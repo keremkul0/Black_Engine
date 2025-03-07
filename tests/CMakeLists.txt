@@ -9,8 +9,8 @@ add_executable(unit_tests
 # We need to create a library from your engine code to link against
 add_library(engine_lib STATIC
         ${CMAKE_CURRENT_SOURCE_DIR}/../src/Engine/Entity/GameObject.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../src/Engine/Component/BaseComponent.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../src/Engine/Component/TransformComponent.cpp
+        ../src/Engine/Component/BaseComponent.cpp
+        ../src/Engine/Component/TransformComponent.cpp
 )
 
 target_include_directories(engine_lib PUBLIC

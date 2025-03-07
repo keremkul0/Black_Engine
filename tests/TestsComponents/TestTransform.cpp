@@ -14,8 +14,6 @@ TEST(TransformTest, DefaultValues)
 
 TEST(TransformTest, UpdateMovesPosition)
 {
-    // Belki Update'te position değiştiriyoruz
-    // Bu tür bir test mantığı ekleyebilirsiniz
     GameObject obj;
     auto transform = obj.AddComponent<TransformComponent>();
 
