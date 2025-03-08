@@ -3,7 +3,7 @@
 #include <memory>
 #include <unordered_map>
 #include <string>
-#include "Editor/UI/Panels//Panel.h"
+#include "Editor/UI/Panels/Panel.h"
 #include "Core/InputManager/InputEvent.h"
 #include "Core/InputManager/IInputEventReceiver.h"
 #include "Engine/Scene/Scene.h"

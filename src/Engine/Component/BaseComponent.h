@@ -24,6 +24,9 @@ public:
     // Her karede çağrılabilecek çizim metodu (şimdilik boş bırakabiliriz)
     virtual void Draw() {}
 
+    virtual void OnEnable() {}
+    virtual void OnDisable() {}
+    [[nodiscard]] virtual const char* GetTypeName() const { return "BaseComponent"; }
     // İleride Inspector'da göstereceğimiz parametreler
     virtual void OnInspectorGUI() {}
 };

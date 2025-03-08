@@ -96,7 +96,7 @@ void ScenePanel::DrawContent() {
 
     // Update the framebuffer size if needed
     static int lastWidth = 0, lastHeight = 0;
-    if (lastWidth != (int) contentRegionAvail.x || lastHeight != (int) contentRegionAvail.y) {
+    if (lastWidth != static_cast<int>(contentRegionAvail.x) || lastHeight != static_cast<int>(contentRegionAvail.y)) {
         ResizeFramebuffer((int) contentRegionAvail.x, (int) contentRegionAvail.y);
         lastWidth = (int) contentRegionAvail.x;
         lastHeight = (int) contentRegionAvail.y;
