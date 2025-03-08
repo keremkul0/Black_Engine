@@ -7,14 +7,14 @@
 #include "../Render/Shader.h"  // varsa
 #include <memory>
 
-class MeshRendererComponent : public BaseComponent
+class MeshRendererComponent final : public BaseComponent
 {
 public:
     std::shared_ptr<Mesh> mesh;
     std::shared_ptr<Shader> shader;  // Shader / Material vb.
 
     MeshRendererComponent() = default;
-    virtual ~MeshRendererComponent() = default;
+    ~MeshRendererComponent() override = default;
 
     void Draw() override;
 };

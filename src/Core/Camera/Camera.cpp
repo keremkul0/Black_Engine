@@ -1,7 +1,5 @@
 #include "Camera.h"
-#include <GLFW/glfw3.h>  // For key definitions
 
-// Directions
 enum CameraMovement {
     FORWARD,
     BACKWARD,
@@ -26,8 +24,8 @@ void Camera::LookAt(const glm::vec3 &target) {
     UpdateCameraVectors();
 }
 
-void Camera::ProcessKeyboard(int direction, float deltaTime) {
-    float velocity = MovementSpeed * deltaTime;
+void Camera::ProcessKeyboard(const int direction, const float deltaTime) {
+    const float velocity = MovementSpeed * deltaTime;
 
     switch (direction) {
         case FORWARD:
@@ -42,11 +40,12 @@ void Camera::ProcessKeyboard(int direction, float deltaTime) {
         case RIGHT:
             position += right * velocity;
             break;
+        default: ;
     }
 }
 
 void Camera::ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch) {
-    float sensitivity = 0.1f;
+    constexpr float sensitivity = 0.1f;
     xoffset *= sensitivity;
     yoffset *= sensitivity;
 
@@ -81,11 +80,9 @@ void Camera::Pan(const glm::vec3 &offset) {
 }
 
 void Camera::SetPosition(const glm::vec3 &position) {
-    // Set the camera position
     this->position = position;
 }
 
 void Camera::SetTarget(const glm::vec3 &target) {
-    // Set where the camera is looking at
     this->front = glm::normalize(target - this->position);
 }

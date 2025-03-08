@@ -1,9 +1,13 @@
 #include "GamePanel.h"
     #include <iostream>
-    #include <glad/glad.h>
-    #include "imgui.h"
+#include <memory>
+#include <glad/glad.h>
+#include <glm/fwd.hpp>
 
-    extern glm::mat4 gViewMatrix;
+#include "imgui.h"
+#include "Engine/Scene/Scene.h"
+
+extern glm::mat4 gViewMatrix;
 
     GamePanel::GamePanel(const std::string &title)
         : Panel(title) {

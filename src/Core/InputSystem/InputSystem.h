@@ -1,32 +1,33 @@
 #pragma once
-#include "Editor/UI/EditorLayout.h"
+#include "Core/InputManager/IInputEventReceiver.h"
 #include <GLFW/glfw3.h>
+#include <vector>
 
 class InputSystem {
 public:
     InputSystem();
-
     ~InputSystem() = default;
 
-    // Initialize the input system
+    // Girdi sistemini başlatır
     void Initialize(GLFWwindow *window);
 
-    // Register input event listeners
-    void RegisterUIEventHandler(EditorLayout *layout);
+    // Olay alıcıları kaydetme
+    void RegisterEventReceiver(IInputEventReceiver *receiver);
+    void UnregisterEventReceiver(IInputEventReceiver *receiver);
 
-    // Process input events for current frame
+    // Mevcut kare için girdi olaylarını işler
     void ProcessInput(float deltaTime);
 
-    // Helper to check if ImGui wants to capture input
-    bool ShouldImGuiProcessEvent(const InputEvent &event) const;
+    // ImGui'nin girdiyi yakalamak isteyip istemediğini kontrol etme yardımcısı
+    [[nodiscard]] static bool ShouldImGuiProcessEvent(const InputEvent &event);
 
-    // Scroll callback to be set as GLFW callback
+    // GLFW geri çağrısı olarak ayarlanacak kaydırma geri çağrısı
     static void ScrollCallback(GLFWwindow *window, double xoffset, double yoffset);
 
 private:
-    // Stores the last known mouse position
+    // Son bilinen fare konumunu saklar
     glm::vec2 m_LastMousePos{0.0f, 0.0f};
 
-    // UI layout to receive input events
-    EditorLayout *m_EditorLayout = nullptr;
+    // Girdi olaylarını alacak alıcılar
+    std::vector<IInputEventReceiver*> m_EventReceivers;
 };

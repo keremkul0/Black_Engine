@@ -14,7 +14,7 @@ void TransformComponent::Update(float deltaTime)
 
 glm::mat4 TransformComponent::GetModelMatrix() const
 {
-    glm::mat4 model = glm::mat4(1.0f);
+    auto model = glm::mat4(1.0f);
 
     // position
     model = glm::translate(model, position);

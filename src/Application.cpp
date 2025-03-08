@@ -2,11 +2,11 @@
 #include "Core/InputManager/InputManager.h"
 #include "Engine/Component/TransformComponent.h"
 #include "Core/ImGui/ImGuiLayer.h"
-#include "Editor/UI/EditorLayout.h"
+#include "Editor/UI//Layout/EditorLayout.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <GLFW/glfw3.h>
 
-// ImGui için ana pencere referansı - ImGuiLayer.cpp için gerekli
+// Main window reference for ImGui - required for ImGuiLayer.cpp
 GLFWwindow *g_Window = nullptr;
 
 // External references to maintain compatibility with existing code
@@ -31,7 +31,7 @@ Application::~Application() {
     // Input manager cleanup
     InputManager::Cleanup();
 
-    // ImGui temizleme işlemi
+    // ImGui cleanup
     ImGuiLayer::Shutdown();
 }
 
@@ -66,7 +66,7 @@ bool Application::Initialize() {
     m_EditorLayout->SetupDefaultLayout(m_Scene);
 
     // Register editor layout with input system
-    m_InputSystem->RegisterUIEventHandler(m_EditorLayout.get());
+    m_InputSystem->RegisterEventReceiver(m_EditorLayout.get());
 
     // Load default scene
     m_Scene->LoadDefaultScene();
@@ -74,7 +74,7 @@ bool Application::Initialize() {
     return true;
 }
 
-int Application::Run() {
+int Application::Run() const {
     // Main loop variables
     auto lastTime = static_cast<float>(glfwGetTime());
 

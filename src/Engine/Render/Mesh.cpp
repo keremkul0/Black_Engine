@@ -39,19 +39,19 @@ void Mesh::Initialize(const std::vector<Vertex>& vertices,
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
                           sizeof(Vertex),
-                          (void*)0);
+                          static_cast<void *>(nullptr));
 
     // Normal (layout=1)
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE,
                           sizeof(Vertex),
-                          (void*)offsetof(Vertex, normal));
+                          reinterpret_cast<void *>(offsetof(Vertex, normal)));
 
     // TexCoords (layout=2)
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE,
                           sizeof(Vertex),
-                          (void*)offsetof(Vertex, texCoords));
+                          reinterpret_cast<void *>(offsetof(Vertex, texCoords)));
 
     glBindVertexArray(0);
 }
@@ -59,6 +59,6 @@ void Mesh::Initialize(const std::vector<Vertex>& vertices,
 void Mesh::Draw() const
 {
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
     glBindVertexArray(0);
 }

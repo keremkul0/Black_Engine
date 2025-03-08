@@ -1,8 +1,9 @@
 // src/Editor/UI/InspectorPanel.h
 #pragma once
-#include "Panel.h"
-#include "../../../Engine/Entity/GameObject.h"
+#include "../Panel.h"
 #include <memory>
+
+#include "Engine/Entity/GameObject.h"
 
 class InspectorPanel : public Panel {
 public:

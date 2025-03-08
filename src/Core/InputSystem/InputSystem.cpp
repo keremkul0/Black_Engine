@@ -1,33 +1,45 @@
 #include "InputSystem.h"
+
+#include <algorithm>
+
 #include "imgui.h"
 #include "Core/InputManager/InputManager.h"
 
-InputSystem::InputSystem() : m_LastMousePos(0.0f, 0.0f), m_EditorLayout(nullptr) {}
+InputSystem::InputSystem() : m_LastMousePos(0.0f, 0.0f) {
+}
 
-void InputSystem::Initialize(GLFWwindow* window) {
-    // Initialize the input manager
+void InputSystem::Initialize(GLFWwindow *window) {
+    // Girdi yöneticisini başlat
     InputManager::Initialize(window);
 
-    // Set up window callbacks
+    // Pencere geri çağrılarını ayarla
     glfwSetWindowUserPointer(window, this);
     glfwSetScrollCallback(window, ScrollCallback);
 
-    // Initialize last mouse position
+    // Son fare konumunu başlat
     double mouseX, mouseY;
     InputManager::GetMousePosition(mouseX, mouseY);
     m_LastMousePos = glm::vec2(static_cast<float>(mouseX), static_cast<float>(mouseY));
 }
 
-void InputSystem::RegisterUIEventHandler(EditorLayout* layout) {
-    m_EditorLayout = layout;
+void InputSystem::RegisterEventReceiver(IInputEventReceiver *receiver) {
+    if (receiver) {
+        m_EventReceivers.push_back(receiver);
+    }
 }
 
-void InputSystem::ScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
+void InputSystem::UnregisterEventReceiver(IInputEventReceiver *receiver) {
+    if (const auto it = std::ranges::find(m_EventReceivers, receiver); it != m_EventReceivers.end()) {
+        m_EventReceivers.erase(it);
+    }
+}
+
+void InputSystem::ScrollCallback(GLFWwindow *window, double xoffset, double yoffset) {
     InputManager::SetScrollOffset(static_cast<float>(yoffset));
 }
 
-bool InputSystem::ShouldImGuiProcessEvent(const InputEvent& event) const {
-    ImGuiIO& io = ImGui::GetIO();
+bool InputSystem::ShouldImGuiProcessEvent(const InputEvent &event) {
+    const ImGuiIO &io = ImGui::GetIO();
 
     // For mouse events, check if ImGui wants the mouse
     if (event.type == InputEventType::MouseDown ||
@@ -48,67 +60,100 @@ bool InputSystem::ShouldImGuiProcessEvent(const InputEvent& event) const {
 }
 
 void InputSystem::ProcessInput(float deltaTime) {
-    // Update input manager state
+    // Girdi yöneticisi durumunu güncelle
     InputManager::Update();
 
-    // No UI layout registered to receive events
-    if (!m_EditorLayout) return;
+    // Kayıtlı alıcı yoksa olayları işleme
+    if (m_EventReceivers.empty()) return;
 
-    // Get mouse position
+    // Fare konumunu al
     double mouseX, mouseY;
     InputManager::GetMousePosition(mouseX, mouseY);
     glm::vec2 currentMousePos(static_cast<float>(mouseX), static_cast<float>(mouseY));
     glm::vec2 mouseDelta = currentMousePos - m_LastMousePos;
 
-    // Mouse move event - always create it
+    // Fare hareketi olayını işle
     if (mouseDelta.x != 0.0f || mouseDelta.y != 0.0f) {
         InputEvent mouseMoveEvent;
         mouseMoveEvent.type = InputEventType::MouseMove;
         mouseMoveEvent.mousePos = currentMousePos;
         mouseMoveEvent.mouseDelta = mouseDelta;
 
-        // Always pass mouse move events to the layout - it will determine which panel receives it
-        m_EditorLayout->ProcessInput(mouseMoveEvent);
+        // Tüm alıcılara gönder
+        for (auto receiver: m_EventReceivers) {
+            if (!mouseMoveEvent.consumed) {
+                receiver->ProcessInput(mouseMoveEvent);
+            }
+        }
     }
 
-    // Mouse scroll event
-    float scrollOffset = InputManager::GetScrollOffset();
-    if (scrollOffset != 0.0f) {
-        InputEvent scrollEvent;
-        scrollEvent.type = InputEventType::MouseScroll;
-        scrollEvent.scrollDelta = scrollOffset;
-        m_EditorLayout->ProcessInput(scrollEvent);
-    }
-
-    // Mouse button events
-    for (int button = 0; button < 3; button++) {
+    // Fare düğmesi basılma olaylarını işle
+    for (int button = 0; button < 3; ++button) {
         if (InputManager::IsMouseButtonJustPressed(button)) {
             InputEvent mouseDownEvent;
             mouseDownEvent.type = InputEventType::MouseDown;
             mouseDownEvent.button = button;
             mouseDownEvent.mousePos = currentMousePos;
-            m_EditorLayout->ProcessInput(mouseDownEvent);
+
+            for (auto receiver: m_EventReceivers) {
+                if (!mouseDownEvent.consumed) {
+                    receiver->ProcessInput(mouseDownEvent);
+                }
+            }
         }
+
         if (InputManager::IsMouseButtonJustReleased(button)) {
             InputEvent mouseUpEvent;
             mouseUpEvent.type = InputEventType::MouseUp;
             mouseUpEvent.button = button;
             mouseUpEvent.mousePos = currentMousePos;
-            m_EditorLayout->ProcessInput(mouseUpEvent);
+
+            for (auto receiver: m_EventReceivers) {
+                if (!mouseUpEvent.consumed) {
+                    receiver->ProcessInput(mouseUpEvent);
+                }
+            }
         }
     }
 
-    // Keyboard events - create individual events for each key
-    static const int cameraKeys[] = {GLFW_KEY_W, GLFW_KEY_A, GLFW_KEY_S, GLFW_KEY_D, GLFW_KEY_Q, GLFW_KEY_E, GLFW_KEY_R};
-    for (int key : cameraKeys) {
-        if (InputManager::IsKeyPressed(key)) {
+    // Fare kaydırma olayını işle
+    float scrollOffset = InputManager::GetScrollOffset();
+    if (scrollOffset != 0.0f) {
+        InputEvent scrollEvent;
+        scrollEvent.type = InputEventType::MouseScroll;
+        scrollEvent.scrollDelta = scrollOffset;
+        scrollEvent.mousePos = currentMousePos;
+
+        for (auto receiver: m_EventReceivers) {
+            if (!scrollEvent.consumed) {
+                receiver->ProcessInput(scrollEvent);
+            }
+        }
+    }
+
+    // Klavye olaylarını işle
+    // Genel olarak, tüm tuşları kontrol etmek için bir döngü kullanabiliriz
+    // Not: Bu, performansı etkileyebilir; optimizasyon gerekebilir
+    for (int key = GLFW_KEY_SPACE; key <= GLFW_KEY_LAST; ++key) {
+        bool isPressed = InputManager::IsKeyPressed(key);
+
+        // Tuş basma ve basılı tutma olaylarını ayırt etmek için
+        // daha fazla durum bilgisine ihtiyaç olabilir
+        // Şu anda sadece basılı tuşlar için olay oluşturuyoruz
+
+        if (isPressed) {
             InputEvent keyEvent;
-            keyEvent.type = InputEventType::KeyHeld;
+            keyEvent.type = InputEventType::KeyHeld; // Veya KeyDown olabilir
             keyEvent.key = key;
-            m_EditorLayout->ProcessInput(keyEvent);
+
+            for (auto receiver: m_EventReceivers) {
+                if (!keyEvent.consumed) {
+                    receiver->ProcessInput(keyEvent);
+                }
+            }
         }
     }
 
-    // Update last mouse position
+    // Son fare konumunu güncelle
     m_LastMousePos = currentMousePos;
 }
