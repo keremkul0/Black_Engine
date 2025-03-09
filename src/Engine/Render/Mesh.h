@@ -2,35 +2,30 @@
 #define MESH_H
 
 #include <vector>
+#include <glad/glad.h>
 #include <glm/glm.hpp>
 
-// Tek bir vertex verisi
 struct Vertex {
     glm::vec3 position;
     glm::vec3 normal;
     glm::vec2 texCoords;
-    // istersen renk veya diğer verileri de ekleyebilirsin
 };
 
-// Mesh sınıfı, VAO/VBO/EBO oluşturur ve Draw() metoduyla çizilir
-class Mesh
-{
+class Mesh {
 public:
-    Mesh() = default;
+    Mesh() = default; // Added default constructor
     ~Mesh();
 
-    // Vertex ve index verilerini GPU'ya yükler
-    void Initialize(const std::vector<Vertex>& vertices,
-                    const std::vector<unsigned int>& indices);
+    void Initialize(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices);
 
-    // Bu Mesh'i çiz
     void Draw() const;
 
-private:
-    unsigned int VAO = 0;
-    unsigned int VBO = 0;
-    unsigned int EBO = 0;
+    [[nodiscard]] unsigned int GetIndexCount() const { return indexCount; }
 
+private:
+    GLuint VAO = 0;
+    GLuint VBO = 0;
+    GLuint EBO = 0;
     unsigned int indexCount = 0;
 };
 

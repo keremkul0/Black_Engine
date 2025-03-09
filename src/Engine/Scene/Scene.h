@@ -5,10 +5,7 @@
 #include <memory>
 #include <string>
 #include <glm/glm.hpp>
-
-// GameObject'i burada INLINE (yani header içinde) kullanacaksak
-// tam tanımına ihtiyacımız var. O yüzden "GameObject.h" ekliyoruz.
-#include "../Entity/GameObject.h"
+#include "Engine/Entity/GameObject.h"
 
 class Scene
 {

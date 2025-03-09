@@ -81,6 +81,8 @@ add_executable(Black_Engine
         src/Core/InputSystem/InputSystem.h
         src/Core/InputSystem/InputSystem.cpp
         src/Core/InputManager/IInputEventReceiver.h
+        src/Engine/Component/MeshComponent.h
+        src/Engine/Component/MeshComponent.cpp
 )
 
 target_include_directories(Black_Engine PRIVATE

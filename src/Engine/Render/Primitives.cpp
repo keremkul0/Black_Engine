@@ -5,7 +5,7 @@ namespace Primitives {
 std::shared_ptr<Mesh> CreateCube()
 {
     // 24 vertex + 36 index
-    std::vector<Vertex> vertices = {
+    const std::vector<Vertex> vertices = {
         // Ön yüz
         {{-0.5f, -0.5f,  0.5f}, {0.f, 0.f, 1.f},  {0.f, 0.f}},
         {{ 0.5f, -0.5f,  0.5f}, {0.f, 0.f, 1.f},  {1.f, 0.f}},
@@ -43,7 +43,7 @@ std::shared_ptr<Mesh> CreateCube()
         {{-0.5f, -0.5f, -0.5f}, {0.f,-1.f,0.f},   {1.f,0.f}},
     };
 
-    std::vector<unsigned int> indices = {
+    const std::vector<unsigned int> indices = {
         0,1,2, 2,3,0,
         4,5,6, 6,7,4,
         8,9,10, 10,11,8,

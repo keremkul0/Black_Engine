@@ -77,7 +77,7 @@ void Shader::setMat4(const std::string &name, const glm::mat4 &mat) const
 }
 
 // Hata kontrolü (derleme/link)
-void Shader::checkCompileErrors(unsigned int shader, const std::string& type)
+void Shader::checkCompileErrors(const unsigned int shader, const std::string& type)
 {
     int success;
     char infoLog[1024];

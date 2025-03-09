@@ -1,6 +1,8 @@
 #include "Scene.h"
 
 #include "Engine/Component/MeshRendererComponent.h"
+#include "Engine/Component/MeshComponent.h"
+#include "Engine/Component/TransformComponent.h"
 #include "Engine/Render/Primitives.h"
 #include "Engine/Render/Shader.h"
 
@@ -8,7 +10,7 @@
 std::shared_ptr<GameObject> Scene::CreateGameObject(const std::string &name) {
     auto obj = std::make_shared<GameObject>();
     obj->name = name;
-    m_GameObjects.push_back(obj); // Changed from objects to m_GameObjects
+    m_GameObjects.push_back(obj);
     return obj;
 }
 
@@ -21,12 +23,18 @@ void Scene::LoadDefaultScene() {
     );
 
     auto cubeObj = CreateGameObject("MyCube");
+
+    // Add transform component
     auto transform = cubeObj->AddComponent<TransformComponent>();
     transform->position = glm::vec3(0.0f, 0.0f, 0.0f);
 
+    // Add mesh component
+    auto meshComponent = cubeObj->AddComponent<MeshComponent>();
+    meshComponent->SetMesh(Primitives::CreateCube());
+
+    // Add mesh renderer component
     auto renderer = cubeObj->AddComponent<MeshRendererComponent>();
-    renderer->mesh = Primitives::CreateCube();
-    renderer->shader = defaultShader;
+    renderer->SetShader(defaultShader);
 }
 
 bool Scene::LoadSceneFromFile(const std::string &path) {
@@ -35,15 +43,13 @@ bool Scene::LoadSceneFromFile(const std::string &path) {
 }
 
 void Scene::UpdateAll(float dt) {
-    for (auto &obj: m_GameObjects) // Changed from objects to m_GameObjects
-    {
+    for (auto &obj: m_GameObjects) {
         obj->Update(dt);
     }
 }
 
 void Scene::DrawAll() {
-    for (auto &obj: m_GameObjects) // Changed from objects to m_GameObjects
-    {
+    for (auto &obj: m_GameObjects) {
         obj->Draw();
     }
 }

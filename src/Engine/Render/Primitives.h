@@ -5,10 +5,9 @@
 #include "Mesh.h"
 
 namespace Primitives {
-    // Basit bir küp oluşturan fonksiyon
+    // Remove the static keyword
     std::shared_ptr<Mesh> CreateCube();
-
-    // İleride CreateSphere(), CreateCylinder() gibi fonksiyonlar da ekleyebilirsin
+    // Other primitive functions can be added later
 }
 
 #endif // PRIMITIVES_H
