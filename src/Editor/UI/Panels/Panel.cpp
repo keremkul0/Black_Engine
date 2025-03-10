@@ -7,10 +7,9 @@ void Panel::Render() {
         return;
 
     // Begin window with docking enabled
-    ImGuiWindowFlags windowFlags = ImGuiWindowFlags_None;
 
     // Start panel window
-    if (ImGui::Begin(m_Title.c_str(), &m_IsOpen, windowFlags)) {
+    if (constexpr ImGuiWindowFlags windowFlags = ImGuiWindowFlags_None; ImGui::Begin(m_Title.c_str(), &m_IsOpen, windowFlags)) {
         // Update focus and hover states with more thorough checks
         m_IsFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_ChildWindows |
                                              ImGuiFocusedFlags_RootWindow);

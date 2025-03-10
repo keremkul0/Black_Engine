@@ -7,17 +7,22 @@
 #include "Editor/UI/Panels/ScenePanel/ScenePanel.h"
 
 
-EditorLayout::EditorLayout() : m_DockspaceID(0), m_FirstFrame(true), m_DockspaceInitialized(false) {
+EditorLayout::EditorLayout() : m_FirstFrame(true), m_DockspaceID(0), m_DockspaceInitialized(false) {
 }
 
 void EditorLayout::SetupDefaultLayout(const std::shared_ptr<Scene> &scene) {
     // Add standard panels
-    AddPanel<HierarchyPanel>("Hierarchy", scene);
-    AddPanel<InspectorPanel>("Inspector");
+    auto hierarchyPanel = AddPanel<HierarchyPanel>("Hierarchy", scene);
+    auto inspectorPanel = AddPanel<InspectorPanel>("Inspector");
     auto scenePanel = AddPanel<ScenePanel>("Scene");
     scenePanel->SetScene(scene);
     auto gamePanel = AddPanel<GamePanel>("Game");
     gamePanel->SetScene(scene);
+
+    // Connect the hierarchy and inspector panels
+    hierarchyPanel->OnSelectionChanged = [inspectorPanel](std::shared_ptr<GameObject> selectedObject) {
+        inspectorPanel->SetSelectedObject(selectedObject);
+    };
 }
 
 void EditorLayout::SetupCustomLayout(const std::string &layoutName, const std::shared_ptr<Scene> &scene) {
@@ -132,29 +137,28 @@ void EditorLayout::ProcessInput(const InputEvent &event) {
     // For ImGui multi-viewport (floating windows) to work correctly,
     // we need to ensure input is properly routed
 
-    ImGuiIO &io = ImGui::GetIO();
-    bool isMouseEvent = (event.type == InputEventType::MouseMove ||
-                        event.type == InputEventType::MouseDown ||
-                        event.type == InputEventType::MouseUp ||
-                        event.type == InputEventType::MouseScroll);
+    const ImGuiIO &io = ImGui::GetIO();
+    const bool isMouseEvent = (event.type == InputEventType::MouseMove ||
+                               event.type == InputEventType::MouseDown ||
+                               event.type == InputEventType::MouseUp ||
+                               event.type == InputEventType::MouseScroll);
 
-    bool isKeyEvent = (event.type == InputEventType::KeyDown ||
-                      event.type == InputEventType::KeyUp ||
-                      event.type == InputEventType::KeyHeld);
+    const bool isKeyEvent = (event.type == InputEventType::KeyDown ||
+                             event.type == InputEventType::KeyUp ||
+                             event.type == InputEventType::KeyHeld);
 
     // Process panel-specific input even when ImGui wants capture
     // This allows game panels to receive input when focused
     if (isMouseEvent) {
         // Find panel under mouse regardless of io.WantCaptureMouse
-        auto panelUnderMouse = GetPanelUnderMouse();
-        if (panelUnderMouse) {
+        if (const auto panelUnderMouse = GetPanelUnderMouse()) {
             // Always send mouse events to the panel under mouse
             // The panel itself can decide whether to use it
             panelUnderMouse->OnInputEvent(event);
 
             // If it's a mouse down event, focus this panel
             if (event.type == InputEventType::MouseDown) {
-                for (auto &[name, panel] : m_Panels) {
+                for (auto &[name, panel]: m_Panels) {
                     if (panel == panelUnderMouse) {
                         ImGui::SetWindowFocus(name.c_str());
                         break;
@@ -173,7 +177,7 @@ void EditorLayout::ProcessInput(const InputEvent &event) {
         if (io.WantCaptureKeyboard)
             return;
 
-        for (auto &[name, panel] : m_Panels) {
+        for (auto &[name, panel]: m_Panels) {
             if (panel->IsActiveForInput()) {
                 panel->OnInputEvent(event);
                 break;
@@ -181,14 +185,14 @@ void EditorLayout::ProcessInput(const InputEvent &event) {
         }
     }
 }
+
 void EditorLayout::ShowPanel(const std::string &name, bool show) {
-    auto it = m_Panels.find(name);
-    if (it != m_Panels.end()) {
+    if (const auto it = m_Panels.find(name); it != m_Panels.end()) {
         it->second->SetActive(show);
     }
 }
 
-void EditorLayout::EnableDockspace(bool enable) {
+void EditorLayout::EnableDockspace(const bool enable) {
     m_UseDockspace = enable;
 }
 

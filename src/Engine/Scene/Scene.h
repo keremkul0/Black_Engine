@@ -5,10 +5,7 @@
 #include <memory>
 #include <string>
 #include <glm/glm.hpp>
-
-// GameObject'i burada INLINE (yani header içinde) kullanacaksak
-// tam tanımına ihtiyacımız var. O yüzden "GameObject.h" ekliyoruz.
-#include "../Entity/GameObject.h"
+#include "Engine/Entity/GameObject.h"
 
 class Scene
 {
@@ -17,7 +14,7 @@ public:
     ~Scene() = default;
 
     void LoadDefaultScene();
-    bool LoadSceneFromFile(const std::string& path);
+    static bool LoadSceneFromFile(const std::string& path);
 
     [[nodiscard]] const std::vector<std::shared_ptr<GameObject>>& GetGameObjects() const {
         return m_GameObjects;
@@ -36,8 +33,11 @@ public:
     void SetProjectionMatrix(const glm::mat4& projMatrix) {
         m_ProjectionMatrix = projMatrix;
     }
+    const std::string& GetName() const { return m_SceneName; }
+    void SetName(const std::string& name) { m_SceneName = name; }
 
 private:
+    std::string m_SceneName = "New Scene";
     glm::mat4 m_ViewMatrix = glm::mat4(1.0f);
     glm::mat4 m_ProjectionMatrix = glm::mat4(1.0f);
     // Sahnedeki tüm objeler

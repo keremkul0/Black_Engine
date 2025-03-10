@@ -26,7 +26,7 @@ public:
 
 private:
     // Derleme/link fonksiyonları vs.
-    void checkCompileErrors(unsigned int shader, const std::string& type);
+    static void checkCompileErrors(unsigned int shader, const std::string& type);
 };
 
 #endif

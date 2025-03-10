@@ -1,11 +1,12 @@
 #pragma once
 #include <string>
+#include <utility>
 #include "Core/InputManager/InputEvent.h"
 #include "imgui.h"
 
 class Panel {
 public:
-    explicit Panel(const std::string &title) : m_Title(title), m_IsOpen(true), m_IsActive(true), m_IsFocused(false),
+    explicit Panel(std::string title) : m_Title(std::move(title)), m_IsOpen(true), m_IsActive(true), m_IsFocused(false),
                                                m_IsHovered(false) {
     }
 

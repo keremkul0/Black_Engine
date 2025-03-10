@@ -1,16 +1,15 @@
-// GameObject.cpp
 #include "GameObject.h"
 #include "../Component/BaseComponent.h"
 
-void GameObject::Update(float deltaTime)
+void GameObject::Update(const float deltaTime)
 {
-    for (auto& comp : components)
+    for (const auto& comp : components)
     {
         comp->Update(deltaTime);
     }
 
     // Update children recursively
-    for (auto& child : m_Children)
+    for (const auto& child : m_Children)
     {
         child->Update(deltaTime);
     }
@@ -18,30 +17,22 @@ void GameObject::Update(float deltaTime)
 
 void GameObject::Draw()
 {
-    for (auto& comp : components)
+    for (const auto& comp : components)
     {
         comp->Draw();
     }
 
     // Draw children recursively
-    for (auto& child : m_Children)
+    for (const auto& child : m_Children)
     {
         child->Draw();
     }
 }
 
-void GameObject::OnInspectorGUI()
-{
-    for (auto& comp : components)
-    {
-        comp->OnInspectorGUI();
-    }
-}
-
-void GameObject::AddChild(std::shared_ptr<GameObject> child) {
+void GameObject::AddChild(const std::shared_ptr<GameObject>& child) {
     if (child) {
         // If child has another parent, remove from that parent first
-        if (auto parentPtr = child->GetParent()) {
+        if (const auto parentPtr = child->GetParent()) {
             parentPtr->RemoveChild(child);
         }
 
@@ -50,12 +41,20 @@ void GameObject::AddChild(std::shared_ptr<GameObject> child) {
     }
 }
 
-void GameObject::RemoveChild(std::shared_ptr<GameObject> child) {
+void GameObject::RemoveChild(const std::shared_ptr<GameObject>& child) {
     if (!child) return;
 
-    auto it = std::find(m_Children.begin(), m_Children.end(), child);
-    if (it != m_Children.end()) {
+    if (const auto it = std::ranges::find(m_Children, child); it != m_Children.end()) {
         child->m_Parent.reset(); // Clear the parent reference
         m_Children.erase(it);
+    }
+}
+
+void GameObject::SetActive(const bool isActive) {
+    active = isActive;
+
+    // Optionally propagate to components
+    for (const auto& component : components) {
+        component->SetEnabled(isActive);
     }
 }
