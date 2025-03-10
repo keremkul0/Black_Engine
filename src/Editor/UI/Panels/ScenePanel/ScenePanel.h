@@ -7,10 +7,10 @@
 
 #include "Editor/UI/Panels/Panel.h"
 
-class ScenePanel : public Panel {
+class ScenePanel final : public Panel {
 public:
-    ScenePanel(const std::string &title);
-    ~ScenePanel();
+    explicit ScenePanel(const std::string &title);
+    ~ScenePanel() override;
 
     void SetScene(const std::shared_ptr<Scene> &scene);
     bool OnInputEvent(const InputEvent &event) override;
@@ -40,6 +40,11 @@ private:
     // Viewport properties
     bool m_ViewportHovered = false;
     bool m_ViewportFocused = false;
+    bool m_IsRotating = false;
+    bool m_IsPanning = false;
+    bool m_WasRightMouseDown = false;
+    bool m_WasMiddleMouseDown = false;
+    bool m_CursorOverrideEnabled = false;
     ImVec2 m_LastMousePos = {0.0f, 0.0f};
 
     // Framebuffer properties
@@ -53,4 +58,5 @@ private:
     void UpdateCamera(float deltaTime);
     void ResizeFramebuffer(int width, int height);
     void CleanupResources();
+    void UpdateCursorForCurrentAction() const;
 };

@@ -1,6 +1,7 @@
 #include "MeshComponent.h"
 #include <imgui.h>
 #include <filesystem>
+#include "Engine/Render/Mesh/Mesh.h"
 
 void MeshComponent::Start() {
     // Eğer mesh yolu belirtilmişse ve henüz yüklenmemişse

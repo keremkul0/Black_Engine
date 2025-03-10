@@ -41,12 +41,12 @@ add_executable(Black_Engine
         src/main.cpp
         src/Application.cpp
         src/Application.h
-        src/Engine/Render/Shader.h
-        src/Engine/Render/Shader.cpp
-        src/Engine/Render/Mesh.cpp
-        src/Engine/Render/Mesh.h
-        src/Engine/Render/Primitives.cpp
-        src/Engine/Render/Primitives.h
+        src/Engine/Render/Shader/Shader.h
+        src/Engine/Render/Shader/Shader.cpp
+        src/Engine/Render/Mesh/Mesh.cpp
+        src/Engine/Render/Mesh/Mesh.h
+        src/Engine/Render/Primitives/Primitives.cpp
+        src/Engine/Render/Primitives/Primitives.h
         src/Engine/Scene/Scene.cpp
         src/Engine/Scene/Scene.h
         src/Engine/Component/BaseComponent.h

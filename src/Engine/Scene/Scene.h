@@ -14,7 +14,7 @@ public:
     ~Scene() = default;
 
     void LoadDefaultScene();
-    bool LoadSceneFromFile(const std::string& path);
+    static bool LoadSceneFromFile(const std::string& path);
 
     [[nodiscard]] const std::vector<std::shared_ptr<GameObject>>& GetGameObjects() const {
         return m_GameObjects;

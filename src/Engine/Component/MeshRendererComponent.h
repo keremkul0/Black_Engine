@@ -3,9 +3,9 @@
 
 #include "BaseComponent.h"
 #include "MeshComponent.h"
-#include "../Render/Shader.h"
 #include <memory>
 #include "TransformComponent.h"
+#include "Engine/Render/Shader/Shader.h"
 
 class MeshRendererComponent final : public BaseComponent
 {

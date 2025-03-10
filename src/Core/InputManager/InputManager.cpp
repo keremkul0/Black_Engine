@@ -8,11 +8,11 @@ float InputManager::s_ScrollOffset = 0.0f;
 bool InputManager::s_MouseButtonsCurrentState[3] = {false, false, false};
 bool InputManager::s_MouseButtonsPreviousState[3] = {false, false, false};
 
-bool InputManager::IsMouseButtonJustPressed(int button) {
+bool InputManager::IsMouseButtonJustPressed(const int button) {
     return s_MouseButtonsCurrentState[button] && !s_MouseButtonsPreviousState[button];
 }
 
-bool InputManager::IsMouseButtonJustReleased(int button) {
+bool InputManager::IsMouseButtonJustReleased(const int button) {
     return !s_MouseButtonsCurrentState[button] && s_MouseButtonsPreviousState[button];
 }
 
@@ -22,7 +22,7 @@ float InputManager::GetScrollOffset() {
     return offset;
 }
 
-void InputManager::SetScrollOffset(float offset) {
+void InputManager::SetScrollOffset(const float offset) {
     s_ScrollOffset = offset;
 }
 
@@ -46,7 +46,7 @@ void InputManager::Update() {
     }
 }
 
-bool InputManager::IsKeyPressed(int key) {
+bool InputManager::IsKeyPressed(const int key) {
     return glfwGetKey(s_Window, key) == GLFW_PRESS;
 }
 
@@ -54,11 +54,11 @@ void InputManager::GetMousePosition(double &xpos, double &ypos) {
     glfwGetCursorPos(s_Window, &xpos, &ypos);
 }
 
-bool InputManager::IsMouseButtonPressed(int button) {
+bool InputManager::IsMouseButtonPressed(const int button) {
     return glfwGetMouseButton(s_Window, button) == GLFW_PRESS;
 }
 
-void InputManager::SetCursor(CursorType cursorType) {
+void InputManager::SetCursor(const CursorType cursorType) {
     switch (cursorType) {
         case DEFAULT_CURSOR:
             glfwSetCursor(s_Window, s_DefaultCursor);

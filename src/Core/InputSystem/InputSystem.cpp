@@ -70,10 +70,9 @@ void InputSystem::ProcessInput(float deltaTime) {
     double mouseX, mouseY;
     InputManager::GetMousePosition(mouseX, mouseY);
     glm::vec2 currentMousePos(static_cast<float>(mouseX), static_cast<float>(mouseY));
-    glm::vec2 mouseDelta = currentMousePos - m_LastMousePos;
 
     // Fare hareketi olayını işle
-    if (mouseDelta.x != 0.0f || mouseDelta.y != 0.0f) {
+    if (glm::vec2 mouseDelta = currentMousePos - m_LastMousePos; mouseDelta.x != 0.0f || mouseDelta.y != 0.0f) {
         InputEvent mouseMoveEvent;
         mouseMoveEvent.type = InputEventType::MouseMove;
         mouseMoveEvent.mousePos = currentMousePos;
@@ -117,8 +116,7 @@ void InputSystem::ProcessInput(float deltaTime) {
     }
 
     // Fare kaydırma olayını işle
-    float scrollOffset = InputManager::GetScrollOffset();
-    if (scrollOffset != 0.0f) {
+    if (float scrollOffset = InputManager::GetScrollOffset(); scrollOffset != 0.0f) {
         InputEvent scrollEvent;
         scrollEvent.type = InputEventType::MouseScroll;
         scrollEvent.scrollDelta = scrollOffset;
@@ -135,13 +133,11 @@ void InputSystem::ProcessInput(float deltaTime) {
     // Genel olarak, tüm tuşları kontrol etmek için bir döngü kullanabiliriz
     // Not: Bu, performansı etkileyebilir; optimizasyon gerekebilir
     for (int key = GLFW_KEY_SPACE; key <= GLFW_KEY_LAST; ++key) {
-        bool isPressed = InputManager::IsKeyPressed(key);
-
         // Tuş basma ve basılı tutma olaylarını ayırt etmek için
         // daha fazla durum bilgisine ihtiyaç olabilir
         // Şu anda sadece basılı tuşlar için olay oluşturuyoruz
 
-        if (isPressed) {
+        if (bool isPressed = InputManager::IsKeyPressed(key)) {
             InputEvent keyEvent;
             keyEvent.type = InputEventType::KeyHeld; // Veya KeyDown olabilir
             keyEvent.key = key;

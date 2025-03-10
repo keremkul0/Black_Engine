@@ -2,9 +2,10 @@
 #define MESH_COMPONENT_H
 
 #include "BaseComponent.h"
-#include "../Render/Mesh.h"
 #include <memory>
 #include <string>
+
+#include "Engine/Render/Mesh/Mesh.h"
 
 class MeshComponent final : public BaseComponent {
 private:

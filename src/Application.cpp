@@ -85,7 +85,7 @@ int Application::Run() const {
         lastTime = currentTime;
 
         // Process input
-        m_WindowManager->PollEvents();
+        WindowManager::PollEvents();
         m_InputSystem->ProcessInput(deltaTime);
 
         // Clear screen
