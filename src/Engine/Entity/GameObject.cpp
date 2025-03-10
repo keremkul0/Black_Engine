@@ -29,14 +29,6 @@ void GameObject::Draw()
     }
 }
 
-void GameObject::OnInspectorGUI()
-{
-    for (const auto& comp : components)
-    {
-        comp->OnInspectorGUI();
-    }
-}
-
 void GameObject::AddChild(const std::shared_ptr<GameObject>& child) {
     if (child) {
         // If child has another parent, remove from that parent first
@@ -55,5 +47,14 @@ void GameObject::RemoveChild(const std::shared_ptr<GameObject>& child) {
     if (const auto it = std::ranges::find(m_Children, child); it != m_Children.end()) {
         child->m_Parent.reset(); // Clear the parent reference
         m_Children.erase(it);
+    }
+}
+
+void GameObject::SetActive(const bool isActive) {
+    active = isActive;
+
+    // Optionally propagate to components
+    for (const auto& component : components) {
+        component->SetEnabled(isActive);
     }
 }

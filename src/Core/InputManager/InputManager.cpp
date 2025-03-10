@@ -59,16 +59,21 @@ bool InputManager::IsMouseButtonPressed(const int button) {
 }
 
 void InputManager::SetCursor(const CursorType cursorType) {
-    switch (cursorType) {
-        case DEFAULT_CURSOR:
-            glfwSetCursor(s_Window, s_DefaultCursor);
+    // Only change cursor if it's different from current
+    if (s_CurrentCursorType != cursorType) {
+        s_CurrentCursorType = cursorType;
+
+        switch (cursorType) {
+            case DEFAULT_CURSOR:
+                glfwSetCursor(s_Window, s_DefaultCursor);
             break;
-        case HAND_CURSOR:
-            glfwSetCursor(s_Window, s_HandCursor);
+            case HAND_CURSOR:
+                glfwSetCursor(s_Window, s_HandCursor);
             break;
-        case EYE_CURSOR:
-            glfwSetCursor(s_Window, s_EyeCursor);
+            case EYE_CURSOR:
+                glfwSetCursor(s_Window, s_EyeCursor);
             break;
+        }
     }
 }
 

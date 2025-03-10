@@ -34,10 +34,8 @@ public:
 
     void OnDisable() override;
 
-    void OnInspectorGUI() override;
-
     // Bileşen tipi bilgisi
-    [[nodiscard]] const char *GetTypeName() const override { return "MeshComponent"; }
+    [[nodiscard]] std::string GetTypeName() const override { return "MeshComponent"; }
 };
 
 #endif // MESH_COMPONENT_H

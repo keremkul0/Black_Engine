@@ -24,10 +24,9 @@ public:
     void Draw() override;
     void OnEnable() override;
     void OnDisable() override;
-    void OnInspectorGUI() override;
 
     // Bileşen tipi bilgisi
-    [[nodiscard]] const char* GetTypeName() const override { return "MeshRendererComponent"; }
+    [[nodiscard]] std::string GetTypeName() const override { return "MeshRendererComponent"; }
 
 private:
     MeshComponent* m_cachedMeshComponent = nullptr;

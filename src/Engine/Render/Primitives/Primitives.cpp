@@ -2,7 +2,7 @@
 #include "Engine/Render/Mesh/Mesh.h"
 
 namespace Primitives {
- std::shared_ptr<Mesh> CreateCube(const float size) {
+    std::shared_ptr<Mesh> CreateCube(const float size) {
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
 
@@ -11,23 +11,23 @@ namespace Primitives {
         // Define all 8 corners of the cube
         const glm::vec3 corners[8] = {
             {-halfSize, -halfSize, -halfSize}, // 0: left bottom back
-            { halfSize, -halfSize, -halfSize}, // 1: right bottom back
-            { halfSize, -halfSize,  halfSize}, // 2: right bottom front
-            {-halfSize, -halfSize,  halfSize}, // 3: left bottom front
-            {-halfSize,  halfSize, -halfSize}, // 4: left top back
-            { halfSize,  halfSize, -halfSize}, // 5: right top back
-            { halfSize,  halfSize,  halfSize}, // 6: right top front
-            {-halfSize,  halfSize,  halfSize}  // 7: left top front
+            {halfSize, -halfSize, -halfSize}, // 1: right bottom back
+            {halfSize, -halfSize, halfSize}, // 2: right bottom front
+            {-halfSize, -halfSize, halfSize}, // 3: left bottom front
+            {-halfSize, halfSize, -halfSize}, // 4: left top back
+            {halfSize, halfSize, -halfSize}, // 5: right top back
+            {halfSize, halfSize, halfSize}, // 6: right top front
+            {-halfSize, halfSize, halfSize} // 7: left top front
         };
 
         // Define the 6 face normals
         const glm::vec3 normals[6] = {
-            { 0.0f,  0.0f,  1.0f}, // Front face  (+Z)
-            { 0.0f,  0.0f, -1.0f}, // Back face   (-Z)
-            {-1.0f,  0.0f,  0.0f}, // Left face   (-X)
-            { 1.0f,  0.0f,  0.0f}, // Right face  (+X)
-            { 0.0f,  1.0f,  0.0f}, // Top face    (+Y)
-            { 0.0f, -1.0f,  0.0f}  // Bottom face (-Y)
+            {0.0f, 0.0f, 1.0f}, // Front face  (+Z)
+            {0.0f, 0.0f, -1.0f}, // Back face   (-Z)
+            {-1.0f, 0.0f, 0.0f}, // Left face   (-X)
+            {1.0f, 0.0f, 0.0f}, // Right face  (+X)
+            {0.0f, 1.0f, 0.0f}, // Top face    (+Y)
+            {0.0f, -1.0f, 0.0f} // Bottom face (-Y)
         };
 
         // Define the face corner indices in counter-clockwise order
@@ -37,27 +37,27 @@ namespace Primitives {
             {0, 3, 7, 4}, // Left face (-X)
             {2, 1, 5, 6}, // Right face (+X)
             {7, 6, 5, 4}, // Top face (+Y)
-            {0, 1, 2, 3}  // Bottom face (-Y)
+            {0, 1, 2, 3} // Bottom face (-Y)
         };
 
         // Generate vertices and indices for all faces
         for (int faceIdx = 0; faceIdx < 6; ++faceIdx) {
-            const glm::vec3& normal = normals[faceIdx];
+            const glm::vec3 &normal = normals[faceIdx];
 
             // UV coordinates for the quad corners
             constexpr glm::vec2 uvs[4] = {
                 {0.0f, 0.0f}, // bottom-left
                 {1.0f, 0.0f}, // bottom-right
                 {1.0f, 1.0f}, // top-right
-                {0.0f, 1.0f}  // top-left
+                {0.0f, 1.0f} // top-left
             };
 
             // Add four vertices for this face
             for (int i = 0; i < 4; ++i) {
                 vertices.push_back({
                     corners[faceCorners[faceIdx][i]], // position
-                    normal,                           // normal
-                    uvs[i]                            // uv
+                    normal, // normal
+                    uvs[i] // uv
                 });
             }
 

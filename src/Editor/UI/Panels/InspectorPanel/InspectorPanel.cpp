@@ -1,103 +1,79 @@
 #include "InspectorPanel.h"
+#include "ComponentDrawers.h"
 #include "Engine/Component/BaseComponent.h"
 #include "Engine/Component/TransformComponent.h"
 #include "imgui.h"
 #include <typeinfo>
 #include <glm/glm.hpp>
+#include <utility>
 
 InspectorPanel::InspectorPanel()
-    : Panel("Inspector"), m_SelectedObject(nullptr) {}
+    : Panel("Inspector"), m_SelectedObject(nullptr) {
+    ComponentDrawers::RegisterAllDrawers();
+}
 
 InspectorPanel::InspectorPanel(const std::string& title)
     : Panel(title), m_SelectedObject(nullptr) {}
 
 void InspectorPanel::SetSelectedObject(std::shared_ptr<GameObject> object) {
-    m_SelectedObject = object;
+    m_SelectedObject = std::move(object);
 }
 
 void InspectorPanel::DrawContent() {
     if (!m_SelectedObject) {
-        ImGui::TextWrapped("No object selected");
+        ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), "No object selected");
         return;
     }
 
-    // Object name edit
-    char nameBuf[256];
-    strcpy(nameBuf, m_SelectedObject->name.c_str());
-    if (ImGui::InputText("Name", nameBuf, sizeof(nameBuf))) {
-        m_SelectedObject->name = nameBuf;
+    // Draw object properties
+    const std::string name = m_SelectedObject->GetName();
+    char buffer[256];
+    strcpy(buffer, name.c_str());
+    if (ImGui::InputText("Name", buffer, sizeof(buffer))) {
+        m_SelectedObject->SetName(buffer);
     }
 
-    // Transform section
-    ImGui::Separator();
-    if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
-        auto transformComponent = m_SelectedObject->GetComponent<TransformComponent>();
-        if (transformComponent) {
-            // Position
-            glm::vec3& position = transformComponent->position;
-            ImGui::DragFloat3("Position", &position.x, 0.1f);
-
-            // Rotation
-            glm::vec3& rotation = transformComponent->rotation;
-            ImGui::DragFloat3("Rotation", &rotation.x, 0.1f);
-
-            // Scale
-            glm::vec3& scale = transformComponent->scale;
-            ImGui::DragFloat3("Scale", &scale.x, 0.1f);
-        }
-        else {
-            ImGui::Text("No transform component found");
-        }
+    // Active checkbox
+    bool isActive = m_SelectedObject->IsActive();
+    if (ImGui::Checkbox("Active", &isActive)) {
+        m_SelectedObject->SetActive(isActive);
     }
 
-    // Components
+    // Draw components
     ImGui::Separator();
-    if (ImGui::CollapsingHeader("Components", ImGuiTreeNodeFlags_DefaultOpen)) {
-        // Access components vector directly
-        for (auto& component : m_SelectedObject->components) {
-            DrawComponentUI(component.get());
-        }
-
-        // Add component button
-        if (ImGui::Button("Add Component")) {
-            ImGui::OpenPopup("ComponentPopup");
-        }
-
-        if (ImGui::BeginPopup("ComponentPopup")) {
-            // List of component types that can be added
-            if (ImGui::MenuItem("Mesh Renderer")) {
-                // m_SelectedObject->AddComponent<MeshRendererComponent>();
-            }
-            if (ImGui::MenuItem("Camera")) {
-                // m_SelectedObject->AddComponent<CameraComponent>();
-            }
-            // Add more component types as needed
-            ImGui::EndPopup();
-        }
+    for (const auto& component : m_SelectedObject->GetComponents()) {
+        // Use ComponentDrawers to draw each component
+        ComponentDrawers::DrawComponent(component.get());
     }
 }
 
 void InspectorPanel::DrawComponentUI(BaseComponent* component) {
     if (!component) return;
 
-    // Draw component header
-    ImGuiTreeNodeFlags headerFlags = ImGuiTreeNodeFlags_DefaultOpen;
-    bool opened = ImGui::CollapsingHeader(typeid(*component).name(), headerFlags);
+    // Component type as header
+    const std::string componentName = component->GetTypeName();
+    constexpr ImGuiTreeNodeFlags headerFlags = ImGuiTreeNodeFlags_DefaultOpen;
 
-    // Context menu for component
+    ImGui::PushID(component);
+    const bool opened = ImGui::CollapsingHeader(componentName.c_str(), headerFlags);
+
+    // Component context menu
     if (ImGui::BeginPopupContextItem()) {
         if (ImGui::MenuItem("Remove Component")) {
-            // Mark component for removal
-            // m_SelectedObject->RemoveComponent(component->GetID());
+            // TODO: Mark component for removal
+            // m_SelectedObject->RemoveComponent(component);
         }
         ImGui::EndPopup();
     }
 
     if (opened) {
-        // Component-specific UI
-        // This will need to be expanded based on your component types
-        ImGui::Text("Component properties will appear here");
-    }
-}
+        ImGui::Indent();
 
+        // Use specialized drawer for this component type
+        ComponentDrawers::DrawComponent(component);
+
+        ImGui::Unindent();
+    }
+    ImGui::PopID();
+}
 //TODO: Implement additional component types if needed

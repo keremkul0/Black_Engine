@@ -50,7 +50,6 @@ add_executable(Black_Engine
         src/Engine/Scene/Scene.cpp
         src/Engine/Scene/Scene.h
         src/Engine/Component/BaseComponent.h
-        src/Engine/Component/BaseComponent.cpp
         src/Engine/Component/TransformComponent.cpp
         src/Engine/Component/TransformComponent.h
         src/Engine/Component/MeshRendererComponent.cpp
@@ -83,6 +82,8 @@ add_executable(Black_Engine
         src/Core/InputManager/IInputEventReceiver.h
         src/Engine/Component/MeshComponent.h
         src/Engine/Component/MeshComponent.cpp
+        src/Editor/UI/Panels/InspectorPanel/ComponentDrawers.h
+        src/Editor/UI/Panels/InspectorPanel/ComponentDrawers.cpp
 )
 
 target_include_directories(Black_Engine PRIVATE

@@ -7,7 +7,7 @@ class BaseComponent {
 public:
     // Bileşenin bağlı olduğu varlık
     std::shared_ptr<GameObject> owner = nullptr;
-
+    std::string fullName = typeid(*this).name();
 
     // Sanal yıkıcı (miras için gerekli)
     virtual ~BaseComponent() = default;
@@ -36,14 +36,24 @@ public:
     }
 
     // Bileşenin tipi için sabit dize döndürür
-    [[nodiscard]] virtual const char *GetTypeName() const { return "BaseComponent"; }
+    [[nodiscard]] virtual std::string GetTypeName() const {
+        // Extract clean name from typeid
+        const std::string fullName = typeid(*this).name();
 
-    // İleride Inspector'da göstereceğimiz parametreler
-    virtual void OnInspectorGUI() {
+        // Skip any leading numbers and "class " prefix
+        size_t startPos = 0;
+        while (startPos < fullName.size() && (std::isdigit(fullName[startPos]) || std::isspace(fullName[startPos])))
+            startPos++;
+
+        // Also skip "class " prefix if present
+        if (fullName.substr(startPos, 6) == "class ")
+            startPos += 6;
+
+        return fullName.substr(startPos);
     }
 
     // Bileşenin aktif/inaktif durumunu değiştirmek için yardımcı fonksiyon
-    void SetEnabled(bool enabled) {
+    void SetEnabled(const bool enabled) {
         if (isEnabled != enabled) {
             isEnabled = enabled;
             if (isEnabled) {

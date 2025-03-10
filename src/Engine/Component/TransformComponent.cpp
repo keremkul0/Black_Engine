@@ -1,5 +1,4 @@
 #include "TransformComponent.h"
-#include <imgui.h>
 
 void TransformComponent::Start()
 {
@@ -44,24 +43,4 @@ void TransformComponent::RecalculateModelMatrix() const
 
     // Scale
     cachedModelMatrix = glm::scale(cachedModelMatrix, scale);
-}
-
-void TransformComponent::OnInspectorGUI()
-{
-    ImGui::Text("Transform");
-
-    // Position değişikliği
-    if (ImGui::DragFloat3("Position", &position[0], 0.1f)) {
-        matrixDirty = true;
-    }
-
-    // Rotation değişikliği
-    if (ImGui::DragFloat3("Rotation", &rotation[0], 0.5f)) {
-        matrixDirty = true;
-    }
-
-    // Scale değişikliği
-    if (ImGui::DragFloat3("Scale", &scale[0], 0.01f)) {
-        matrixDirty = true;
-    }
 }

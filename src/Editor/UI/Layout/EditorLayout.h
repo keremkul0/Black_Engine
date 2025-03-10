@@ -64,7 +64,7 @@ template<typename T>
 std::shared_ptr<T> EditorLayout::GetPanel(const std::string &name) {
     static_assert(std::is_base_of_v<Panel, T>, "T must derive from Panel");
 
-    if (auto it = m_Panels.find(name); it != m_Panels.end()) {
+    if (const auto it = m_Panels.find(name); it != m_Panels.end()) {
         return std::dynamic_pointer_cast<T>(it->second);
     }
     return nullptr;

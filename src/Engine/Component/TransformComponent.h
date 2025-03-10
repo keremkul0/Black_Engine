@@ -46,10 +46,9 @@ public:
     void Update(float deltaTime) override;
     void OnEnable() override;
     void OnDisable() override;
-    void OnInspectorGUI() override;
 
     // Bileşen tipi bilgisi
-    [[nodiscard]] const char* GetTypeName() const override { return "TransformComponent"; }
+    [[nodiscard]] std::string GetTypeName() const override { return "TransformComponent"; }
 
 private:
     // Model matrisini yeniden hesapla

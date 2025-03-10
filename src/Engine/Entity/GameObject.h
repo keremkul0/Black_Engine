@@ -12,11 +12,12 @@ class GameObject final : public std::enable_shared_from_this<GameObject> {
 public:
     std::string name;
     bool isSelected = false;
-
+    bool active = true;
     std::vector<std::shared_ptr<BaseComponent> > components;
 
     // Use the public name property consistently
     const std::string &GetName() const { return name; }
+    void SetName(const std::string &newName) { name = newName; }
 
     GameObject() = default;
 
@@ -36,6 +37,10 @@ public:
         newComponent->Start();
 
         return newComponent;
+    }
+
+    const std::vector<std::shared_ptr<BaseComponent>>& GetComponents() const {
+        return components;  // Assuming 'components' is the member variable name
     }
 
     template<typename T>
@@ -68,14 +73,15 @@ public:
 
     void RemoveChild(const std::shared_ptr<GameObject> &child);
 
+    bool IsActive() const { return active; }
+    void SetActive(bool isActive);
+
     const std::vector<std::shared_ptr<GameObject> > &GetChildren() const { return m_Children; }
     std::shared_ptr<GameObject> GetParent() const { return m_Parent.lock(); }
 
     void Update(float deltaTime);
 
     void Draw();
-
-    void OnInspectorGUI();
 
 private:
     std::vector<std::shared_ptr<GameObject> > m_Children;

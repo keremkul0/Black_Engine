@@ -2,7 +2,6 @@
 #include "TransformComponent.h"
 #include "MeshComponent.h"
 #include "../Entity/GameObject.h"
-#include <imgui.h>
 #include <glm/glm.hpp>
 
 // Uygulama tarafında tanımlanacak.
@@ -57,30 +56,4 @@ void MeshRendererComponent::Draw() {
 
     // Mesh'i çiz
     mesh->Draw();
-}
-
-void MeshRendererComponent::OnInspectorGUI() {
-    ImGui::Text("Mesh Renderer Component");
-
-    // Shader durumunu göster
-    if (m_shader) {
-        ImGui::Text("Shader: Loaded");
-    } else {
-        ImGui::TextColored(ImVec4(1.0f, 0.5f, 0.5f, 1.0f), "No Shader Assigned");
-    }
-
-    if (ImGui::Button("Select Shader...")) {
-        // Burada shader seçme dialogu açılabilir
-    }
-
-    // Bağımlılık durumunu göster
-    if (owner) {
-        const auto meshComp = owner->GetComponent<MeshComponent>();
-        const auto transformComp = owner->GetComponent<TransformComponent>();
-
-        ImGui::Separator();
-        ImGui::Text("Dependencies:");
-        ImGui::Text("Mesh Component: %s", meshComp ? "Found" : "Missing");
-        ImGui::Text("Transform Component: %s", transformComp ? "Found" : "Missing");
-    }
 }
