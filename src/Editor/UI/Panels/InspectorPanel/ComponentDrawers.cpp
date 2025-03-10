@@ -1,6 +1,5 @@
 #include "Engine/Component/TransformComponent.h"
 #include "Engine/Component/MeshComponent.h"
-#include "Engine/Component/MeshRendererComponent.h"
 #include "ComponentDrawers.h"
 #include "imgui.h"
 #include <typeinfo>
@@ -38,10 +37,6 @@ void ComponentDrawers::DrawComponent(BaseComponent *component) {
     // Find and call appropriate drawer function
     const auto typeIndex = std::type_index(typeid(*component));
     const std::string typeName = component->GetTypeName();
-
-    // Debug: Print the type info
-    std::cout << "Looking for component type: " << typeName
-              << " with index hash: " << typeIndex.hash_code() << std::endl;
 
     if (const auto it = s_DrawerFunctions.find(typeIndex); it != s_DrawerFunctions.end()) {
         // Use registered drawer function

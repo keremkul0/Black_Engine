@@ -1,10 +1,7 @@
 #include "InspectorPanel.h"
 #include "ComponentDrawers.h"
 #include "Engine/Component/BaseComponent.h"
-#include "Engine/Component/TransformComponent.h"
 #include "imgui.h"
-#include <typeinfo>
-#include <glm/glm.hpp>
 #include <utility>
 
 InspectorPanel::InspectorPanel()
