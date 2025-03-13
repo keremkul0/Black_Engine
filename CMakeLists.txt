@@ -84,6 +84,10 @@ add_executable(Black_Engine
         src/Engine/Component/MeshComponent.cpp
         src/Editor/UI/Panels/InspectorPanel/ComponentDrawers.h
         src/Editor/UI/Panels/InspectorPanel/ComponentDrawers.cpp
+        src/Engine/Render/Material/Material.h
+        src/Engine/Render/Texture/Texture.h
+        src/Engine/Render/Texture/Texture.cpp
+        src/Engine/Render/Material/Material.cpp
 )
 
 target_include_directories(Black_Engine PRIVATE

@@ -22,65 +22,42 @@ void Scene::LoadDefaultScene() {
         (shaderPath + "simple.frag").c_str()
     );
 
-    // Create and position each primitive with increased spacing
+}
 
-    // 1. Cube
-    auto cubeObj = CreateGameObject("Cube");
-    auto cubeTransform = cubeObj->AddComponent<TransformComponent>();
-    cubeTransform->position = glm::vec3(-10.0f, 0.0f, 0.0f);
-    auto cubeMesh = cubeObj->AddComponent<MeshComponent>();
-    cubeMesh->SetMesh(Primitives::CreateCube());
-    auto cubeRenderer = cubeObj->AddComponent<MeshRendererComponent>();
-    cubeRenderer->SetShader(defaultShader);
+void Scene::CreateTestScene() {
+    // Create shader
+    auto shader = std::make_shared<Shader>("shaders/pbr.vert", "shaders/pbr.frag");
 
-    // 2. Sphere
-    auto sphereObj = CreateGameObject("Sphere");
-    auto sphereTransform = sphereObj->AddComponent<TransformComponent>();
-    sphereTransform->position = glm::vec3(-6.0f, 0.0f, 0.0f);
-    auto sphereMesh = sphereObj->AddComponent<MeshComponent>();
-    sphereMesh->SetMesh(Primitives::CreateSphere(1.0f, 32));
-    auto sphereRenderer = sphereObj->AddComponent<MeshRendererComponent>();
-    sphereRenderer->SetShader(defaultShader);
+    // Create textures
+    const auto diffuseTexture = std::make_shared<Texture>();
+    diffuseTexture->LoadFromFile("textures/bricks_diffuse.jpg");
 
-    // 3. Plane
-    auto planeObj = CreateGameObject("Plane");
-    auto planeTransform = planeObj->AddComponent<TransformComponent>();
-    planeTransform->position = glm::vec3(-2.0f, -1.0f, 0.0f);
-    planeTransform->scale = glm::vec3(2.0f, 1.0f, 2.0f);
-    auto planeMesh = planeObj->AddComponent<MeshComponent>();
-    planeMesh->SetMesh(Primitives::CreatePlane(2.0f, 2.0f, 1));
-    auto planeRenderer = planeObj->AddComponent<MeshRendererComponent>();
-    planeRenderer->SetShader(defaultShader);
+    const auto specularTexture = std::make_shared<Texture>();
+    specularTexture->LoadFromFile("textures/bricks_specular.jpg");
 
-    // 4. Quad
-    auto quadObj = CreateGameObject("Quad");
-    auto quadTransform = quadObj->AddComponent<TransformComponent>();
-    quadTransform->position = glm::vec3(2.0f, 1.0f, 0.0f);
-    auto quadMesh = quadObj->AddComponent<MeshComponent>();
-    quadMesh->SetMesh(Primitives::CreateQuad(2.0f, 1.0f));
-    auto quadRenderer = quadObj->AddComponent<MeshRendererComponent>();
-    quadRenderer->SetShader(defaultShader);
+    // Create material
+    const auto material = std::make_shared<Material>(shader);
+    material->diffuseColor = glm::vec3(0.8f, 0.8f, 0.8f);
+    material->specularColor = glm::vec3(1.0f);
+    material->shininess = 64.0f;
+    material->SetTexture(TextureType::Diffuse, diffuseTexture);
+    material->SetTexture(TextureType::Specular, specularTexture);
 
-    // 5. Cylinder
-    auto cylinderObj = CreateGameObject("Cylinder");
-    auto cylinderTransform = cylinderObj->AddComponent<TransformComponent>();
-    cylinderTransform->position = glm::vec3(6.0f, 0.0f, 0.0f);
-    auto cylinderMesh = cylinderObj->AddComponent<MeshComponent>();
-    cylinderMesh->SetMesh(Primitives::CreateCylinder(1.0f, 2.0f, 32));
-    auto cylinderRenderer = cylinderObj->AddComponent<MeshRendererComponent>();
-    cylinderRenderer->SetShader(defaultShader);
+    // Create cube with material
+    auto cubeObject = CreateGameObject("Cube");
 
-    // 6. Capsule
-    auto capsuleObj = CreateGameObject("Capsule");
-    auto capsuleTransform = capsuleObj->AddComponent<TransformComponent>();
-    capsuleTransform->position = glm::vec3(10.0f, 0.0f, 0.0f);
-    auto capsuleMesh = capsuleObj->AddComponent<MeshComponent>();
-    capsuleMesh->SetMesh(Primitives::CreateCapsule(1.0f, 2.0f, 32));
-    auto capsuleRenderer = capsuleObj->AddComponent<MeshRendererComponent>();
-    capsuleRenderer->SetShader(defaultShader);
+    const auto meshComp = cubeObject->AddComponent<MeshComponent>();
+    meshComp->SetMesh(Primitives::CreateCube(1.0f));
 
-    // You'll need to position your camera farther back to see all objects
-    // Consider using a z-position of around -15 to -20
+    const auto rendererComp = cubeObject->AddComponent<MeshRendererComponent>();
+    rendererComp->SetMaterial(material);
+
+    const auto transform = cubeObject->GetComponent<TransformComponent>();
+    transform->SetPosition(glm::vec3(0.0f, 0.0f, -5.0f));
+    transform->SetRotation(glm::vec3(45.0f, 45.0f, 0.0f));
+
+    // Add to scene/game
+    // yourScene->AddGameObject(cubeObject);
 }
 
 bool Scene::LoadSceneFromFile(const std::string &path) {
