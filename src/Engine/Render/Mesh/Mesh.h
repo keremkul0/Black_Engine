@@ -9,6 +9,7 @@ struct Vertex {
     glm::vec3 position;
     glm::vec3 normal;
     glm::vec2 texCoords;
+    glm::vec3 Tangent;
 };
 
 class Mesh {
@@ -18,8 +19,13 @@ public:
 
     void Initialize(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices);
 
+    void CalculateTangents(std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices);
+
+
+
     void Draw() const;
 
+    unsigned int GetVAO() const { return VAO; }
     [[nodiscard]] unsigned int GetIndexCount() const { return indexCount; }
 
 private:

@@ -8,6 +8,8 @@
 #include <type_traits>
 #include "Engine/Component/BaseComponent.h"
 
+class Scene;
+
 class GameObject final : public std::enable_shared_from_this<GameObject> {
 public:
     std::string name;
@@ -81,11 +83,17 @@ public:
 
     void Update(float deltaTime);
 
+    // Scene methods
+    Scene* GetScene() const { return m_Scene; }
+    void SetScene(Scene* scene) { m_Scene = scene; }
+    bool HasScene() const { return m_Scene != nullptr; }
+
     void Draw();
 
 private:
     std::vector<std::shared_ptr<GameObject> > m_Children;
     std::weak_ptr<GameObject> m_Parent; // Weak reference to avoid circular dependencies
+    Scene* m_Scene = nullptr; // Raw pointer because Scene owns GameObjects
 };
 
 #endif

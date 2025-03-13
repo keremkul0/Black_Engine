@@ -26,6 +26,9 @@ void Scene::LoadDefaultScene() {
 }
 
 void Scene::CreateTestScene() {
+    auto iblManager = std::make_shared<IBLManager>();
+    iblManager->GenerateEnvironmentMap("../src/Assets/environments/studio.hdr");
+    m_IBLManager = iblManager;
     const std::string shaderPath = "../src/shaders/";
     // Create shader
     const auto shader = std::make_shared<Shader>(
@@ -33,23 +36,14 @@ void Scene::CreateTestScene() {
         (shaderPath + "pbr.frag").c_str()
     );
 
+    shader->setFloat("material.metallic", 0.9f); // More metallic
+    shader->setFloat("material.roughness", 0.1f); // Less rough
+    shader->setInt("useIBL", 1); // Enable IBL
+
     // Create material
     const auto material = std::make_shared<Material>(shader);
 
     // Load textures with error handling
-    if (const auto diffuseTexture = std::make_shared<Texture>(); !diffuseTexture->LoadFromFile("../src/textures/bricks_diffuse.jpg")) {
-        std::cout << "Warning: Failed to load diffuse texture, using default\n";
-        material->diffuseColor = glm::vec3(0.8f, 0.2f, 0.2f);
-    } else {
-        material->SetTexture(TextureType::Diffuse, diffuseTexture);
-    }
-
-    if (const auto specularTexture = std::make_shared<Texture>(); !specularTexture->LoadFromFile("../src/textures/bricks_specular.jpg")) {
-        std::cout << "Warning: Failed to load specular texture, using default\n";
-    } else {
-        material->SetTexture(TextureType::Specular, specularTexture);
-    }
-
     material->diffuseColor = glm::vec3(0.8f, 0.8f, 0.8f);
     material->specularColor = glm::vec3(1.0f);
     material->shininess = 64.0f;
@@ -83,6 +77,18 @@ void Scene::UpdateAll(const float dt) {
 }
 
 void Scene::DrawAll() {
+
+    // If scene has IBL, bind the textures before rendering
+    if (m_IBLManager && !m_GameObjects.empty()) {
+        // Get the shader from the first object's material
+        // This is a simplification - you might need a more robust approach
+        auto renderer = m_GameObjects[0]->GetComponent<MeshRendererComponent>();
+        if (renderer && renderer->GetMaterial() && renderer->GetMaterial()->GetShader()) {
+            int textureUnit = 10; // Start at a high texture unit to avoid conflicts
+            m_IBLManager->BindTextures(renderer->GetMaterial()->GetShader(), textureUnit);
+        }
+    }
+
     for (const auto &obj: m_GameObjects) {
         obj->Draw();
     }

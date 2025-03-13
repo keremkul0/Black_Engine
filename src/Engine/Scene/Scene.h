@@ -6,6 +6,7 @@
 #include <string>
 #include <glm/glm.hpp>
 #include "Engine/Entity/GameObject.h"
+#include "Engine/Render/IBL/IBLManager.h"
 
 class Scene
 {
@@ -34,6 +35,9 @@ public:
     void SetProjectionMatrix(const glm::mat4& projMatrix) {
         m_ProjectionMatrix = projMatrix;
     }
+
+    bool HasIBLManager() const { return m_IBLManager != nullptr; }
+    std::shared_ptr<IBLManager> GetIBLManager() const { return m_IBLManager; }
     const std::string& GetName() const { return m_SceneName; }
     void SetName(const std::string& name) { m_SceneName = name; }
 
@@ -41,6 +45,7 @@ private:
     std::string m_SceneName = "New Scene";
     glm::mat4 m_ViewMatrix = glm::mat4(1.0f);
     glm::mat4 m_ProjectionMatrix = glm::mat4(1.0f);
+    std::shared_ptr<IBLManager> m_IBLManager;
     // Sahnedeki tüm objeler
     std::vector<std::shared_ptr<GameObject>> m_GameObjects;
 };

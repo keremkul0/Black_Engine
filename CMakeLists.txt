@@ -88,6 +88,10 @@ add_executable(Black_Engine
         src/Engine/Render/Texture/Texture.h
         src/Engine/Render/Texture/Texture.cpp
         src/Engine/Render/Material/Material.cpp
+        src/Engine/Render/IBL/Cubemap.h
+        src/Engine/Render/IBL/Cubemap.cpp
+        src/Engine/Render/IBL/IBLManager.h
+        src/Engine/Render/IBL/IBLManager.cpp
 )
 
 target_include_directories(Black_Engine PRIVATE

@@ -53,9 +53,49 @@ void Mesh::Initialize(const std::vector<Vertex>& vertices,
                           sizeof(Vertex),
                           reinterpret_cast<void *>(offsetof(Vertex, texCoords)));
 
+    // Tangent (layout=3) - Add this new attribute
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE,
+                          sizeof(Vertex),
+                          reinterpret_cast<void *>(offsetof(Vertex, Tangent)));
+
     glBindVertexArray(0);
 }
 
+void Mesh::CalculateTangents(std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) {
+    for (size_t i = 0; i < indices.size(); i += 3) {
+        Vertex& v0 = vertices[indices[i]];
+        Vertex& v1 = vertices[indices[i + 1]];
+        Vertex& v2 = vertices[indices[i + 2]];
+
+        // Edges of the triangle - use lowercase position
+        glm::vec3 edge1 = v1.position - v0.position;
+        glm::vec3 edge2 = v2.position - v0.position;
+
+        // Texture coordinate differences - use lowercase texCoords
+        glm::vec2 deltaUV1 = v1.texCoords - v0.texCoords;
+        glm::vec2 deltaUV2 = v2.texCoords - v0.texCoords;
+
+        // Calculate tangent
+        float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+
+        glm::vec3 tangent;
+        tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+        tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+        tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+        tangent = glm::normalize(tangent);
+
+        // Add calculated tangent to vertices
+        v0.Tangent += tangent;
+        v1.Tangent += tangent;
+        v2.Tangent += tangent;
+    }
+
+    // Normalize the tangents
+    for (auto& vertex : vertices) {
+        vertex.Tangent = glm::normalize(vertex.Tangent);
+    }
+}
 void Mesh::Draw() const
 {
     glBindVertexArray(VAO);

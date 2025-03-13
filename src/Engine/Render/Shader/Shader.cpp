@@ -5,11 +5,9 @@
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>  // glm::value_ptr() için gerekli
 
-Shader::Shader(const char* vertexPath, const char* fragmentPath)
-{
+Shader::Shader(const char *vertexPath, const char *fragmentPath) {
     std::string vertexCode;
-    std::string fragmentCode;
-    {
+    std::string fragmentCode; {
         std::ifstream vShaderFile(vertexPath);
         std::ifstream fShaderFile(fragmentPath);
 
@@ -31,18 +29,18 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
         fragmentCode = fShaderStream.str();
     }
 
-    const char* vShaderCode = vertexCode.c_str();
-    const char* fShaderCode = fragmentCode.c_str();
+    const char *vShaderCode = vertexCode.c_str();
+    const char *fShaderCode = fragmentCode.c_str();
 
     // 2) Derle (vertex shader)
     unsigned int vertex = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertex, 1, &vShaderCode, NULL);
+    glShaderSource(vertex, 1, &vShaderCode, nullptr);
     glCompileShader(vertex);
     checkCompileErrors(vertex, "VERTEX");
 
     // 3) Derle (fragment shader)
     unsigned int fragment = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment, 1, &fShaderCode, NULL);
+    glShaderSource(fragment, 1, &fShaderCode, nullptr);
     glCompileShader(fragment);
     checkCompileErrors(fragment, "FRAGMENT");
 
@@ -58,17 +56,14 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
     glDeleteShader(fragment);
 }
 
-void Shader::use() const
-{
+void Shader::use() const {
     glUseProgram(ID);
 }
 
-void Shader::setMat4(const std::string &name, const glm::mat4 &mat) const
-{
+void Shader::setMat4(const std::string &name, const glm::mat4 &mat) const {
     // Uniform konumunu bul
     const int location = glGetUniformLocation(ID, name.c_str());
-    if (location == -1)
-    {
+    if (location == -1) {
         // Opsiyonel: uniform bulunamadı diye uyarı verebilirsiniz
         // std::cerr << "Warning: uniform '" << name << "' doesn't exist!\n";
     }
@@ -77,57 +72,60 @@ void Shader::setMat4(const std::string &name, const glm::mat4 &mat) const
 }
 
 // Hata kontrolü (derleme/link)
-void Shader::checkCompileErrors(const unsigned int shader, const std::string& type)
-{
+void Shader::checkCompileErrors(const unsigned int shader, const std::string &type) {
     int success;
     char infoLog[1024];
-    if (type == "PROGRAM")
-    {
+    if (type == "PROGRAM") {
         glGetProgramiv(shader, GL_LINK_STATUS, &success);
-        if (!success)
-        {
-            glGetProgramInfoLog(shader, 1024, NULL, infoLog);
+        if (!success) {
+            glGetProgramInfoLog(shader, 1024, nullptr, infoLog);
             std::cerr << "ERROR::PROGRAM_LINKING_ERROR of type: " << type
-                      << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+                    << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
         }
-    }
-    else
-    {
+    } else {
         glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-        if (!success)
-        {
-            glGetShaderInfoLog(shader, 1024, NULL, infoLog);
+        if (!success) {
+            glGetShaderInfoLog(shader, 1024, nullptr, infoLog);
             std::cerr << "ERROR::SHADER_COMPILATION_ERROR of type: " << type
-                      << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+                    << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
         }
     }
 }
 
-void Shader::setVec3(const std::string& name, const glm::vec3& value) const {
+void Shader::setVec3(const std::string &name, const glm::vec3 &value) const {
     glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
 }
 
-void Shader::setVec4(const std::string& name, const glm::vec4& value) const {
+void Shader::setVec4(const std::string &name, const glm::vec4 &value) const {
     glUniform4fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
 }
 
-void Shader::setFloat(const std::string& name, const float value) const {
+void Shader::setFloat(const std::string &name, const float value) const {
     glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
 }
 
-void Shader::setInt(const std::string& name, const int value) const {
+void Shader::setInt(const std::string &name, const int value) const {
     const GLint location = glGetUniformLocation(ID, name.c_str());
-    if (location == -1) {
-        std::cerr << "Warning: Uniform '" << name << "' not found in shader" << std::endl;
+    if (location != -1) {
+        glUniform1i(location, value);
     }
-    glUniform1i(location, value);
+#ifdef DEBUG_SHADERS
+    else {
+        static std::set<std::string> reportedMissing;
+        if (reportedMissing.find(name) == reportedMissing.end()) {
+            std::cerr << "Warning: Uniform '" << name << "' not found in shader " << ID << std::endl;
+            reportedMissing.insert(name);
+        }
+    }
+#endif
 }
 
-bool Shader::HasUniform(const std::string& name) const {
-    return glGetUniformLocation(ID, name.c_str()) != -1;
+bool Shader::HasUniform(const std::string &name) const {
+    GLint location = glGetUniformLocation(ID, name.c_str());
+    return location != -1;
 }
 
-void Shader::setBool(const std::string& name, bool value) const {
+void Shader::setBool(const std::string &name, bool value) const {
     if (HasUniform(name)) {
         glUniform1i(glGetUniformLocation(ID, name.c_str()), static_cast<int>(value));
     }
