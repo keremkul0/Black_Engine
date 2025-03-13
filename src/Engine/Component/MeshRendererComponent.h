@@ -18,7 +18,7 @@ public:
 
     // Material setter/getter
     void SetMaterial(const std::shared_ptr<Material> &material) { m_material = material; }
-    std::shared_ptr<Material> GetMaterial() const { return m_material; }
+    [[nodiscard]] std::shared_ptr<Material> GetMaterial() const { return m_material; }
 
     // BaseComponent overrides
     void Start() override;

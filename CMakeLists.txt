@@ -92,6 +92,7 @@ add_executable(Black_Engine
 
 target_include_directories(Black_Engine PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/external/glm
+        ${CMAKE_CURRENT_SOURCE_DIR}/external/stb
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 

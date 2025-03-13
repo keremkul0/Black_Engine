@@ -3,6 +3,14 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h" // Make sure to download this header file
 
+void CheckGLError(const char* operation) {
+    GLenum error = glGetError();
+    if (error != GL_NO_ERROR) {
+        std::cerr << "OpenGL error after " << operation << ": 0x"
+                  << std::hex << error << std::dec << std::endl;
+    }
+}
+
 Texture::Texture() : m_textureID(0), m_width(0), m_height(0), m_channels(0) {
 }
 
@@ -49,6 +57,7 @@ bool Texture::LoadFromFile(const std::string& path, bool generateMipmaps) {
     // Bind and set texture parameters
     glBindTexture(GL_TEXTURE_2D, m_textureID);
     glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, m_width, m_height, 0, dataFormat, GL_UNSIGNED_BYTE, data);
+    CheckGLError("glTexImage2D");
 
     if (generateMipmaps) {
         glGenerateMipmap(GL_TEXTURE_2D);
@@ -67,7 +76,14 @@ bool Texture::LoadFromFile(const std::string& path, bool generateMipmaps) {
     return true;
 }
 
-void Texture::Bind(unsigned int unit) const {
+void Texture::Bind(const unsigned int unit) const {
+    // Don't bind if texture ID is 0 (indicates failure)
+    if (m_textureID == 0) {
+        std::cerr << "Warning: Attempting to bind invalid texture (ID=0)" << std::endl;
+        return;
+    }
+
     glActiveTexture(GL_TEXTURE0 + unit);
     glBindTexture(GL_TEXTURE_2D, m_textureID);
+    CheckGLError("glBindTexture");
 }

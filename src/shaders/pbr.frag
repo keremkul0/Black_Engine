@@ -36,10 +36,13 @@ void main() {
         diffuseColor = texture(material.diffuseMap, TexCoords).rgb;
     }
 
-    vec3 specularColor = material.specular;
-    if (material.hasSpecularMap == 1) {
-        specularColor = texture(material.specularMap, TexCoords).rgb;
-    }
+     vec3 specularColor;
+     if(material.hasSpecularMap == 1) {
+         // Invert roughness map to use as specular
+         specularColor = vec3(1.0) - texture(material.specularMap, TexCoords).rgb;
+     } else {
+         specularColor = material.specular;
+     }
 
     // Ambient
     float ambientStrength = 0.1;

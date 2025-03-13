@@ -66,7 +66,7 @@ void Shader::use() const
 void Shader::setMat4(const std::string &name, const glm::mat4 &mat) const
 {
     // Uniform konumunu bul
-    int location = glGetUniformLocation(ID, name.c_str());
+    const int location = glGetUniformLocation(ID, name.c_str());
     if (location == -1)
     {
         // Opsiyonel: uniform bulunamadı diye uyarı verebilirsiniz
@@ -100,5 +100,35 @@ void Shader::checkCompileErrors(const unsigned int shader, const std::string& ty
             std::cerr << "ERROR::SHADER_COMPILATION_ERROR of type: " << type
                       << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
         }
+    }
+}
+
+void Shader::setVec3(const std::string& name, const glm::vec3& value) const {
+    glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+}
+
+void Shader::setVec4(const std::string& name, const glm::vec4& value) const {
+    glUniform4fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+}
+
+void Shader::setFloat(const std::string& name, const float value) const {
+    glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+}
+
+void Shader::setInt(const std::string& name, const int value) const {
+    const GLint location = glGetUniformLocation(ID, name.c_str());
+    if (location == -1) {
+        std::cerr << "Warning: Uniform '" << name << "' not found in shader" << std::endl;
+    }
+    glUniform1i(location, value);
+}
+
+bool Shader::HasUniform(const std::string& name) const {
+    return glGetUniformLocation(ID, name.c_str()) != -1;
+}
+
+void Shader::setBool(const std::string& name, bool value) const {
+    if (HasUniform(name)) {
+        glUniform1i(glGetUniformLocation(ID, name.c_str()), static_cast<int>(value));
     }
 }

@@ -1,5 +1,6 @@
 #include "Material.h"
 
+#include <iostream>
 #include <utility>
 
 Material::Material() : diffuseColor(1.0f), specularColor(0.5f), shininess(32.0f) {
@@ -25,9 +26,17 @@ std::shared_ptr<Texture> Material::GetTexture(const TextureType type) const {
 }
 
 void Material::Apply() const {
-    if (!m_shader) return;
+    if (!m_shader) {
+        std::cerr << "Error: No shader assigned to material!" << std::endl;
+        return;
+    }
 
     m_shader->use();
+
+    if (m_shader->HasUniform("material.hasNormalMap")) {
+        const bool hasNormalMapTexture = (GetTexture(TextureType::Normal) != nullptr);
+        m_shader->setBool("material.hasNormalMap", hasNormalMapTexture);
+    }
 
     // Set material properties
     m_shader->setVec3("material.diffuse", diffuseColor);

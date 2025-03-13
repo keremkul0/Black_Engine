@@ -69,7 +69,7 @@ bool Application::Initialize() {
     m_InputSystem->RegisterEventReceiver(m_EditorLayout.get());
 
     // Load default scene
-    m_Scene->LoadDefaultScene();
+    m_Scene->CreateTestScene();
     // Set up the scene
     return true;
 }
