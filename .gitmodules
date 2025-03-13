@@ -16,5 +16,5 @@
 	url = https://github.com/g-truc/glm.git
 
 [submodule "external/stb"]
-     path = external/stb
-     url = https://github.com/nothings/stb.git
+ path = external/stb
+ url = https://github.com/nothings/stb.git
