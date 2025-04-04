@@ -5,6 +5,7 @@
 #include "Editor/UI//Layout/EditorLayout.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <GLFW/glfw3.h>
+#include "Editor/UI/Panels/InspectorPanel/ComponentDrawers.h"
 
 // Main window reference for ImGui - required for ImGuiLayer.cpp
 GLFWwindow *g_Window = nullptr;
@@ -47,6 +48,7 @@ bool Application::Initialize() {
     // Initialize input manager
     InputManager::Initialize(m_WindowManager->GetWindow());
     m_InputSystem->Initialize(m_WindowManager->GetWindow());
+
     // Set up window callbacks
     GLFWwindow *window = m_WindowManager->GetWindow();
     glfwSetWindowUserPointer(window, this);
@@ -68,9 +70,12 @@ bool Application::Initialize() {
     // Register editor layout with input system
     m_InputSystem->RegisterEventReceiver(m_EditorLayout.get());
 
+    // Save component drawers
+    ComponentDrawers::RegisterAllDrawers();
+
     // Load default scene
     m_Scene->LoadDefaultScene();
-    // Set up the scene
+
     return true;
 }
 

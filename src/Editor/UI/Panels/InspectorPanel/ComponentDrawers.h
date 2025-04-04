@@ -1,23 +1,22 @@
-#pragma once
+#ifndef COMPONENT_DRAWERS_H
+#define COMPONENT_DRAWERS_H
 
-#include "Engine/Component/BaseComponent.h"
-#include "Engine/Component/MeshComponent.h"
-#include "Engine/Component/TransformComponent.h"
-// Include other component headers as needed
+#include <functional>
+#include <string>
+
+class BaseComponent;
 
 class ComponentDrawers {
 public:
-    // Register all drawer functions
+    // Register all component drawers at once
     static void RegisterAllDrawers();
 
-    // Generic component drawer function
-    static void DrawComponent(BaseComponent *component);
+    // Register a single drawer
+    static void RegisterDrawer(const std::string& typeName,
+                              std::function<void(BaseComponent*)> drawerFunction);
 
-private:
-    // Specialized drawer functions for each component type
-    static void DrawMeshComponent(const MeshComponent *component);
-
-    static void DrawTransformComponent(TransformComponent *component);
-
-    // Add more component drawer methods as needed
+    // Draw a component using the appropriate drawer
+    static void DrawComponent(BaseComponent* component);
 };
+
+#endif // COMPONENT_DRAWERS_H

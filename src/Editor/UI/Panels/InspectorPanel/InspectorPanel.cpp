@@ -39,8 +39,9 @@ void InspectorPanel::DrawContent() {
     // Draw components
     ImGui::Separator();
     for (const auto& component : m_SelectedObject->GetComponents()) {
-        // Use ComponentDrawers to draw each component
-        ComponentDrawers::DrawComponent(component.get());
+        // ComponentDrawers::DrawComponent(component.get());
+
+        DrawComponentUI(component.get());
     }
 }
 

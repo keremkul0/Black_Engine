@@ -20,6 +20,10 @@ public:
     TransformComponent() = default;
     ~TransformComponent() override = default;
 
+    // TransformComponent.h dosyasındaki public bölümüne ekleyin
+    void UpdateModelMatrix() {
+        matrixDirty = true;
+    }
     // Position setter
     void SetPosition(const glm::vec3& newPosition) {
         position = newPosition;
