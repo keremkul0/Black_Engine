@@ -1,4 +1,6 @@
 #include "EditorLayout.h"
+
+#include <utility>
 #include "imgui.h"
 #include "imgui_internal.h"
 #include "Editor/UI/Panels/GamePanel/GamePanel.h"
@@ -21,7 +23,7 @@ void EditorLayout::SetupDefaultLayout(const std::shared_ptr<Scene> &scene) {
 
     // Connect the hierarchy and inspector panels
     hierarchyPanel->OnSelectionChanged = [inspectorPanel](std::shared_ptr<GameObject> selectedObject) {
-        inspectorPanel->SetSelectedObject(selectedObject);
+        inspectorPanel->SetSelectedObject(std::move(selectedObject));
     };
 }
 
@@ -117,8 +119,8 @@ std::shared_ptr<Panel> EditorLayout::GetPanelUnderMouse() {
         if (!window || !window->Active)
             continue;
 
-        ImVec2 panelMin = window->Pos;
-        ImVec2 panelMax = ImVec2(
+        const ImVec2 panelMin = window->Pos;
+        const auto panelMax = ImVec2(
             panelMin.x + window->Size.x,
             panelMin.y + window->Size.y
         );
@@ -138,19 +140,19 @@ void EditorLayout::ProcessInput(const InputEvent &event) {
     // we need to ensure input is properly routed
 
     const ImGuiIO &io = ImGui::GetIO();
-    const bool isMouseEvent = (event.type == InputEventType::MouseMove ||
-                               event.type == InputEventType::MouseDown ||
-                               event.type == InputEventType::MouseUp ||
-                               event.type == InputEventType::MouseScroll);
+    const bool isMouseEvent = event.type == InputEventType::MouseMove ||
+                              event.type == InputEventType::MouseDown ||
+                              event.type == InputEventType::MouseUp ||
+                              event.type == InputEventType::MouseScroll;
 
-    const bool isKeyEvent = (event.type == InputEventType::KeyDown ||
-                             event.type == InputEventType::KeyUp ||
-                             event.type == InputEventType::KeyHeld);
+    const bool isKeyEvent = event.type == InputEventType::KeyDown ||
+                            event.type == InputEventType::KeyUp ||
+                            event.type == InputEventType::KeyHeld;
 
     // Process panel-specific input even when ImGui wants capture
     // This allows game panels to receive input when focused
     if (isMouseEvent) {
-        // Find panel under mouse regardless of io.WantCaptureMouse
+        // Find a panel under mouse regardless of io.WantCaptureMouse
         if (const auto panelUnderMouse = GetPanelUnderMouse()) {
             // Always send mouse events to the panel under mouse
             // The panel itself can decide whether to use it

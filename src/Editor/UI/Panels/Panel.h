@@ -18,21 +18,21 @@ public:
     virtual bool OnInputEvent(const InputEvent &event) { return false; }
 
     // Declaration only - implementation moved to .cpp
-    virtual bool IsActiveForInput() const;
+    [[nodiscard]] virtual bool IsActiveForInput() const;
 
-    bool IsFocused() const { return m_IsFocused; }
-    bool IsHovered() const { return m_IsHovered; }
+    [[nodiscard]] bool IsFocused() const { return m_IsFocused; }
+    [[nodiscard]] bool IsHovered() const { return m_IsHovered; }
 
     void SetActive(bool active);
 
-    bool IsActive() const;
+    [[nodiscard]] bool IsActive() const;
 
     virtual void OnUpdate(float deltaTime) {
     }
 
     bool &IsOpen() { return m_IsOpen; }
 
-    const std::string &GetTitle() const;
+    [[nodiscard]] const std::string &GetTitle() const;
 
 protected:
     // This is what derived panels will implement

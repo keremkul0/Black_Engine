@@ -4,6 +4,7 @@
 #include <vector>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include "Core/AssetDatabase/Asset.h"
 
 struct Vertex {
     glm::vec3 position;
@@ -11,10 +12,12 @@ struct Vertex {
     glm::vec2 texCoords;
 };
 
-class Mesh {
+class Mesh : public Asset {
+    // Inherit from Asset
 public:
-    Mesh() = default; // Added default constructor
-    ~Mesh();
+    Mesh() = default;
+
+    ~Mesh() override; // Mark as override
 
     void Initialize(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices);
 
