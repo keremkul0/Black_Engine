@@ -377,7 +377,7 @@ namespace Primitives {
                 const glm::vec3 normal = glm::normalize(glm::vec3(posX, posY + halfHeight, posZ));
 
                 const float u = static_cast<float>(x) / static_cast<float>(segments);
-                const float v = (0.5f + 0.25f) + 0.25f * static_cast<float>(y) / static_cast<float>(rings);
+                const float v = 0.5f + 0.25f + 0.25f * static_cast<float>(y) / static_cast<float>(rings);
 
                 vertices.push_back({{posX, posY, posZ}, normal, {u, v}});
             }

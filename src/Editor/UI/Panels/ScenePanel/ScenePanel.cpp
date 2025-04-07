@@ -220,7 +220,9 @@ void ScenePanel::SetupFramebuffer()
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_DepthRenderBuffer);
 
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-        std::cout << "ERROR: Framebuffer not complete!" << std::endl;
+    {
+        // Framebuffer is not complete, but we're removing the console output
+    }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

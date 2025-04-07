@@ -13,12 +13,6 @@ using DrawerFunction = std::function<void(BaseComponent *)>;
 static std::unordered_map<std::type_index, DrawerFunction> s_DrawerFunctions;
 
 void ComponentDrawers::RegisterAllDrawers() {
-    // Print hash codes during registration
-    std::cout << "Registering TransformComponent with hash: "
-              << std::type_index(typeid(TransformComponent)).hash_code() << std::endl;
-    std::cout << "Registering MeshComponent with hash: "
-              << std::type_index(typeid(MeshComponent)).hash_code() << std::endl;
-
     // Register all drawer functions by component type
     s_DrawerFunctions[std::type_index(typeid(MeshComponent))] = [](BaseComponent *comp) {
         DrawMeshComponent(dynamic_cast<MeshComponent *>(comp));

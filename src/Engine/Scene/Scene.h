@@ -33,7 +33,7 @@ public:
     void SetProjectionMatrix(const glm::mat4& projMatrix) {
         m_ProjectionMatrix = projMatrix;
     }
-    const std::string& GetName() const { return m_SceneName; }
+    [[nodiscard]] const std::string& GetName() const { return m_SceneName; }
     void SetName(const std::string& name) { m_SceneName = name; }
 
 private:
