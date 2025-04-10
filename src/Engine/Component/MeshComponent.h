@@ -8,11 +8,6 @@
 #include "Engine/Render/Mesh/Mesh.h"
 
 class MeshComponent final : public BaseComponent {
-private:
-    std::shared_ptr<Mesh> m_mesh;
-    std::string m_meshPath;
-    bool m_isLoaded = false;
-
 public:
     MeshComponent() = default;
 
@@ -36,6 +31,11 @@ public:
 
     // Bileşen tipi bilgisi
     [[nodiscard]] std::string GetTypeName() const override { return "MeshComponent"; }
+
+private:
+    std::shared_ptr<Mesh> m_mesh;
+    std::string m_meshPath;
+    bool m_isLoaded = false;
 };
 
 #endif // MESH_COMPONENT_H

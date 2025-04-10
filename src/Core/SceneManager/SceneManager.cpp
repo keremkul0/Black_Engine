@@ -1,10 +1,17 @@
+/**
+ * @file SceneManager.cpp
+ * @brief Implementation of the scene management system for Black Engine.
+ *
+ * This file handles scene loading, saving, and management of scene objects.
+ */
+
 #include "SceneManager.h"
 #include "Core/FileSystem/FileSystem.h"
-#include "Core/Logger/Logger.h"
 #include "Core/ProjectManager/ProjectManager.h"
 #include "Engine/Component/MeshComponent.h"
 #include "Engine/Component/MeshRendererComponent.h"
 #include "Engine/Component/TransformComponent.h"
+#include "Core/Logger/LogMacros.h"
 
 SceneManager &SceneManager::GetInstance() {
     static SceneManager instance;
@@ -12,11 +19,11 @@ SceneManager &SceneManager::GetInstance() {
 }
 
 bool SceneManager::LoadScene(const std::string &scenePath) {
-    if (!FileSystem::FileExists(scenePath)) {
+    if (!FileSystem::BE_File_Exists(scenePath)) {
         return false;
     }
 
-    std::string fileContent = FileSystem::ReadTextFile(scenePath);
+    const std::string fileContent = FileSystem::BE_Read_Text_File(scenePath);
     if (fileContent.empty()) {
         return false;
     }
@@ -30,22 +37,20 @@ bool SceneManager::LoadScene(const std::string &scenePath) {
 
 void SceneManager::SaveCurrentScene() {
     if (m_CurrentScenePath.empty()) {
-        return; // Remove boolean return
+        return; // No scene path set; nothing to save
     }
 
-    SaveCurrentScene(m_CurrentScenePath); // Don't return value
+    SaveCurrentScene(m_CurrentScenePath);
 }
 
 void SceneManager::SaveCurrentScene(const std::string &scenePath) {
     if (!m_ActiveScene) {
-        return; // Remove boolean return
+        return;
     }
 
-    // Use SerializeCurrentScene() instead of SerializeToJSON
-    std::string jsonStr = SerializeCurrentScene();
-    if (FileSystem::WriteTextFile(scenePath, jsonStr)) {
+    // Use SerializeCurrentScene() instead of old serialization methods
+    if (const std::string jsonStr = SerializeCurrentScene(); FileSystem::BE_Write_Text_File(scenePath, jsonStr)) {
         m_CurrentScenePath = scenePath;
-        return; // Remove boolean return
     }
 }
 
@@ -65,10 +70,9 @@ std::vector<std::string> SceneManager::GetAvailableScenes() const {
 
 void SceneManager::RegisterScene(const std::string &scenePath) {
     // Check if already registered
-    for (const auto &path: m_RegisteredScenes) {
+    for (const auto &path : m_RegisteredScenes) {
         if (path == scenePath) return;
     }
-
     m_RegisteredScenes.push_back(scenePath);
 }
 
@@ -88,13 +92,13 @@ bool SceneManager::DeserializeScene(const std::string &jsonData) {
 
         // Load game objects
         if (sceneJson.contains("gameObjects") && sceneJson["gameObjects"].is_array()) {
-            for (const auto &objJson: sceneJson["gameObjects"]) {
+            for (const auto &objJson : sceneJson["gameObjects"]) {
                 std::string name = objJson.value("name", "GameObject");
                 const auto gameObject = m_ActiveScene->CreateGameObject(name);
 
                 // Add components based on their types
                 if (objJson.contains("components") && objJson["components"].is_array()) {
-                    for (const auto &compJson: objJson["components"]) {
+                    for (const auto &compJson : objJson["components"]) {
                         std::string type = compJson["type"];
 
                         if (type == "TransformComponent") {
@@ -125,26 +129,26 @@ bool SceneManager::DeserializeScene(const std::string &jsonData) {
                                 );
                             }
                         }
-                        // Add more component types as needed
+                        // Process MeshComponent
                         else if (type == "MeshComponent") {
-                            // Process mesh component
-                            // This would need asset references to be loaded
                             auto mesh = gameObject->AddComponent<MeshComponent>();
-                            // TODO: Load mesh from asset path
-                        } else if (type == "MeshRendererComponent") {
-                            // Process mesh renderer component
+                            // TODO: Load mesh asset reference as needed
+                        }
+                        // Process MeshRendererComponent
+                        else if (type == "MeshRendererComponent") {
                             auto renderer = gameObject->AddComponent<MeshRendererComponent>();
-                            // TODO: Load shader from asset path
+                            // TODO: Load shader asset reference as needed
                         }
                     }
                 }
             }
         }
 
-        Logger::LogInfo("Scene loaded successfully");
+        // Kategori kullanarak loglama
+        BE_CAT_INFO("Scene", "Scene loaded successfully");
         return true;
     } catch (const std::exception &e) {
-        Logger::LogError("Failed to parse scene JSON: " + std::string(e.what()));
+        BE_CAT_ERROR("Scene", std::string("Failed to parse scene JSON: ") + e.what());
         // Create an empty scene as fallback
         CreateNewScene();
         return false;
@@ -162,31 +166,28 @@ std::string SceneManager::SerializeCurrentScene() const {
     sceneJson["gameObjects"] = json::array();
 
     // Serialize game objects
-    for (const auto &obj: m_ActiveScene->GetGameObjects()) {
+    for (const auto &obj : m_ActiveScene->GetGameObjects()) {
         json objJson;
         objJson["name"] = obj->name;
         objJson["components"] = json::array();
 
-        // Serialize transform component
+        // Serialize TransformComponent
         if (const auto transform = obj->GetComponent<TransformComponent>()) {
             json compJson;
             compJson["type"] = "TransformComponent";
 
-            // Position
             compJson["position"] = {
                 transform->position.x,
                 transform->position.y,
                 transform->position.z
             };
 
-            // Rotation
             compJson["rotation"] = {
                 transform->rotation.x,
                 transform->rotation.y,
                 transform->rotation.z
             };
 
-            // Scale
             compJson["scale"] = {
                 transform->scale.x,
                 transform->scale.y,
@@ -196,30 +197,25 @@ std::string SceneManager::SerializeCurrentScene() const {
             objJson["components"].push_back(compJson);
         }
 
-        // Serialize mesh component
+        // Serialize MeshComponent
         if (auto mesh = obj->GetComponent<MeshComponent>()) {
             json compJson;
             compJson["type"] = "MeshComponent";
-            // TODO: Store mesh asset path
-
+            // TODO: Store mesh asset reference
             objJson["components"].push_back(compJson);
         }
 
-        // Serialize mesh renderer component
+        // Serialize MeshRendererComponent
         if (auto renderer = obj->GetComponent<MeshRendererComponent>()) {
             json compJson;
             compJson["type"] = "MeshRendererComponent";
-            // TODO: Store shader asset path
-
+            // TODO: Store shader asset reference
             objJson["components"].push_back(compJson);
         }
-
-        // Add more component types as needed
 
         sceneJson["gameObjects"].push_back(objJson);
     }
 
-    // Return formatted JSON string
     return sceneJson.dump(4);
 }
 
@@ -230,7 +226,7 @@ void SceneManager::ClearCurrentScene() {
 bool SceneManager::LoadSceneFromJSON(const std::string &jsonData) {
     try {
         auto j = nlohmann::json::parse(jsonData);
-        auto scene = std::make_shared<Scene>();
+        const auto scene = std::make_shared<Scene>();
         DeserializeScene(jsonData);
         m_ActiveScene = scene;
         return true;

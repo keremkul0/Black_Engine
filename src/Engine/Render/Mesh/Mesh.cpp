@@ -3,17 +3,18 @@
 #include <glad/glad.h>
 
 
-Mesh::~Mesh()
-{
+Mesh::~Mesh() {
     // Yok edici
-    if (EBO) glDeleteBuffers(1, &EBO);
-    if (VBO) glDeleteBuffers(1, &VBO);
-    if (VAO) glDeleteVertexArrays(1, &VAO);
+    if (EBO)
+        glDeleteBuffers(1, &EBO);
+    if (VBO)
+        glDeleteBuffers(1, &VBO);
+    if (VAO)
+        glDeleteVertexArrays(1, &VAO);
 }
 
-void Mesh::Initialize(const std::vector<Vertex>& vertices,
-                      const std::vector<unsigned int>& indices)
-{
+void Mesh::Initialize(const std::vector<Vertex> &vertices,
+                      const std::vector<unsigned int> &indices) {
     indexCount = static_cast<unsigned int>(indices.size());
 
     glGenVertexArrays(1, &VAO);
@@ -23,7 +24,7 @@ void Mesh::Initialize(const std::vector<Vertex>& vertices,
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER,
-                 vertices.size() * sizeof(Vertex),
+                 static_cast<GLsizeiptr>(vertices.size() * sizeof(Vertex)),
                  vertices.data(),
                  GL_STATIC_DRAW);
 
@@ -31,7 +32,7 @@ void Mesh::Initialize(const std::vector<Vertex>& vertices,
     glGenBuffers(1, &EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 indices.size() * sizeof(unsigned int),
+                 static_cast<GLsizeiptr>(indices.size() * sizeof(unsigned int)),
                  indices.data(),
                  GL_STATIC_DRAW);
 
@@ -56,9 +57,8 @@ void Mesh::Initialize(const std::vector<Vertex>& vertices,
     glBindVertexArray(0);
 }
 
-void Mesh::Draw() const
-{
+void Mesh::Draw() const {
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indexCount), GL_UNSIGNED_INT, nullptr);
     glBindVertexArray(0);
 }

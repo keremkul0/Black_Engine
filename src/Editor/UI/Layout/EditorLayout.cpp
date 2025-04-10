@@ -1,6 +1,7 @@
 #include "EditorLayout.h"
 
 #include <utility>
+#include <ranges>
 #include "imgui.h"
 #include "imgui_internal.h"
 #include "Editor/UI/Panels/GamePanel/GamePanel.h"
@@ -37,14 +38,14 @@ void EditorLayout::RenderLayout() {
     }
 
     // Render all panels
-    for (auto &[name, panel]: m_Panels) {
+    for (const auto &panel: m_Panels | std::views::values) {
         panel->Render();
     }
 }
 
-void EditorLayout::UpdateAllPanels(float deltaTime) {
-    for (auto &panelPair: m_Panels) {
-        panelPair.second->OnUpdate(deltaTime);
+void EditorLayout::UpdateAllPanels(const float deltaTime) {
+    for (const auto &val: m_Panels | std::views::values) {
+        val->OnUpdate(deltaTime);
     }
 }
 
@@ -179,7 +180,7 @@ void EditorLayout::ProcessInput(const InputEvent &event) {
         if (io.WantCaptureKeyboard)
             return;
 
-        for (auto &[name, panel]: m_Panels) {
+        for (const auto &panel: m_Panels | std::views::values) {
             if (panel->IsActiveForInput()) {
                 panel->OnInputEvent(event);
                 break;
@@ -188,7 +189,7 @@ void EditorLayout::ProcessInput(const InputEvent &event) {
     }
 }
 
-void EditorLayout::ShowPanel(const std::string &name, bool show) {
+void EditorLayout::ShowPanel(const std::string &name, const bool show) {
     if (const auto it = m_Panels.find(name); it != m_Panels.end()) {
         it->second->SetActive(show);
     }

@@ -15,7 +15,7 @@ glm::mat4 gViewMatrix(1.0f);
 glm::mat4 gProjectionMatrix(1.0f);
 
 // Scroll callback function
-static void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
+static void scroll_callback(GLFWwindow *window, double xoffset, const double yoffset) {
     InputManager::SetScrollOffset(static_cast<float>(yoffset));
 }
 

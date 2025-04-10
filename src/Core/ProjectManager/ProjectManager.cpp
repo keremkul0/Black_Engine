@@ -3,6 +3,7 @@
 #include "Core/FileSystem/FileSystem.h"
 #include "Core/SceneManager/SceneManager.h"
 #include "Core/Logger/LogMacros.h"
+#include "spdlog/fmt/bundled/format.h"
 
 /**
  * Returns the singleton instance of the Project Manager.
@@ -23,14 +24,14 @@ bool ProjectManager::LoadProject(const std::string &projectPath) {
 
     // Check if project file exists
     std::string projectFilePath = projectPath + "/project.json";
-    if (!FileSystem::FileExists(projectFilePath)) {
+    if (!FileSystem::BE_File_Exists(projectFilePath)) {
         BE_ERROR(fmt::format("Project file not found: {}", projectFilePath));
         return false;
     }
 
     // Read and parse project file
     BE_DEBUG(fmt::format("Reading project file: {}", projectFilePath));
-    std::string projectJson = FileSystem::ReadTextFile(projectFilePath);
+    std::string projectJson = FileSystem::BE_Read_Text_File(projectFilePath);
 
     try {
         auto projectData = nlohmann::json::parse(projectJson);
@@ -71,7 +72,7 @@ bool ProjectManager::LoadProjectSettings() {
     std::string settingsFilePath = m_ProjectPath + "/settings.json";
 
     // Check if settings file exists
-    if (!FileSystem::FileExists(settingsFilePath)) {
+    if (!FileSystem::BE_File_Exists(settingsFilePath)) {
         BE_INFO(fmt::format("Settings file not found: {}. Creating defaults.",
             settingsFilePath));
         // Create default settings if not found
@@ -82,7 +83,7 @@ bool ProjectManager::LoadProjectSettings() {
     // Try to read and parse settings
     try {
         BE_DEBUG(fmt::format("Reading settings file: {}", settingsFilePath));
-        std::string settingsJson = FileSystem::ReadTextFile(settingsFilePath);
+        std::string settingsJson = FileSystem::BE_Read_Text_File(settingsFilePath);
         auto settingsData = nlohmann::json::parse(settingsJson);
 
         // Parse build settings
@@ -166,7 +167,7 @@ bool ProjectManager::SaveProjectSettings() {
         // Save to file
         std::string settingsFilePath = m_ProjectPath + "/settings.json";
         BE_DEBUG(fmt::format("Writing settings file: {}", settingsFilePath));
-        bool success = FileSystem::WriteTextFile(settingsFilePath, settingsJson.dump(4));
+        const bool success = FileSystem::BE_Write_Text_File(settingsFilePath, settingsJson.dump(4));
 
         if (success) {
             BE_INFO("Project settings saved successfully");
@@ -201,13 +202,12 @@ bool ProjectManager::SaveProject() {
     projectData["engine"] = "Black Engine";
 
     const std::string projectFilePath = m_ProjectPath + "/project.json";
-    const bool projectSaved = FileSystem::WriteTextFile(projectFilePath, projectData.dump(4));
+    const bool projectSaved = FileSystem::BE_Write_Text_File(projectFilePath, projectData.dump(4));
 
     if (projectSaved && settingsSaved) {
         BE_INFO(fmt::format("Project saved successfully: {}", m_ProjectName));
         return true;
-    } else {
-        BE_ERROR("Failed to save project");
-        return false;
     }
+    BE_ERROR("Failed to save project");
+    return false;
 }

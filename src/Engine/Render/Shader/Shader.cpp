@@ -67,14 +67,14 @@ void Shader::use() const
 void Shader::setMat4(const std::string &name, const glm::mat4 &mat) const
 {
     // Uniform konumunu bul
-    int location = glGetUniformLocation(ID, name.c_str());
+    const int location = glGetUniformLocation(ID, name.c_str());
     if (location == -1)
     {
         // Opsiyonel: uniform bulunamadı diye uyarı verebilirsiniz
         // std::cerr << "Warning: uniform '" << name << "' doesn't exist!\n";
     }
     // Matrisi uniform'a yükle
-    glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(mat));
+    glUniformMatrix4fv(location, 1, GL_FALSE, value_ptr(mat));
 }
 
 // Hata kontrolü (derleme/link)

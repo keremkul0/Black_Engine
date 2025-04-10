@@ -3,7 +3,6 @@
 // Forward declarations
 class Asset;
 class FileSystem;
-class Logger;
 class Texture;
 class Shader;
 class Material;

@@ -3,6 +3,11 @@ project(Black_Engine)
 
 set(CMAKE_CXX_STANDARD 20)
 
+# Visual Studio için UTF-8 desteği ekliyoruz (spdlog için gerekli)
+if(MSVC)
+  add_compile_options(/utf-8)
+endif()
+
 option(BUILD_TESTS "Build the test suite" ON)
 if(COMMAND cmake_policy)
     cmake_policy(SET CMP0003 NEW)
@@ -70,8 +75,13 @@ set(CORE_FILES
     src/Core/ProjectManager/ProjectManager.cpp
     src/Core/FileSystem/FileSystem.h
     src/Core/FileSystem/FileSystem.cpp
-    src/Core/Logger/Logger.h
-    src/Core/Logger/Logger.cpp
+    src/Core/Logger/LoggerManager.h
+    src/Core/Logger/LoggerManager.cpp
+    src/Core/Logger/SpdlogLogger.h
+    src/Core/Logger/SpdlogLogger.cpp
+    src/Core/Logger/MockLogger.h
+    src/Core/Logger/MockLogger.cpp
+    src/Core/Logger/ILogger.h
 )
 
 # Engine Files
