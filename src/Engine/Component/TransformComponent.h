@@ -7,11 +7,6 @@
 
 class TransformComponent final : public BaseComponent
 {
-private:
-    // Model matrisi önbellekleme için
-    mutable glm::mat4 cachedModelMatrix = glm::mat4(1.0f);
-    mutable bool matrixDirty = true;
-
 public:
     glm::vec3 position {0.f, 0.f, 0.f};
     glm::vec3 rotation {0.f, 0.f, 0.f}; // Euler açı (derece)
@@ -51,7 +46,9 @@ public:
     [[nodiscard]] std::string GetTypeName() const override { return "TransformComponent"; }
 
 private:
-    // Model matrisini yeniden hesapla
+    // Model matrisi önbellekleme için
+    mutable glm::mat4 cachedModelMatrix = glm::mat4(1.0f);
+    mutable bool matrixDirty = true;
     void RecalculateModelMatrix() const;
 };
 

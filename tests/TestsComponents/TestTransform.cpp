@@ -2,22 +2,39 @@
 #include "Engine/Entity/GameObject.h"
 #include "Engine/Component/TransformComponent.h"
 #include <glm/glm.hpp>
+#include <memory>
 
-TEST(TransformTest, DefaultValues)
+class TransformTest : public ::testing::Test {
+protected:
+    void SetUp() override {
+        // Create a new GameObject for each test
+        gameObject = std::make_shared<GameObject>();
+    }
+    
+    std::shared_ptr<GameObject> gameObject;
+};
+
+TEST_F(TransformTest, DefaultValues)
 {
-    GameObject obj;
-    auto transform = obj.AddComponent<TransformComponent>();
+    // Use the shared_ptr-managed GameObject
+    auto transform = gameObject->AddComponent<TransformComponent>();
+    
+    // Make sure we got a valid component
+    ASSERT_NE(transform, nullptr);
 
     EXPECT_FLOAT_EQ(transform->position.x, 0.f);
     EXPECT_FLOAT_EQ(transform->scale.x, 1.f);
 }
 
-TEST(TransformTest, UpdateMovesPosition)
+TEST_F(TransformTest, UpdateMovesPosition)
 {
-    GameObject obj;
-    auto transform = obj.AddComponent<TransformComponent>();
+    // Use the shared_ptr-managed GameObject
+    auto transform = gameObject->AddComponent<TransformComponent>();
+    
+    // Make sure we got a valid component
+    ASSERT_NE(transform, nullptr);
 
     transform->position = glm::vec3(1,2,3);
-    obj.Update(0.016f);
+    gameObject->Update(0.016f);
     EXPECT_FLOAT_EQ(transform->position.x, 1.f);
 }

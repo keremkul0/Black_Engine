@@ -1,212 +1,358 @@
 /**
  * @file FileSystem.cpp
- * @brief Implementation of filesystem utilities for cross-platform file operations
+ * @brief Implementation of utility functions for file system operations
  *
- * This file provides implementation for various filesystem operations including:
- * - File manipulation (create, delete, read, write)
- * - Directory operations (create, delete, listing)
- * - Path utilities (normalization, combining, extraction)
+ * This file contains the implementation of the FileSystem class, which provides
+ * a cross-platform interface for file and directory operations. It uses std::filesystem
+ * for C++17 compliant and platform-independent operations.
  *
- * The implementation uses the C++17 std::filesystem library for cross-platform
- * filesystem operations, abstracting platform-specific details away from client code.
- *
- * @note All operations are designed to be safe, returning empty results or false
- *       instead of throwing exceptions when operations fail.
- *
- * @see FileSystem.h for the interface definitions
+ * @see FileSystem.h
  */
 
+// Include our header first
 #include "FileSystem.h"
+
+// Then include other required headers
 #include <filesystem>
 #include <fstream>
 #include <sstream>
 #include <iterator>
 #include "Core/Logger/LogMacros.h"
 
+// Using std::filesystem with a shorter alias
 namespace fs = std::filesystem;
 
-bool FileSystem::Initialize()
+bool FileSystem::BE_Initialize()
 {
-    // Log initialization for this subsystem.
-    BE_CAT_INFO("FileSystem", "FileSystem module initialized");
+    // Subsystem initialization message
+    BE_CAT_INFO("FileSystem", "FileSystem subsystem initialized");
     return true;
 }
 
-bool FileSystem::FileExists(const std::string &path)
+bool FileSystem::BE_File_Exists(const std::string &path)
 {
     return fs::exists(path) && fs::is_regular_file(path);
 }
 
-bool FileSystem::CreateFile(const std::string &path)
+bool FileSystem::BE_Create_File(const std::string &path)
 {
-    std::ofstream file(path);
-    return file.is_open();
-}
+    try {
+        // Create parent directories if they don't exist
+        const fs::path filePath(path);
 
-bool FileSystem::DeleteFile(const std::string &path)
-{
-    if (!FileExists(path))
+        if (const fs::path parentPath = filePath.parent_path(); !parentPath.empty() && !fs::exists(parentPath)) {
+            BE_CAT_DEBUG_FMT("FileSystem", "Creating parent directory: {}", parentPath.string());
+            fs::create_directories(parentPath);
+        }
+        
+        std::ofstream file(path);
+
+        if (const bool result = file.is_open(); !result) {
+            BE_CAT_ERROR_FMT("FileSystem", "Failed to create file: {}", path);
+            return false;
+        }
+
+        BE_CAT_DEBUG_FMT("FileSystem", "File created successfully: {}", path);
+        return true;
+    }
+    catch (const std::exception& e) {
+        BE_CAT_ERROR_FMT("FileSystem", "Error creating file: {} - {}", path, e.what());
         return false;
-
-    return fs::remove(path);
+    }
 }
 
-std::string FileSystem::ReadTextFile(const std::string &path)
+bool FileSystem::BE_Delete_File(const std::string &path)
 {
-    if (!FileExists(path))
-    {
-        BE_CAT_WARN_FORMAT("FileSystem", "File does not exist: {}", path);
+    try {
+        if (!BE_File_Exists(path)) {
+            BE_CAT_WARN_FMT("FileSystem", "File not found for deletion: {}", path);
+            return false;
+        }
+
+        bool result = fs::remove(path);
+
+        if (result) {
+            BE_CAT_DEBUG_FMT("FileSystem", "File deleted successfully: {}", path);
+        } else {
+            BE_CAT_ERROR_FMT("FileSystem", "Failed to delete file: {}", path);
+        }
+
+        return result;
+    }
+    catch (const std::exception& e) {
+        BE_CAT_ERROR_FMT("FileSystem", "Error deleting file: {} - {}", path, e.what());
+        return false;
+    }
+}
+
+std::string FileSystem::BE_Read_Text_File(const std::string &path)
+{
+    try {
+        if (!BE_File_Exists(path)) {
+            BE_CAT_WARN_FMT("FileSystem", "File not found for reading: {}", path);
+            return "";
+        }
+
+        const std::ifstream file(path);
+        std::stringstream buffer;
+        buffer << file.rdbuf();
+
+        BE_CAT_DEBUG_FMT("FileSystem", "File read successfully: {}", path);
+        return buffer.str();
+    }
+    catch (const std::exception& e) {
+        BE_CAT_ERROR_FMT("FileSystem", "Error reading file: {} - {}", path, e.what());
         return "";
     }
-
-    const std::ifstream file(path);
-    std::stringstream buffer;
-    buffer << file.rdbuf();
-    return buffer.str();
 }
 
-bool FileSystem::WriteTextFile(const std::string &path, const std::string &content)
+bool FileSystem::BE_Write_Text_File(const std::string &path, const std::string &content)
 {
-    std::ofstream file(path);
-    if (!file.is_open())
+    try {
+        // Create parent directories if they don't exist
+        fs::path filePath(path);
+        fs::path parentPath = filePath.parent_path();
+        
+        if (!parentPath.empty() && !fs::exists(parentPath)) {
+            BE_CAT_DEBUG_FMT("FileSystem", "Creating parent directory: {}", parentPath.string());
+            fs::create_directories(parentPath);
+        }
+        
+        std::ofstream file(path);
+        if (!file.is_open()) {
+            BE_CAT_ERROR_FMT("FileSystem", "Failed to open file for writing: {}", path);
+            return false;
+        }
+
+        file << content;
+
+        if (file.fail()) {
+            BE_CAT_ERROR_FMT("FileSystem", "Failed to write to file: {}", path);
+            return false;
+        }
+
+        BE_CAT_DEBUG_FMT("FileSystem", "File written successfully: {}", path);
+        return true;
+    }
+    catch (const std::exception& e) {
+        BE_CAT_ERROR_FMT("FileSystem", "Error writing to file: {} - {}", path, e.what());
         return false;
-
-    file << content;
-    return true;
+    }
 }
 
-std::vector<uint8_t> FileSystem::ReadBinaryFile(const std::string &path)
+std::vector<uint8_t> FileSystem::BE_Read_Binary_File(const std::string &path)
 {
-    if (!FileExists(path))
+    try {
+        if (!BE_File_Exists(path)) {
+            BE_CAT_WARN_FMT("FileSystem", "Binary file not found for reading: {}", path);
+            return {};
+        }
+
+        std::ifstream file(path, std::ios::binary);
+        file.unsetf(std::ios::skipws);  // To not skip whitespaces
+
+        file.seekg(0, std::ios::end);
+        const std::streampos fileSize = file.tellg();
+        file.seekg(0, std::ios::beg);
+
+        std::vector<uint8_t> data;
+        data.reserve(fileSize);
+
+        // Read the file byte by byte into the vector
+        data.insert(
+            data.begin(),
+            std::istream_iterator<uint8_t>(file),
+            std::istream_iterator<uint8_t>()
+        );
+
+        BE_CAT_DEBUG_FMT("FileSystem", "Binary file read successfully: {} - {} bytes", path, data.size());
+        return data;
+    }
+    catch (const std::exception& e) {
+        BE_CAT_ERROR_FMT("FileSystem", "Error reading binary file: {} - {}", path, e.what());
         return {};
-
-    std::ifstream file(path, std::ios::binary);
-    file.unsetf(std::ios::skipws);
-
-    file.seekg(0, std::ios::end);
-    const std::streampos fileSize = file.tellg();
-    file.seekg(0, std::ios::beg);
-
-    std::vector<uint8_t> data;
-    data.reserve(static_cast<size_t>(fileSize));
-    data.insert(
-        data.begin(),
-        std::istream_iterator<uint8_t>(file),
-        std::istream_iterator<uint8_t>()
-    );
-
-    return data;
+    }
 }
 
-bool FileSystem::WriteBinaryFile(const std::string &path, const std::vector<uint8_t> &data)
+bool FileSystem::BE_Write_Binary_File(const std::string &path, const std::vector<uint8_t> &data)
 {
-    std::ofstream file(path, std::ios::binary);
-    if (!file.is_open())
-        return false;
+    try {
+        // Create parent directories if they don't exist
+        fs::path filePath(path);
+        fs::path parentPath = filePath.parent_path();
+        
+        if (!parentPath.empty() && !fs::exists(parentPath)) {
+            BE_CAT_DEBUG_FMT("FileSystem", "Creating parent directory: {}", parentPath.string());
+            fs::create_directories(parentPath);
+        }
+        
+        std::ofstream file(path, std::ios::binary);
+        if (!file.is_open()) {
+            BE_CAT_ERROR_FMT("FileSystem", "Failed to open binary file: {}", path);
+            return false;
+        }
 
-    file.write(
-        reinterpret_cast<const char *>(data.data()),
-        static_cast<std::streamsize>(data.size())
-    );
-    return true;
+        file.write(
+            reinterpret_cast<const char *>(data.data()),
+            static_cast<std::streamsize>(data.size())
+        );
+
+        if (file.fail()) {
+            BE_CAT_ERROR_FMT("FileSystem", "Failed to write to binary file: {}", path);
+            return false;
+        }
+
+        BE_CAT_DEBUG_FMT("FileSystem", "Binary file written successfully: {} - {} bytes", path, data.size());
+        return true;
+    }
+    catch (const std::exception& e) {
+        BE_CAT_ERROR_FMT("FileSystem", "Error writing to binary file: {} - {}", path, e.what());
+        return false;
+    }
 }
 
-bool FileSystem::DirectoryExists(const std::string &path)
+bool FileSystem::BE_Directory_Exists(const std::string &path)
 {
     return fs::exists(path) && fs::is_directory(path);
 }
 
-bool FileSystem::CreateDirectory(const std::string &path)
+bool FileSystem::BE_Create_Directory(const std::string &path)
 {
-    BE_CAT_DEBUG_FORMAT("FileSystem", "Creating directory: {}", path);
-    const bool result = fs::create_directories(path);
-    if (!result)
-    {
-        BE_CAT_ERROR_FORMAT("FileSystem", "Failed to create directory: {}", path);
+    try {
+        BE_CAT_DEBUG_FMT("FileSystem", "Creating directory: {}", path);
+        const bool result = fs::create_directories(path);
+
+        if (!result) {
+            BE_CAT_ERROR_FMT("FileSystem", "Failed to create directory: {}", path);
+        } else {
+            BE_CAT_DEBUG_FMT("FileSystem", "Directory created successfully: {}", path);
+        }
+
+        return result;
     }
-    return result;
-}
-
-bool FileSystem::DeleteDirectory(const std::string &path, bool recursive)
-{
-    if (!DirectoryExists(path))
+    catch (const std::exception& e) {
+        BE_CAT_ERROR_FMT("FileSystem", "Error creating directory: {} - {}", path, e.what());
         return false;
-
-    if (recursive)
-        return fs::remove_all(path) > 0;
-
-    return fs::remove(path);
+    }
 }
 
-std::vector<std::string> FileSystem::GetFilesInDirectory(
+bool FileSystem::BE_Delete_Directory(const std::string &path, const bool recursive)
+{
+    try {
+        if (!BE_Directory_Exists(path)) {
+            BE_CAT_WARN_FMT("FileSystem", "Directory not found for deletion: {}", path);
+            return false;
+        }
+
+        bool result;
+
+        if (recursive) {
+            result = fs::remove_all(path) > 0;
+            BE_CAT_DEBUG_FMT("FileSystem", "Deleting directory and contents: {}", path);
+        } else {
+            result = fs::remove(path);
+            BE_CAT_DEBUG_FMT("FileSystem", "Deleting empty directory: {}", path);
+        }
+
+        if (!result) {
+            BE_CAT_ERROR_FMT("FileSystem", "Failed to delete directory: {}", path);
+        }
+
+        return result;
+    }
+    catch (const std::exception& e) {
+        BE_CAT_ERROR_FMT("FileSystem", "Error deleting directory: {} - {}", path, e.what());
+        return false;
+    }
+}
+
+std::vector<std::string> FileSystem::BE_Get_Files_In_Directory(
     const std::string &path,
     const std::string &extension
 )
 {
     std::vector<std::string> files;
 
-    if (!DirectoryExists(path))
-        return files;
+    try {
+        if (!BE_Directory_Exists(path)) {
+            BE_CAT_WARN_FMT("FileSystem", "Directory not found: {}", path);
+            return files;
+        }
 
-    for (const auto &entry : fs::directory_iterator(path))
-    {
-        if (entry.is_regular_file())
-        {
-            if (extension.empty() || entry.path().extension() == extension)
-            {
-                files.push_back(entry.path().string());
+        for (const auto &entry : fs::directory_iterator(path)) {
+            if (entry.is_regular_file()) {
+                if (extension.empty() || entry.path().extension() == extension) {
+                    files.push_back(entry.path().string());
+                }
             }
         }
+
+        BE_CAT_DEBUG_FMT("FileSystem", "Found {} files in directory: {}", files.size(), path);
+        return files;
     }
-    return files;
+    catch (const std::exception& e) {
+        BE_CAT_ERROR_FMT("FileSystem", "Error listing directory contents: {} - {}", path, e.what());
+        return files;
+    }
 }
 
-std::vector<std::string> FileSystem::GetDirectoriesInDirectory(const std::string &path)
+std::vector<std::string> FileSystem::BE_Get_Directories_In_Directory(const std::string &path)
 {
     std::vector<std::string> directories;
 
-    if (!DirectoryExists(path))
-    {
-        BE_CAT_WARN_FORMAT("FileSystem", "Directory does not exist: {}", path);
+    try {
+        if (!BE_Directory_Exists(path)) {
+            BE_CAT_WARN_FMT("FileSystem", "Directory not found: {}", path);
+            return directories;
+        }
+
+        for (const auto &entry : fs::directory_iterator(path)) {
+            if (entry.is_directory()) {
+                directories.push_back(entry.path().string());
+            }
+        }
+
+        BE_CAT_DEBUG_FMT("FileSystem", "Found {} subdirectories in directory: {}", directories.size(), path);
         return directories;
     }
-
-    for (const auto &entry : fs::directory_iterator(path))
-    {
-        if (entry.is_directory())
-        {
-            directories.push_back(entry.path().string());
-        }
+    catch (const std::exception& e) {
+        BE_CAT_ERROR_FMT("FileSystem", "Error listing subdirectories: {} - {}", path, e.what());
+        return directories;
     }
-    return directories;
 }
 
-std::string FileSystem::GetFileName(const std::string &path)
+std::string FileSystem::BE_Get_File_Name(const std::string &path)
 {
     return fs::path(path).filename().string();
 }
 
-std::string FileSystem::GetFileExtension(const std::string &path)
+std::string FileSystem::BE_Get_File_Extension(const std::string &path)
 {
     return fs::path(path).extension().string();
 }
 
-std::string FileSystem::GetFileNameWithoutExtension(const std::string &path)
+std::string FileSystem::BE_Get_File_Name_Without_Extension(const std::string &path)
 {
     return fs::path(path).stem().string();
 }
 
-std::string FileSystem::GetDirectoryPath(const std::string &path)
+std::string FileSystem::BE_Get_Directory_Path(const std::string &path)
 {
     return fs::path(path).parent_path().string();
 }
 
-std::string FileSystem::NormalizePath(const std::string &path)
+std::string FileSystem::BE_Normalize_Path(const std::string &path)
 {
-    return fs::absolute(fs::path(path)).string();
+    try {
+        return absolute(fs::path(path)).string();
+    }
+    catch (const std::exception& e) {
+        BE_CAT_ERROR_FMT("FileSystem", "Error normalizing path: {} - {}", path, e.what());
+        return path; // Return original path in case of error
+    }
 }
 
-std::string FileSystem::CombinePaths(const std::string &path1, const std::string &path2)
+std::string FileSystem::BE_Combine_Paths(const std::string &path1, const std::string &path2)
 {
     return (fs::path(path1) / fs::path(path2)).string();
 }

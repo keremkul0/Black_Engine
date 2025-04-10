@@ -6,11 +6,11 @@
 
 class GamePanel : public Panel {
 public:
-    GamePanel(const std::string& title);
+    explicit GamePanel(const std::string& title);
     ~GamePanel() override;
 
     // Get framebuffer ID to render into
-    unsigned int GetFramebufferID() const { return m_FramebufferID; }
+    [[nodiscard]] unsigned int GetFramebufferID() const { return m_FramebufferID; }
 
     // Get current dimensions
     ImVec2 GetViewportSize() const { return ImVec2(m_ViewportWidth, m_ViewportHeight); }

@@ -1,5 +1,11 @@
 #include "Primitives.h"
 #include "Engine/Render/Mesh/Mesh.h"
+#include <cmath>
+
+// Visual Studio derleyicisi için M_PI sabitini tanımlayalım
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 namespace Primitives {
     std::shared_ptr<Mesh> CreateCube(const float size) {
@@ -92,7 +98,7 @@ namespace Primitives {
 
             for (int x = 0; x <= segments; ++x) {
                 // theta: yatay açı (0-2PI arası)
-                const float theta = 2.0f * M_PI * static_cast<float>(x) / static_cast<float>(segments);
+                const float theta = 2.0f * static_cast<float>(M_PI) * static_cast<float>(x) / static_cast<float>(segments);
                 const float sinTheta = std::sin(theta);
                 const float cosTheta = std::cos(theta);
 
@@ -102,7 +108,7 @@ namespace Primitives {
                 float posZ = radius * sinPhi * sinTheta;
 
                 // Normal vektörü, pozisyon vektörünün normalize edilmiş hali
-                const glm::vec3 normal = glm::normalize(glm::vec3(posX, posY, posZ));
+                const glm::vec3 normal = normalize(glm::vec3(posX, posY, posZ));
 
                 // UV koordinatları
                 float u = static_cast<float>(x) / static_cast<float>(segments);
@@ -241,13 +247,13 @@ namespace Primitives {
 
         // Çember etrafında noktalar oluştur
         for (int i = 0; i <= segments; ++i) {
-            const float angle = 2.0f * M_PI * static_cast<float>(i) / static_cast<float>(segments);
+            const float angle = 2.0f * static_cast<float>(M_PI) * static_cast<float>(i) / static_cast<float>(segments);
             const float x = radius * std::cos(angle);
             const float z = radius * std::sin(angle);
             const float u = static_cast<float>(i) / static_cast<float>(segments);
 
             // Silindir yan yüzey noktaları
-            const glm::vec3 sideNormal = glm::normalize(glm::vec3(x, 0.0f, z));
+            const glm::vec3 sideNormal = normalize(glm::vec3(x, 0.0f, z));
 
             // Üst kenar
             vertices.push_back({{x, halfHeight, z}, sideNormal, {u, 1.0f}});
@@ -319,12 +325,12 @@ namespace Primitives {
 
         // 1. SİLİNDİR KISMI (ORTA)
         for (int i = 0; i <= segments; ++i) {
-            const float angle = 2.0f * M_PI * static_cast<float>(i) / static_cast<float>(segments);
+            const float angle = 2.0f * static_cast<float>(M_PI) * static_cast<float>(i) / static_cast<float>(segments);
             const float x = radius * std::cos(angle);
             const float z = radius * std::sin(angle);
             const float u = static_cast<float>(i) / static_cast<float>(segments);
 
-            const glm::vec3 normal = glm::normalize(glm::vec3(x, 0.0f, z));
+            const glm::vec3 normal = normalize(glm::vec3(x, 0.0f, z));
 
             // Üst kenar
             vertices.push_back({{x, halfHeight, z}, normal, {u, 0.5f - 0.25f}});
@@ -339,7 +345,7 @@ namespace Primitives {
             const float cosPhi = std::cos(phi);
 
             for (int x = 0; x <= segments; ++x) {
-                const float theta = 2.0f * M_PI * static_cast<float>(x) / static_cast<float>(segments);
+                const float theta = 2.0f * static_cast<float>(M_PI) * static_cast<float>(x) / static_cast<float>(segments);
                 const float sinTheta = std::sin(theta);
                 const float cosTheta = std::cos(theta);
 
@@ -347,7 +353,7 @@ namespace Primitives {
                 const float posY = halfHeight + radius * cosPhi;
                 const float posZ = radius * sinPhi * sinTheta;
 
-                const glm::vec3 normal = glm::normalize(glm::vec3(posX, posY - halfHeight, posZ));
+                const glm::vec3 normal = normalize(glm::vec3(posX, posY - halfHeight, posZ));
 
                 const float u = static_cast<float>(x) / static_cast<float>(segments);
                 const float v = (0.5f - 0.25f) * (1.0f - static_cast<float>(y) / static_cast<float>(rings));
@@ -366,7 +372,7 @@ namespace Primitives {
             const float cosPhi = std::cos(phi);
 
             for (int x = 0; x <= segments; ++x) {
-                const float theta = 2.0f * M_PI * static_cast<float>(x) / static_cast<float>(segments);
+                const float theta = 2.0f * static_cast<float>(M_PI) * static_cast<float>(x) / static_cast<float>(segments);
                 const float sinTheta = std::sin(theta);
                 const float cosTheta = std::cos(theta);
 
@@ -374,7 +380,7 @@ namespace Primitives {
                 const float posY = -halfHeight + radius * cosPhi;
                 const float posZ = radius * sinPhi * sinTheta;
 
-                const glm::vec3 normal = glm::normalize(glm::vec3(posX, posY + halfHeight, posZ));
+                const glm::vec3 normal = normalize(glm::vec3(posX, posY + halfHeight, posZ));
 
                 const float u = static_cast<float>(x) / static_cast<float>(segments);
                 const float v = 0.5f + 0.25f + 0.25f * static_cast<float>(y) / static_cast<float>(rings);
@@ -392,8 +398,8 @@ namespace Primitives {
             // Note: we use `segments` here, not `segments + 1` to handle wrapping
             const unsigned int i0 = i * 2;
             const unsigned int i1 = i * 2 + 1;
-            const unsigned int i2 = ((i + 1) % segments) * 2;
-            const unsigned int i3 = ((i + 1) % segments) * 2 + 1;
+            const unsigned int i2 = (i + 1) % segments * 2;
+            const unsigned int i3 = (i + 1) % segments * 2 + 1;
 
             // İlk üçgen (saat yönünün tersine)
             indices.push_back(i0);
@@ -412,7 +418,7 @@ namespace Primitives {
         // Special connection between cylinder and upper hemisphere first ring
         for (int i = 0; i < segments; ++i) {
             const unsigned int cylinderTop = i * 2;
-            const unsigned int cylinderTopNext = ((i + 1) % segments) * 2;
+            const unsigned int cylinderTopNext = (i + 1) % segments * 2;
             const unsigned int sphereBottom = upperHemisphereStartIdx + i;
             const unsigned int sphereBottomNext = upperHemisphereStartIdx + (i + 1) % (segments + 1);
 
@@ -464,7 +470,7 @@ namespace Primitives {
         // Special connection between cylinder and lower hemisphere first ring
         for (int i = 0; i < segments; ++i) {
             const unsigned int cylinderBottom = i * 2 + 1;
-            const unsigned int cylinderBottomNext = ((i + 1) % segments) * 2 + 1;
+            const unsigned int cylinderBottomNext = (i + 1) % segments * 2 + 1;
             const unsigned int sphereTop = lowerHemisphereStartIdx + i;
             const unsigned int sphereTopNext = lowerHemisphereStartIdx + (i + 1) % (segments + 1);
 

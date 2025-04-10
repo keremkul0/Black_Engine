@@ -5,6 +5,7 @@
 #include <gtest/gtest.h>
 #include "../src/Engine/Entity/GameObject.h"
 #include "../src/Engine/Component/BaseComponent.h"
+#include <memory>
 
 class MockComponent : public BaseComponent {
 public:
@@ -19,20 +20,30 @@ public:
     }
 };
 
-TEST(ComponentTest, AddComponent) {
-    GameObject obj;
-    ASSERT_TRUE(obj.components.empty());
+class ComponentTest : public ::testing::Test {
+protected:
+    void SetUp() override {
+        // Create a new GameObject for each test
+        gameObject = std::make_shared<GameObject>();
+    }
+    
+    std::shared_ptr<GameObject> gameObject;
+};
 
-    auto comp = obj.AddComponent<MockComponent>();
-    ASSERT_FALSE(obj.components.empty());
+TEST_F(ComponentTest, AddComponent) {
+    ASSERT_TRUE(gameObject->components.empty());
+
+    auto comp = gameObject->AddComponent<MockComponent>();
+    ASSERT_NE(comp, nullptr);
+    ASSERT_FALSE(gameObject->components.empty());
     EXPECT_TRUE(comp->startCalled);
 }
 
-TEST(ComponentTest, UpdateCallsComponents) {
-    GameObject obj;
-    auto comp = obj.AddComponent<MockComponent>();
+TEST_F(ComponentTest, UpdateCallsComponents) {
+    auto comp = gameObject->AddComponent<MockComponent>();
+    ASSERT_NE(comp, nullptr);
 
-    obj.Update(0.016f);
+    gameObject->Update(0.016f);
     EXPECT_FLOAT_EQ(comp->lastDeltaTime, 0.016f);
 }
 

@@ -1,5 +1,5 @@
 /**
-* @file AssetDatabase.cpp
+ * @file AssetDatabase.cpp
  * @brief Implementation of an asset management system for Black Engine
  *
  * The AssetDatabase manages loading, unloading and tracking of all engine assets,
@@ -11,6 +11,7 @@
 #include "Engine/Render/Mesh/Mesh.h"
 #include "Engine/Render/Shader/Shader.h"
 #include <nlohmann/json.hpp>
+
 
 #include "Core/Logger/LogMacros.h"
 #include "Core/ProjectManager/ProjectManager.h"
@@ -25,11 +26,8 @@ AssetDatabase &AssetDatabase::GetInstance() {
 
 // Constructor
 AssetDatabase::AssetDatabase() {
-    // Initialize logger when AssetDatabase is actually used
     BE_CAT_INFO("Asset", "Asset database initializing");
-
     RegisterAssetLoaders();
-
     BE_CAT_DEBUG("Asset", "Asset database initialized");
 }
 
@@ -45,29 +43,29 @@ AssetDatabase::~AssetDatabase() {
 void AssetDatabase::RegisterAssetLoaders() {
     // Register mesh loader
     m_TypeLoaders[std::type_index(typeid(Mesh))] = [](const std::string &path) -> Asset *{
-        BE_CAT_DEBUG_FORMAT("Asset", "Loading mesh from: {}", path);
+        BE_CAT_DEBUG_FMT("Asset", "Loading mesh from: {}", path);
 
         auto *mesh = new Mesh();
         mesh->SetPath(path);
-        mesh->SetName(FileSystem::GetFileNameWithoutExtension(path));
+        mesh->SetName(FileSystem::BE_Get_File_Name_Without_Extension(path));
         mesh->SetLoaded(true);
 
-        return static_cast<Asset *>(mesh);
+        return mesh;
     };
 
     // Register shader loader
     m_TypeLoaders[std::type_index(typeid(Shader))] = [](const std::string &path) -> Asset *{
-        BE_CAT_DEBUG_FORMAT("Asset", "Loading shader from: {}", path);
+        BE_CAT_DEBUG_FMT("Asset", "Loading shader from: {}", path);
 
         auto *shader = new Shader();
         shader->SetPath(path);
-        shader->SetName(FileSystem::GetFileNameWithoutExtension(path));
+        shader->SetName(FileSystem::BE_Get_File_Name_Without_Extension(path));
         shader->SetLoaded(true);
 
-        return static_cast<Asset *>(shader);
+        return shader;
     };
 
-    BE_CAT_INFO_FORMAT("Asset", "Registered {} asset type loaders", m_TypeLoaders.size());
+    BE_CAT_INFO_FMT("Asset", "Registered {} asset type loaders", m_TypeLoaders.size());
 }
 
 
@@ -82,21 +80,25 @@ bool AssetDatabase::LoadAllAssets() {
     const std::string projectPath = ProjectManager::GetInstance().GetProjectPath();
     const std::string assetsPath = projectPath + "/Assets";
 
-    BE_CAT_DEBUG_FORMAT("Asset", "Scanning assets directory: {}", assetsPath);
+    BE_CAT_DEBUG_FMT("Asset", "Scanning assets directory: {}", assetsPath);
 
     // Check if assets directory exists
-    if (!FileSystem::DirectoryExists(assetsPath)) {
-        if (!FileSystem::CreateDirectory(assetsPath)) {
+    if (!FileSystem::BE_Directory_Exists(assetsPath)) {
+        if (!FileSystem::BE_Create_Directory(assetsPath)) {
             BE_CAT_ERROR("Asset", "Failed to create assets directory");
             return false;
         }
     }
 
     // Create asset type directories if they don't exist
-    for (std::vector<std::string> assetTypes = {"Meshes", "Textures", "Shaders", "Materials", "Scenes"}; const auto &
-         type: assetTypes) {
-        if (std::string typePath = assetsPath + "/" + type; !FileSystem::DirectoryExists(typePath)) {
-            FileSystem::CreateDirectory(typePath);
+    for (std::vector<std::string> assetTypes = {"Meshes", "Textures", "Shaders", "Materials", "Scenes"};
+         const auto &type: assetTypes)
+    {
+        std::string typePath = assetsPath;
+        typePath += '/';
+        typePath += type;
+        if (!FileSystem::BE_Directory_Exists(typePath)) {
+            FileSystem::BE_Create_Directory(typePath);
         }
     }
 
@@ -104,13 +106,15 @@ bool AssetDatabase::LoadAllAssets() {
     std::function<void(const std::string &)> scanDirectory;
 
     scanDirectory = [this, &scanDirectory](const std::string &dirPath) {
-        for (auto files = FileSystem::GetFilesInDirectory(dirPath); const auto &file: files) {
-            if (std::string ext = FileSystem::GetFileExtension(file); ext == ".meta") continue; // Skip metadata files
-
+        for (auto files = FileSystem::BE_Get_Files_In_Directory(dirPath); const auto &file: files) {
+            if (std::string ext = FileSystem::BE_Get_File_Extension(file); ext == ".meta") {
+                // Skip metadata files
+                continue;
+            }
             RegisterAsset(file);
         }
 
-        for (auto subdirs = FileSystem::GetDirectoriesInDirectory(dirPath); const auto &subdir: subdirs) {
+        for (auto subdirs = FileSystem::BE_Get_Directories_In_Directory(dirPath); const auto &subdir: subdirs) {
             scanDirectory(subdir);
         }
     };
@@ -124,7 +128,7 @@ bool AssetDatabase::LoadAllAssets() {
 
 // Register an asset in the database
 void AssetDatabase::RegisterAsset(const std::string &assetPath) {
-    const std::string assetName = FileSystem::GetFileNameWithoutExtension(assetPath);
+    const std::string assetName = FileSystem::BE_Get_File_Name_Without_Extension(assetPath);
     m_AssetPathRegistry[assetName] = assetPath;
 }
 
@@ -132,7 +136,7 @@ void AssetDatabase::RegisterAsset(const std::string &assetPath) {
 bool AssetDatabase::ImportAsset(const std::string &sourcePath, const std::string &assetType) {
     const std::string projectPath = ProjectManager::GetInstance().GetProjectPath();
     const std::string assetsPath = projectPath + "/Assets";
-    const std::string fileName = FileSystem::GetFileName(sourcePath);
+    const std::string fileName = FileSystem::BE_Get_File_Name(sourcePath);
     std::string targetPath;
 
     // Determine a target path based on an asset type
@@ -149,21 +153,21 @@ bool AssetDatabase::ImportAsset(const std::string &sourcePath, const std::string
     }
 
     // Check if a source file exists
-    if (!FileSystem::FileExists(sourcePath)) {
-        BE_CAT_ERROR_FORMAT("Asset", "Source file not found: {}", sourcePath);
+    if (!FileSystem::BE_File_Exists(sourcePath)) {
+        BE_CAT_ERROR_FMT("Asset", "Source file not found: {}", sourcePath);
         return false;
     }
 
     // Read a source file
-    const std::vector<uint8_t> data = FileSystem::ReadBinaryFile(sourcePath);
+    const std::vector<uint8_t> data = FileSystem::BE_Read_Binary_File(sourcePath);
     if (data.empty()) {
-        BE_CAT_ERROR_FORMAT("Asset", "Failed to read source file: {}", sourcePath);
+        BE_CAT_ERROR_FMT("Asset", "Failed to read source file: {}", sourcePath);
         return false;
     }
 
     // Write to a target file
-    if (!FileSystem::WriteBinaryFile(targetPath, data)) {
-        BE_CAT_ERROR_FORMAT("Asset", "Failed to write target file: {}", targetPath);
+    if (!FileSystem::BE_Write_Binary_File(targetPath, data)) {
+        BE_CAT_ERROR_FMT("Asset", "Failed to write target file: {}", targetPath);
         return false;
     }
 
@@ -181,7 +185,7 @@ bool AssetDatabase::ImportAsset(const std::string &sourcePath, const std::string
 void AssetDatabase::UnloadAsset(const std::string &assetPath) {
     if (const auto it = m_LoadedAssets.find(assetPath); it != m_LoadedAssets.end()) {
         delete it->second;
-        BE_CAT_INFO_FORMAT("Asset", "Unloaded asset: {}", assetPath);
+        BE_CAT_INFO_FMT("Asset", "Unloaded asset: {}", assetPath);
         m_LoadedAssets.erase(it);
     }
 }
@@ -191,7 +195,7 @@ void AssetDatabase::UnloadAllAssets() {
     for (const auto &asset: m_LoadedAssets | std::views::values) {
         delete asset;
     }
-    BE_CAT_INFO_FORMAT("Asset", "Unloaded {} assets", m_LoadedAssets.size());
+    BE_CAT_INFO_FMT("Asset", "Unloaded {} assets", m_LoadedAssets.size());
     m_LoadedAssets.clear();
 }
 
@@ -206,9 +210,9 @@ std::vector<std::string> AssetDatabase::FindAssetsByType(const std::string &asse
     else if (assetType == "Shader") extension = ".glsl";
 
     // Find all assets with matching extension
-    for (auto it = m_AssetPathRegistry.begin(); it != m_AssetPathRegistry.end(); ++it) {
-        if (FileSystem::GetFileExtension(it->second) == extension) {
-            result.push_back(it->second);
+    for (const auto &val: m_AssetPathRegistry | std::views::values) {
+        if (FileSystem::BE_Get_File_Extension(val) == extension) {
+            result.push_back(val);
         }
     }
 
@@ -220,23 +224,23 @@ bool AssetDatabase::SaveAssetMetadata(const std::string &assetPath) {
     // Create metadata JSON
     json metadata;
     metadata["assetId"] = GenerateAssetID();
-    metadata["type"] = GetAssetTypeFromExtension(FileSystem::GetFileExtension(assetPath));
+    metadata["type"] = GetAssetTypeFromExtension(FileSystem::BE_Get_File_Extension(assetPath));
     metadata["importTime"] = std::time(nullptr);
 
     // Write a metadata file
     const std::string metaPath = assetPath + ".meta";
-    return FileSystem::WriteTextFile(metaPath, metadata.dump(4));
+    return FileSystem::BE_Write_Text_File(metaPath, metadata.dump(4));
 }
 
 // Load metadata for an asset
 bool AssetDatabase::LoadAssetMetadata(const std::string &metaPath, AssetMetadata &metadata) {
-    if (!FileSystem::FileExists(metaPath)) {
-        BE_CAT_ERROR_FORMAT("Asset", "Metadata file not found: {}", metaPath);
+    if (!FileSystem::BE_File_Exists(metaPath)) {
+        BE_CAT_ERROR_FMT("Asset", "Metadata file not found: {}", metaPath);
         return false;
     }
 
     try {
-        std::string content = FileSystem::ReadTextFile(metaPath);
+        std::string content = FileSystem::BE_Read_Text_File(metaPath);
         json j = json::parse(content);
 
         metadata.uuid = j["uuid"];
@@ -245,15 +249,14 @@ bool AssetDatabase::LoadAssetMetadata(const std::string &metaPath, AssetMetadata
 
         return true;
     } catch (const std::exception &e) {
-        // Log error
-        BE_CAT_ERROR_FORMAT("Asset", "Failed to load metadata from '{}': {}", metaPath, e.what());
+        BE_CAT_ERROR_FMT("Asset", "Failed to load metadata from '{}': {}", metaPath, e.what());
         return false;
     }
 }
 
 // Get asset name from a path
 std::string AssetDatabase::GetAssetNameFromPath(const std::string &path) {
-    return FileSystem::GetFileNameWithoutExtension(path);
+    return FileSystem::BE_Get_File_Name_Without_Extension(path);
 }
 
 // Generate unique asset ID
@@ -271,15 +274,15 @@ std::string AssetDatabase::GetAssetTypeFromExtension(const std::string &extensio
 }
 
 bool AssetDatabase::CopyAsset(const std::string &sourcePath, const std::string &targetPath) {
-    const std::vector<uint8_t> data = FileSystem::ReadBinaryFile(sourcePath);
+    const std::vector<uint8_t> data = FileSystem::BE_Read_Binary_File(sourcePath);
     if (data.empty()) {
-        BE_CAT_ERROR_FORMAT("Asset", "Failed to read source file: {}", sourcePath);
+        BE_CAT_ERROR_FMT("Asset", "Failed to read source file: {}", sourcePath);
         return false;
     }
 
     // Write to a target file
-    if (!FileSystem::WriteBinaryFile(targetPath, data)) {
-        BE_CAT_ERROR_FORMAT("Asset", "Failed to write target file: {}", targetPath);
+    if (!FileSystem::BE_Write_Binary_File(targetPath, data)) {
+        BE_CAT_ERROR_FMT("Asset", "Failed to write target file: {}", targetPath);
         return false;
     }
     return true;

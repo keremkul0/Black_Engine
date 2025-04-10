@@ -33,7 +33,7 @@ bool Panel::IsActiveForInput() const {
     return m_IsOpen && m_IsHovered;
 }
 
-void Panel::SetActive(bool active) {
+void Panel::SetActive(const bool active) {
     m_IsActive = active;
 }
 

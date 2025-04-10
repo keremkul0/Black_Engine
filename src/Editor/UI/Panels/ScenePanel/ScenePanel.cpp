@@ -55,8 +55,8 @@ void ScenePanel::OnUpdate(const float deltaTime)
         // Yalnızca rotasyon modunda WASD hareketleri ile kamera hareketini işle.
         if (m_IsRotating)
         {
-            const float speedMultiplier = (InputManager::IsKeyPressed(GLFW_KEY_LEFT_SHIFT) ||
-                                             InputManager::IsKeyPressed(GLFW_KEY_RIGHT_SHIFT))
+            const float speedMultiplier = InputManager::IsKeyPressed(GLFW_KEY_LEFT_SHIFT) ||
+                                          InputManager::IsKeyPressed(GLFW_KEY_RIGHT_SHIFT)
                                                 ? 3.0f : 1.0f;
             const float adjustedSpeed = m_CameraSpeed * speedMultiplier * deltaTime;
 

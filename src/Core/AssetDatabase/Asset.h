@@ -19,7 +19,7 @@ public:
 
     [[nodiscard]] uint32_t GetID() const { return m_ID; }
 
-    void SetLoaded(bool loaded) { m_IsLoaded = loaded; }
+    void SetLoaded(const bool loaded) { m_IsLoaded = loaded; }
     [[nodiscard]] bool IsLoaded() const { return m_IsLoaded; }
 
 protected:

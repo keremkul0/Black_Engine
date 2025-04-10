@@ -9,9 +9,6 @@
 
 class MeshRendererComponent final : public BaseComponent
 {
-private:
-    std::shared_ptr<Shader> m_shader;
-
 public:
     MeshRendererComponent() = default;
     ~MeshRendererComponent() override = default;
@@ -29,9 +26,9 @@ public:
     [[nodiscard]] std::string GetTypeName() const override { return "MeshRendererComponent"; }
 
 private:
+    std::shared_ptr<Shader> m_shader;
     MeshComponent* m_cachedMeshComponent = nullptr;
     TransformComponent* m_cachedTransform = nullptr;
-
 
     void CacheComponents();
 };

@@ -34,7 +34,7 @@ void InputSystem::UnregisterEventReceiver(IInputEventReceiver *receiver) {
     }
 }
 
-void InputSystem::ScrollCallback(GLFWwindow *window, double xoffset, double yoffset) {
+void InputSystem::ScrollCallback(GLFWwindow *window, double xoffset, const double yoffset) {
     InputManager::SetScrollOffset(static_cast<float>(yoffset));
 }
 
@@ -137,7 +137,7 @@ void InputSystem::ProcessInput(float deltaTime) {
         // daha fazla durum bilgisine ihtiyaç olabilir
         // Şu anda sadece basılı tuşlar için olay oluşturuyoruz
 
-        if (bool isPressed = InputManager::IsKeyPressed(key)) {
+        if (InputManager::IsKeyPressed(key)) {
             InputEvent keyEvent;
             keyEvent.type = InputEventType::KeyHeld; // Veya KeyDown olabilir
             keyEvent.key = key;
@@ -149,7 +149,4 @@ void InputSystem::ProcessInput(float deltaTime) {
             }
         }
     }
-
-    // Son fare konumunu güncelle
-    m_LastMousePos = currentMousePos;
 }
