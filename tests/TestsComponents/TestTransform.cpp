@@ -17,7 +17,7 @@ protected:
 TEST_F(TransformTest, DefaultValues)
 {
     // Use the shared_ptr-managed GameObject
-    auto transform = gameObject->AddComponent<TransformComponent>();
+    const auto transform = gameObject->AddComponent<TransformComponent>();
     
     // Make sure we got a valid component
     ASSERT_NE(transform, nullptr);
@@ -29,7 +29,7 @@ TEST_F(TransformTest, DefaultValues)
 TEST_F(TransformTest, UpdateMovesPosition)
 {
     // Use the shared_ptr-managed GameObject
-    auto transform = gameObject->AddComponent<TransformComponent>();
+    const auto transform = gameObject->AddComponent<TransformComponent>();
     
     // Make sure we got a valid component
     ASSERT_NE(transform, nullptr);

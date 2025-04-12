@@ -1,12 +1,9 @@
 #include <gtest/gtest.h>
-#include "../../src/Core/FileSystem/FileSystem.h"
-#include "../../src/Core/Logger/MockLogger.h"
-#include "../../src/Core/Logger/LoggerManager.h"
+#include "Core/FileSystem/FileSystem.h"
+#include "Core/Logger/LoggerManager.h"
 #include <fstream>
 #include <filesystem>
-#include <chrono>   // For std::chrono::milliseconds
-#include <thread>   // For std::this_thread::sleep_for
-#include <memory>   // For std::shared_ptr
+#include <chrono>
 
 namespace fs = std::filesystem;
 
@@ -21,7 +18,7 @@ protected:
     std::vector<uint8_t> testBinaryContent = {0x42, 0x6C, 0x61, 0x63, 0x6B, 0x20, 0x45, 0x6E, 0x67, 0x69, 0x6E, 0x65};
     std::string nestedDir;    void SetUp() override {
         // Create a unique test directory for each test
-        std::string uniqueSuffix = std::to_string(std::chrono::steady_clock::now().time_since_epoch().count());
+        const std::string uniqueSuffix = std::to_string(std::chrono::steady_clock::now().time_since_epoch().count());
         
         // Make sure the base path exists - using standard filesystem API instead of our own FileSystem class
         // to avoid circular dependencies in testing
@@ -48,7 +45,7 @@ protected:
         CleanUp();
     }
 
-    void CleanUp() {
+    void CleanUp() const {
         // Remove test files and directories
         if (FileSystem::BE_File_Exists(testFile)) {
             FileSystem::BE_Delete_File(testFile);

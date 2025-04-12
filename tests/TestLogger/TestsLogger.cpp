@@ -1,12 +1,11 @@
 #include <gtest/gtest.h>
-// Removing gmock for now as it's not essential for these tests
 #include <fstream>
 #include <filesystem>
 #include <regex>
 #include <thread>
 #include <chrono>
-#include "../../src/Core/Logger/SpdlogLogger.h"
-#include "../../src/Core/Logger/LoggerManager.h"
+#include "Core/Logger/SpdlogLogger.h"
+#include "Core/Logger/LoggerManager.h"
 #include <spdlog/spdlog.h>
 
 // Helper function to check if a file contains specific text

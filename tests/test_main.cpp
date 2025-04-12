@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include "../../src/Core/Logger/LoggerManager.h"
-#include "../../src/Core/Logger/MockLogger.h"
+#include "Core/Logger/LoggerManager.h"
+#include "Core/Logger/MockLogger.h"
 
 // Global test environment setup
 class GlobalTestEnvironment : public ::testing::Environment {

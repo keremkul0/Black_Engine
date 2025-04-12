@@ -1,10 +1,6 @@
-//
-// Created by Kerem on 3.03.2025.
-//
-// tests/TestComponents.cpp
 #include <gtest/gtest.h>
-#include "../src/Engine/Entity/GameObject.h"
-#include "../src/Engine/Component/BaseComponent.h"
+#include "Engine/Entity/GameObject.h"
+#include "Engine/Component/BaseComponent.h"
 #include <memory>
 
 class MockComponent : public BaseComponent {
