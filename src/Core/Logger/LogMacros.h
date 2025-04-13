@@ -154,3 +154,29 @@
     #define BE_CAT_CRITICAL(cat, msg) (void)0
     #define BE_CAT_CRITICAL_FMT(cat, fmt, ...) (void)0
 #endif
+
+//-----------------------------------------------------------------------------
+// File-level category definition
+//-----------------------------------------------------------------------------
+
+// Define a file-level logger category (place at top of file)
+#define BE_DEFINE_LOG_CATEGORY(categoryName) \
+    namespace { \
+        const char* _BE_Current_Log_Category = categoryName; \
+    }
+
+// Category-based logging macros that use the file-level category
+#define BE_CAT_TRACE_CURRENT(msg)     BE_CAT_TRACE(_BE_Current_Log_Category, msg)
+#define BE_CAT_DEBUG_CURRENT(msg)     BE_CAT_DEBUG(_BE_Current_Log_Category, msg)
+#define BE_CAT_INFO_CURRENT(msg)      BE_CAT_INFO(_BE_Current_Log_Category, msg)
+#define BE_CAT_WARN_CURRENT(msg)      BE_CAT_WARN(_BE_Current_Log_Category, msg)
+#define BE_CAT_ERROR_CURRENT(msg)     BE_CAT_ERROR(_BE_Current_Log_Category, msg)
+#define BE_CAT_CRITICAL_CURRENT(msg)  BE_CAT_CRITICAL(_BE_Current_Log_Category, msg)
+
+// Formatted category logging macros that use the file-level category
+#define BE_CAT_TRACE_FMT_CURRENT(fmt, ...)    BE_CAT_TRACE_FMT(_BE_Current_Log_Category, fmt, ##__VA_ARGS__)
+#define BE_CAT_DEBUG_FMT_CURRENT(fmt, ...)    BE_CAT_DEBUG_FMT(_BE_Current_Log_Category, fmt, ##__VA_ARGS__)
+#define BE_CAT_INFO_FMT_CURRENT(fmt, ...)     BE_CAT_INFO_FMT(_BE_Current_Log_Category, fmt, ##__VA_ARGS__)
+#define BE_CAT_WARN_FMT_CURRENT(fmt, ...)     BE_CAT_WARN_FMT(_BE_Current_Log_Category, fmt, ##__VA_ARGS__)
+#define BE_CAT_ERROR_FMT_CURRENT(fmt, ...)    BE_CAT_ERROR_FMT(_BE_Current_Log_Category, fmt, ##__VA_ARGS__)
+#define BE_CAT_CRITICAL_FMT_CURRENT(fmt, ...) BE_CAT_CRITICAL_FMT(_BE_Current_Log_Category, fmt, ##__VA_ARGS__)

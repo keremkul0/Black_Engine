@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "memory": "cpp",
+        "source_location": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "disabled"
+}

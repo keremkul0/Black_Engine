@@ -4,6 +4,10 @@
 #include "Core/ImGui/ImGuiLayer.h"
 #include "Editor/UI/Layout/EditorLayout.h"
 #include "Core/SceneManager/SceneManager.h"
+#include "Core/Logger/LogMacros.h"
+
+// Dosya seviyesinde kategori tanımlaması
+BE_DEFINE_LOG_CATEGORY("Engine")
 #include <glm/gtc/matrix_transform.hpp>
 #include <GLFW/glfw3.h>
 
@@ -35,8 +39,12 @@ Application::~Application() {
 }
 
 bool Application::Initialize() {
+    BE_CAT_INFO_CURRENT("Initializing application components");
+    
     // Initialize window
+    BE_CAT_DEBUG_CURRENT("Initializing window manager");
     if (!m_WindowManager->Initialize(1280, 720, "Black Engine")) {
+        BE_CAT_ERROR_CURRENT("Failed to initialize window manager");
         return false;
     }
 
@@ -44,6 +52,7 @@ bool Application::Initialize() {
     g_Window = m_WindowManager->GetWindow();
 
     // Initialize input manager
+    BE_CAT_DEBUG("Engine", "Initializing input systems");
     InputManager::Initialize(m_WindowManager->GetWindow());
     m_InputSystem->Initialize(m_WindowManager->GetWindow());
 

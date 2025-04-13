@@ -1,0 +1,25 @@
+{
+  "globalLevel": "Info",
+  "pattern": "[%Y-%m-%d %H:%M:%S] [%^%l%$] [%n] %v",
+  "fileLogging": {
+    "enabled": true,
+    "path": "Logs/BlackEngine.log"
+  },
+  "duplicateSuppression": {
+    "enabled": true,
+    "suppressAfter": 3,
+    "summaryInterval": 10
+  },
+  "categories": {
+    "Engine": "Info",
+    "Renderer": "Debug",
+    "Physics": "Info",
+    "Audio": "Info",
+    "Input": "off",
+    "FileSystem": "Info",
+    "ProjectManager": "Debug",
+    "SceneManager": "Debug",
+    "Editor": "Debug",
+    "UI": "Warning"
+  }
+}

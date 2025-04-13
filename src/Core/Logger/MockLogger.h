@@ -11,6 +11,10 @@ public:
     void Initialize() override {}
     void Shutdown() override {}
     
+    // Duplicate suppression configuration
+    void EnableDuplicateSuppression(bool enable) override {}
+    void SetDuplicateSuppressionOptions(size_t suppressAfter = 3, size_t summaryInterval = 0) override {}
+    
     void Log(LogLevel level, const std::string& message, 
              const std::source_location& location = std::source_location::current()) override {}
     void LogTrace(const std::string& message,

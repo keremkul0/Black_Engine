@@ -76,10 +76,11 @@ set(CORE_FILES
         src/Core/Logger/LoggerManager.h
         src/Core/Logger/LoggerManager.cpp
         src/Core/Logger/SpdlogLogger.h
-        src/Core/Logger/SpdlogLogger.cpp
-        src/Core/Logger/MockLogger.h
+        src/Core/Logger/SpdlogLogger.cpp        src/Core/Logger/MockLogger.h
         src/Core/Logger/MockLogger.cpp
         src/Core/Logger/ILogger.h
+        src/Core/Logger/LoggerConfig.h
+        src/Core/Logger/LoggerConfig.cpp
         src/Core/SceneManager/SceneManager.h
         src/Core/SceneManager/SceneManager.cpp
         src/Core/AssetDatabase/AssetDatabase.h

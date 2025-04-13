@@ -8,17 +8,18 @@
 #include <nlohmann/json.hpp>
 
 int main() {
-    // Yeni log sistemini başlat: Prod ortamı için false (test değil)
-    LoggerManager::Initialize(false);
+    // Get the executable path to find config files relative to it
+    std::string configPath = "c:/Users/Kerem/CLionProjects/Black_Engine/log_config.json";
+    
+    // Yeni log sistemini JSON konfigürasyon dosyasından başlat: Prod ortamı için false (test değil)
+    LoggerManager::InitializeFromJson(configPath, false);
 
     BE_INFO("Black Engine starting up");
 
     BE_DEBUG("Creating application instance");
-    Application app;
-
-    BE_INFO("Initializing application");
+    Application app;    BE_CAT_INFO("Engine", "Initializing application");
     if (!app.Initialize()) {
-        BE_CRITICAL("Application initialization failed");
+        BE_CAT_CRITICAL("Engine", "Application initialization failed");
         LoggerManager::Shutdown();
         return -1;
     }

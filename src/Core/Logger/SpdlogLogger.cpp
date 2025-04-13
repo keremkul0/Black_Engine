@@ -1,4 +1,5 @@
 #include "SpdlogLogger.h"
+#include "LoggerConfig.h"
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/sinks/rotating_file_sink.h"
@@ -8,6 +9,9 @@
 #include <iostream>
 #include <thread>
 #include <ranges>
+#include <string>
+#include <fstream>
+#include <nlohmann/json.hpp>
 
 // Private implementation class (PIMPL pattern)
 class SpdlogLogger::LoggerImpl {
@@ -19,7 +23,7 @@ public:
 };
 
 SpdlogLogger::SpdlogLogger()
-    : m_Impl(std::make_unique<LoggerImpl>()) {
+    : m_Impl(std::make_unique<LoggerImpl>()), m_LastMessage() {
 }
 
 SpdlogLogger::~SpdlogLogger() {
@@ -113,6 +117,10 @@ void SpdlogLogger::Log(LogLevel level, const std::string &message, const std::so
     if (!m_IsInitialized)
         return;
 
+    // Check for duplicate message suppression
+    if (ProcessDuplicateMessage(message, level, ""))
+        return;  // This message is suppressed
+
     auto spdLevel = ConvertToSpdlogLevel(level);
     m_Impl->m_CoreLogger->log(
         spdlog::source_loc{location.file_name(), static_cast<int>(location.line()), location.function_name()},
@@ -123,6 +131,10 @@ void SpdlogLogger::LogTrace(const std::string &message, const std::source_locati
     if (!m_IsInitialized)
         return;
 
+    // Check for duplicate message suppression
+    if (ProcessDuplicateMessage(message, LogLevel::Trace, ""))
+        return;  // This message is suppressed
+
     m_Impl->m_CoreLogger->log(spdlog::source_loc{
                                   location.file_name(), static_cast<int>(location.line()), location.function_name()
                               },
@@ -132,6 +144,10 @@ void SpdlogLogger::LogTrace(const std::string &message, const std::source_locati
 void SpdlogLogger::LogDebug(const std::string &message, const std::source_location &location) {
     if (!m_IsInitialized)
         return;
+        
+    // Check for duplicate message suppression
+    if (ProcessDuplicateMessage(message, LogLevel::Debug, ""))
+        return;  // This message is suppressed
 
     m_Impl->m_CoreLogger->log(spdlog::source_loc{
                                   location.file_name(), static_cast<int>(location.line()), location.function_name()
@@ -142,6 +158,10 @@ void SpdlogLogger::LogDebug(const std::string &message, const std::source_locati
 void SpdlogLogger::LogInfo(const std::string &message, const std::source_location &location) {
     if (!m_IsInitialized)
         return;
+        
+    // Check for duplicate message suppression
+    if (ProcessDuplicateMessage(message, LogLevel::Info, ""))
+        return;  // This message is suppressed
 
     m_Impl->m_CoreLogger->log(spdlog::source_loc{
                                   location.file_name(), static_cast<int>(location.line()), location.function_name()
@@ -152,6 +172,10 @@ void SpdlogLogger::LogInfo(const std::string &message, const std::source_locatio
 void SpdlogLogger::LogWarning(const std::string &message, const std::source_location &location) {
     if (!m_IsInitialized)
         return;
+        
+    // Check for duplicate message suppression
+    if (ProcessDuplicateMessage(message, LogLevel::Warning, ""))
+        return;  // This message is suppressed
 
     m_Impl->m_CoreLogger->log(spdlog::source_loc{
                                   location.file_name(), static_cast<int>(location.line()), location.function_name()
@@ -162,6 +186,10 @@ void SpdlogLogger::LogWarning(const std::string &message, const std::source_loca
 void SpdlogLogger::LogError(const std::string &message, const std::source_location &location) {
     if (!m_IsInitialized)
         return;
+        
+    // Check for duplicate message suppression
+    if (ProcessDuplicateMessage(message, LogLevel::Error, ""))
+        return;  // This message is suppressed
 
     m_Impl->m_CoreLogger->log(spdlog::source_loc{
                                   location.file_name(), static_cast<int>(location.line()), location.function_name()
@@ -172,6 +200,10 @@ void SpdlogLogger::LogError(const std::string &message, const std::source_locati
 void SpdlogLogger::LogCritical(const std::string &message, const std::source_location &location) {
     if (!m_IsInitialized)
         return;
+        
+    // Check for duplicate message suppression
+    if (ProcessDuplicateMessage(message, LogLevel::Critical, ""))
+        return;  // This message is suppressed
 
     m_Impl->m_CoreLogger->log(spdlog::source_loc{
                                   location.file_name(), static_cast<int>(location.line()), location.function_name()
@@ -380,5 +412,170 @@ LogLevel SpdlogLogger::ConvertFromSpdlogLevel(spdlog::level::level_enum level) {
         case spdlog::level::critical: return LogLevel::Critical;
         case spdlog::level::off: return LogLevel::Off;
         default: return LogLevel::Info;
+    }
+}
+
+void SpdlogLogger::EnableDuplicateSuppression(bool enable) {
+    std::lock_guard<std::mutex> lock(m_DuplicateMutex);
+    m_DuplicateSuppressionEnabled = enable;
+    
+    if (!enable) {
+        // When disabling, reset tracking
+        ResetDuplicateTracking();
+    }
+}
+
+void SpdlogLogger::SetDuplicateSuppressionOptions(size_t suppressAfter, size_t summaryInterval) {
+    std::lock_guard<std::mutex> lock(m_DuplicateMutex);
+    m_DuplicateSuppressAfter = suppressAfter;
+    m_DuplicateSummaryInterval = summaryInterval;
+    
+    // Reset tracking when options change
+    ResetDuplicateTracking();
+}
+
+bool SpdlogLogger::ProcessDuplicateMessage(const std::string& message, LogLevel level, const std::string& category) {
+    if (!m_DuplicateSuppressionEnabled) {
+        return false; // Not suppressed
+    }
+    
+    std::lock_guard<std::mutex> lock(m_DuplicateMutex);
+    
+    auto now = std::chrono::steady_clock::now();
+    
+    // If this is a different message than the last one, or from a different category or level
+    if (message != m_LastMessage.message || 
+        level != m_LastMessage.level || 
+        category != m_LastMessage.categoryName) {
+            
+        // If we had a previous message with repeats, log a final summary if it wasn't summarized yet
+        if (m_LastMessage.repeatCount > m_DuplicateSuppressAfter && !m_LastMessage.summarized) {
+            const std::string summaryMsg = fmt::format("Last message repeated {} times", m_LastMessage.repeatCount);
+            
+            // Get the appropriate logger
+            const auto spdlogLevel = ConvertToSpdlogLevel(m_LastMessage.level);
+            if (m_LastMessage.categoryName.empty()) {
+                // Use core logger
+                m_Impl->m_CoreLogger->log(spdlogLevel, summaryMsg);
+            } else if (auto catLogger = GetSpdlogCategoryLogger(m_LastMessage.categoryName)) {
+                // Use category logger
+                catLogger->log(spdlogLevel, summaryMsg);
+            }
+        }
+        
+        // Set the new message as current
+        m_LastMessage.message = message;
+        m_LastMessage.level = level;
+        m_LastMessage.categoryName = category;
+        m_LastMessage.repeatCount = 1;
+        m_LastMessage.lastTime = now;
+        m_LastMessage.summarized = false;
+        
+        return false; // Not suppressed
+    }
+    
+    // Same message, increment counter
+    m_LastMessage.repeatCount++;
+    m_LastMessage.lastTime = now;
+    
+    // Check if we should show a periodic summary
+    if (m_DuplicateSummaryInterval > 0 && 
+        m_LastMessage.repeatCount > m_DuplicateSuppressAfter &&
+        m_LastMessage.repeatCount % m_DuplicateSummaryInterval == 0) {
+          // Show periodic summary
+        const std::string summaryMsg = fmt::format("Last message repeated {} times so far", m_LastMessage.repeatCount);
+        
+        // Get the appropriate logger
+        const auto spdlogLevel = ConvertToSpdlogLevel(m_LastMessage.level);
+        if (m_LastMessage.categoryName.empty()) {
+            // Use core logger
+            m_Impl->m_CoreLogger->log(spdlogLevel, summaryMsg);
+        } else if (const auto catLogger = GetSpdlogCategoryLogger(m_LastMessage.categoryName)) {
+            // Use category logger
+            catLogger->log(spdlogLevel, summaryMsg);
+        }
+        
+        m_LastMessage.summarized = true;
+    }
+    
+    // Suppress if we've exceeded the threshold
+    return m_LastMessage.repeatCount > m_DuplicateSuppressAfter;
+}
+
+void SpdlogLogger::ResetDuplicateTracking() {
+    m_LastMessage = MessageInfo{};
+}
+
+void SpdlogLogger::ApplyLoggerConfig(const LoggerConfig& config) {
+    // Apply global level setting
+    SetGlobalLevel(config.globalLevel);
+    
+    // Apply pattern setting
+    if (!config.pattern.empty()) {
+        SetPattern(config.pattern);
+    }
+    
+    // Apply file logging settings
+    if (config.fileLogging.enabled) {
+        EnableFileLogging(config.fileLogging.path);
+    } else {
+        DisableFileLogging();
+    }
+    
+    // Apply duplicate suppression settings
+    EnableDuplicateSuppression(config.duplicateSuppression.enabled);
+    if (config.duplicateSuppression.enabled) {
+        SetDuplicateSuppressionOptions(
+            config.duplicateSuppression.suppressAfter,
+            config.duplicateSuppression.summaryInterval
+        );
+    }
+    
+    // Apply category-specific log levels
+    for (const auto& [category, level] : config.categories) {
+        SetCategoryLevel(category, level);
+    }
+      // Log that configuration was applied
+    LogInfo("Applied logger configuration: Global level=" + 
+            LoggerConfig::LogLevelToString(config.globalLevel) +
+            ", File logging=" + (config.fileLogging.enabled ? "enabled" : "disabled") +
+            ", Categories=" + std::to_string(config.categories.size()),
+            std::source_location::current());
+}
+
+void SpdlogLogger::Initialize(const std::string& jsonConfigPath) {
+    // Completely redesigned implementation to avoid deadlocks
+    
+    // Check if JSON file exists first
+    if (std::ifstream configFile(jsonConfigPath); !configFile.is_open()) {
+        // File doesn't exist or can't be opened - do standard initialization and log the error
+        std::cerr << "Cannot open config file: " << jsonConfigPath << std::endl;
+        Initialize(); // Use standard initialization
+        
+        // Now it's safe to log the error since we're initialized
+        if (m_IsInitialized) {
+            LogError("Failed to open logger configuration file: " + jsonConfigPath, 
+                     std::source_location::current());
+        }
+        return;
+    }
+    
+    // If we get here, the file exists - do standard initialization first
+    Initialize();
+    
+    // Now we're initialized, so we can parse and apply the JSON config
+    try {
+        if (const auto config = LoggerConfig::FromJson(jsonConfigPath)) {
+            // Apply configuration
+            ApplyLoggerConfig(*config);
+            
+            // Log success
+            LogInfo("Logger configured from JSON file: " + jsonConfigPath,
+                    std::source_location::current());
+        }
+    } catch (const std::exception& e) {
+        // We're already initialized so we can log the error
+        LogError("Error parsing logger configuration: " + std::string(e.what()),
+                 std::source_location::current());
     }
 }

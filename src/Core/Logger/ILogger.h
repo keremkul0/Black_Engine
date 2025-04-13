@@ -3,6 +3,7 @@
 #include <string>
 #include <memory>
 #include <source_location>
+#include <spdlog/fmt/fmt.h>
 
 enum class LogLevel {
     Trace = 0,
@@ -20,7 +21,13 @@ public:
 
     // Basic initialization and shutdown
     virtual void Initialize() = 0;
-    virtual void Shutdown() = 0;    // Simple logging methods with source location
+    virtual void Shutdown() = 0;    
+
+    // Duplicate suppression configuration
+    virtual void EnableDuplicateSuppression(bool enable) = 0;
+    virtual void SetDuplicateSuppressionOptions(size_t suppressAfter = 3, size_t summaryInterval = 0) = 0;
+
+    // Simple logging methods with source location
     virtual void Log(LogLevel level, const std::string& message, 
                      const std::source_location& location) = 0;
     virtual void Log(const LogLevel level, const std::string& message) {
@@ -91,8 +98,15 @@ public:
 // Template method implementations
 template<typename... Args>
 void ILogger::LogFormat(LogLevel level, const std::string& formatString, Args&&... args) {
-    // Each implementation will provide its own formatting logic
-    // This is just a placeholder that derived classes should override
+    try {
+        // Use fmt::format to handle the formatting
+        const std::string formattedMessage = fmt::format(fmt::runtime(formatString), std::forward<Args>(args)...);
+        // Log the formatted message
+        Log(level, formattedMessage);
+    } catch (const std::exception& e) {
+        // Log format error
+        LogError(std::string("Format error: ") + e.what());
+    }
 }
 
 template<typename... Args>
