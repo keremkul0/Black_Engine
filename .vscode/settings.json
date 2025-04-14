@@ -1,7 +1,10 @@
 {
     "files.associations": {
         "memory": "cpp",
-        "source_location": "cpp"
+        "source_location": "cpp",
+        "system_error": "cpp",
+        "xstring": "cpp",
+        "atomic": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

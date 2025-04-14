@@ -68,24 +68,25 @@ set(CORE_FILES
         src/Core/WindowManager/WindowManager.h
         src/Core/WindowManager/WindowManager.cpp
         src/Core/ImGui/ImGuiLayer.h
-        src/Core/ImGui/ImGuiLayer.cpp
-        src/Core/ProjectManager/ProjectManager.h
+        src/Core/ImGui/ImGuiLayer.cpp        src/Core/ProjectManager/ProjectManager.h
         src/Core/ProjectManager/ProjectManager.cpp
         src/Core/FileSystem/FileSystem.h
         src/Core/FileSystem/FileSystem.cpp
-        src/Core/Logger/LoggerManager.h
-        src/Core/Logger/LoggerManager.cpp
-        src/Core/Logger/SpdlogLogger.h
-        src/Core/Logger/SpdlogLogger.cpp        src/Core/Logger/MockLogger.h
-        src/Core/Logger/MockLogger.cpp
-        src/Core/Logger/ILogger.h
-        src/Core/Logger/LoggerConfig.h
-        src/Core/Logger/LoggerConfig.cpp
         src/Core/SceneManager/SceneManager.h
         src/Core/SceneManager/SceneManager.cpp
         src/Core/AssetDatabase/AssetDatabase.h
         src/Core/AssetDatabase/AssetDatabase.cpp
         src/Core/AssetDatabase/Asset.h
+        
+        # Logger sistemi
+        src/Core/Logger/LogTypes.h
+        src/Core/Logger/ILogBackend.h
+        src/Core/Logger/LogManager.h
+        src/Core/Logger/LogManager.cpp
+        src/Core/Logger/SpdlogBackend.h
+        src/Core/Logger/SpdlogBackend.cpp
+        src/Core/Logger/MockLogBackend.h
+        src/Core/Logger/MockLogBackend.cpp
         src/Core/Logger/LogMacros.h
 )
 

@@ -5,6 +5,9 @@
 #include "Core/Logger/LogMacros.h"
 #include "spdlog/fmt/bundled/format.h"
 
+// Define log category for ProjectManager
+BE_DEFINE_LOG_CATEGORY(ProjectManagerLog, "ProjectManager", BlackEngine::LogLevel::Info);
+
 /**
  * Returns the singleton instance of the Project Manager.
  * @return The singleton instance
@@ -20,17 +23,17 @@ ProjectManager &ProjectManager::GetInstance() {
  * @return True if the project was loaded successfully
  */
 bool ProjectManager::LoadProject(const std::string &projectPath) {
-    BE_INFO(fmt::format("Loading project from: {}", projectPath));
+    BE_LOG_INFO(ProjectManagerLog, "Loading project from: {}", projectPath);
 
     // Check if project file exists
     std::string projectFilePath = projectPath + "/project.json";
     if (!FileSystem::BE_File_Exists(projectFilePath)) {
-        BE_ERROR(fmt::format("Project file not found: {}", projectFilePath));
+        BE_LOG_ERROR(ProjectManagerLog, "Project file not found: {}", projectFilePath);
         return false;
     }
 
     // Read and parse project file
-    BE_DEBUG(fmt::format("Reading project file: {}", projectFilePath));
+    BE_LOG_DEBUG(ProjectManagerLog, "Reading project file: {}", projectFilePath);
     std::string projectJson = FileSystem::BE_Read_Text_File(projectFilePath);
 
     try {
@@ -41,15 +44,15 @@ bool ProjectManager::LoadProject(const std::string &projectPath) {
         m_ProjectPath = projectPath;
         m_ProjectVersion = projectData["version"];
 
-        BE_INFO(fmt::format("Project loaded: {}, Version: {}",
-            m_ProjectName, m_ProjectVersion));
+        BE_LOG_INFO(ProjectManagerLog, "Project loaded: {}, Version: {}",
+            m_ProjectName, m_ProjectVersion);
 
         // Load project settings
         LoadProjectSettings();
 
         return true;
     } catch (const std::exception &e) {
-        BE_ERROR(fmt::format("Error parsing project file: {}", e.what()));
+        BE_LOG_ERROR(ProjectManagerLog, "Error parsing project file: {}", e.what());
         return false;
     }
 }
@@ -68,13 +71,13 @@ std::string ProjectManager::GetProjectPath() const {
  * @return True if settings were loaded successfully
  */
 bool ProjectManager::LoadProjectSettings() {
-    BE_DEBUG("Loading project settings");
+    BE_LOG_DEBUG(ProjectManagerLog, "Loading project settings");
     std::string settingsFilePath = m_ProjectPath + "/settings.json";
 
     // Check if settings file exists
     if (!FileSystem::BE_File_Exists(settingsFilePath)) {
-        BE_INFO(fmt::format("Settings file not found: {}. Creating defaults.",
-            settingsFilePath));
+        BE_LOG_INFO(ProjectManagerLog, "Settings file not found: {}. Creating defaults.",
+            settingsFilePath);
         // Create default settings if not found
         CreateDefaultSettings();
         return true;
@@ -82,34 +85,34 @@ bool ProjectManager::LoadProjectSettings() {
 
     // Try to read and parse settings
     try {
-        BE_DEBUG(fmt::format("Reading settings file: {}", settingsFilePath));
+        BE_LOG_DEBUG(ProjectManagerLog, "Reading settings file: {}", settingsFilePath);
         std::string settingsJson = FileSystem::BE_Read_Text_File(settingsFilePath);
         auto settingsData = nlohmann::json::parse(settingsJson);
 
         // Parse build settings
-        BE_DEBUG("Parsing build settings");
+        BE_LOG_DEBUG(ProjectManagerLog, "Parsing build settings");
         auto buildSettings = settingsData["build"];
         m_Settings.buildSettings.outputDirectory = buildSettings["outputDirectory"];
         m_Settings.buildSettings.buildType = buildSettings["buildType"];
 
         // Parse editor settings
-        BE_DEBUG("Parsing editor settings");
+        BE_LOG_DEBUG(ProjectManagerLog, "Parsing editor settings");
         auto editorSettings = settingsData["editor"];
         m_Settings.editorSettings.autoSaveInterval = editorSettings["autoSaveInterval"];
         m_Settings.editorSettings.theme = editorSettings["theme"];
         m_Settings.editorSettings.showGrid = editorSettings["showGrid"];
 
         // Parse render settings
-        BE_DEBUG("Parsing render settings");
+        BE_LOG_DEBUG(ProjectManagerLog, "Parsing render settings");
         auto renderSettings = settingsData["render"];
         m_Settings.renderSettings.msaaLevel = renderSettings["msaaLevel"];
         m_Settings.renderSettings.shadowQuality = renderSettings["shadowQuality"];
         m_Settings.renderSettings.useHDR = renderSettings["useHDR"];
 
-        BE_INFO("Project settings loaded successfully");
+        BE_LOG_INFO(ProjectManagerLog, "Project settings loaded successfully");
         return true;
     } catch (const std::exception &e) {
-        BE_ERROR(fmt::format("Error loading settings: {}. Using defaults.", e.what()));
+        BE_LOG_ERROR(ProjectManagerLog, "Error loading settings: {}. Using defaults.", e.what());
         // Fall back to default settings on error
         CreateDefaultSettings();
         return false;
@@ -120,7 +123,7 @@ bool ProjectManager::LoadProjectSettings() {
  * Creates default project settings and saves them to disk.
  */
 void ProjectManager::CreateDefaultSettings() {
-    BE_INFO("Creating default project settings");
+    BE_LOG_INFO(ProjectManagerLog, "Creating default project settings");
 
     // Initialize with default values
     m_Settings.buildSettings.outputDirectory = "Build";
@@ -135,7 +138,7 @@ void ProjectManager::CreateDefaultSettings() {
     m_Settings.renderSettings.useHDR = true;
 
     // Save the default settings to disk
-    BE_DEBUG("Saving default settings to disk");
+    BE_LOG_DEBUG(ProjectManagerLog, "Saving default settings to disk");
     SaveProjectSettings();
 }
 
@@ -144,7 +147,7 @@ void ProjectManager::CreateDefaultSettings() {
  * @return True if settings were saved successfully
  */
 bool ProjectManager::SaveProjectSettings() {
-    BE_DEBUG("Saving project settings");
+    BE_LOG_DEBUG(ProjectManagerLog, "Saving project settings");
 
     try {
         // Create JSON structure
@@ -166,18 +169,18 @@ bool ProjectManager::SaveProjectSettings() {
 
         // Save to file
         std::string settingsFilePath = m_ProjectPath + "/settings.json";
-        BE_DEBUG(fmt::format("Writing settings file: {}", settingsFilePath));
+        BE_LOG_DEBUG(ProjectManagerLog, "Writing settings file: {}", settingsFilePath);
         const bool success = FileSystem::BE_Write_Text_File(settingsFilePath, settingsJson.dump(4));
 
         if (success) {
-            BE_INFO("Project settings saved successfully");
+            BE_LOG_INFO(ProjectManagerLog, "Project settings saved successfully");
         } else {
-            BE_ERROR(fmt::format("Failed to write settings file: {}", settingsFilePath));
+            BE_LOG_ERROR(ProjectManagerLog, "Failed to write settings file: {}", settingsFilePath);
         }
 
         return success;
     } catch (const std::exception &e) {
-        BE_ERROR(fmt::format("Error saving settings: {}", e.what()));
+        BE_LOG_ERROR(ProjectManagerLog, "Error saving settings: {}", e.what());
         return false;
     }
 }
@@ -188,14 +191,14 @@ bool ProjectManager::SaveProjectSettings() {
  * @return True if project was saved successfully
  */
 bool ProjectManager::SaveProject() {
-    BE_INFO(fmt::format("Saving project: {}", m_ProjectName));
+    BE_LOG_INFO(ProjectManagerLog, "Saving project: {}", m_ProjectName);
 
     // Save project settings
-    BE_DEBUG("Saving project settings");
+    BE_LOG_DEBUG(ProjectManagerLog, "Saving project settings");
     const bool settingsSaved = SaveProjectSettings();
 
     // Update project file
-    BE_DEBUG("Updating project file");
+    BE_LOG_DEBUG(ProjectManagerLog, "Updating project file");
     nlohmann::json projectData;
     projectData["name"] = m_ProjectName;
     projectData["version"] = m_ProjectVersion;
@@ -205,9 +208,9 @@ bool ProjectManager::SaveProject() {
     const bool projectSaved = FileSystem::BE_Write_Text_File(projectFilePath, projectData.dump(4));
 
     if (projectSaved && settingsSaved) {
-        BE_INFO(fmt::format("Project saved successfully: {}", m_ProjectName));
+        BE_LOG_INFO(ProjectManagerLog, "Project saved successfully: {}", m_ProjectName);
         return true;
     }
-    BE_ERROR("Failed to save project");
+    BE_LOG_ERROR(ProjectManagerLog, "Failed to save project");
     return false;
 }

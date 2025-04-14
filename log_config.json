@@ -1,25 +1,37 @@
 {
-  "globalLevel": "Info",
-  "pattern": "[%Y-%m-%d %H:%M:%S] [%^%l%$] [%n] %v",
-  "fileLogging": {
-    "enabled": true,
-    "path": "Logs/BlackEngine.log"
-  },
-  "duplicateSuppression": {
-    "enabled": true,
-    "suppressAfter": 3,
-    "summaryInterval": 10
-  },
-  "categories": {
-    "Engine": "Info",
-    "Renderer": "Debug",
-    "Physics": "Info",
-    "Audio": "Info",
-    "Input": "off",
-    "FileSystem": "Info",
-    "ProjectManager": "Debug",
-    "SceneManager": "Debug",
-    "Editor": "Debug",
-    "UI": "Warning"
-  }
+    "defaultLogLevel": "Info",
+    "categories": {
+        "Core": {
+            "level": "Info",
+            "enabled": true
+        },
+        "Renderer": {
+            "level": "Debug",
+            "enabled": true
+        },
+        "Physics": {
+            "level": "Warning",
+            "enabled": true
+        },
+        "Audio": {
+            "level": "Info",
+            "enabled": true
+        },
+        "Input": {
+            "level": "Debug",
+            "enabled": true
+        },
+        "FileSystem": {
+            "level": "Info",
+            "enabled": true
+        },
+        "Editor": {
+            "level": "Debug",
+            "enabled": true
+        },
+        "UI": {
+            "level": "Info",
+            "enabled": true
+        }
+    }
 }

@@ -1,26 +1,31 @@
 #include "Application.h"
 #include "Core/Logger/LogMacros.h"
-#include "Core/Logger/LoggerManager.h"  // Yeni log yönetim sistemi
+#include "Core/Logger/LogManager.h"
 #include "Core/ProjectManager/ProjectManager.h"
 #include "Core/FileSystem/FileSystem.h"
 #include "Core/SceneManager/SceneManager.h"
 #include <cstdlib>
 #include <nlohmann/json.hpp>
 
+// Ana log kategorisi tanımlama
+BE_DEFINE_LOG_CATEGORY(MainLog, "Main", BlackEngine::LogLevel::Info);
+
 int main() {
-    // Get the executable path to find config files relative to it
+    // Log yapılandırma dosyası yolu
     std::string configPath = "c:/Users/Kerem/CLionProjects/Black_Engine/log_config.json";
-    
-    // Yeni log sistemini JSON konfigürasyon dosyasından başlat: Prod ortamı için false (test değil)
-    LoggerManager::InitializeFromJson(configPath, false);
 
-    BE_INFO("Black Engine starting up");
+    // Log sistemini başlat
+    BlackEngine::LogManager::GetInstance().Initialize();
+    BlackEngine::LogManager::GetInstance().LoadConfig(configPath);
 
-    BE_DEBUG("Creating application instance");
-    Application app;    BE_CAT_INFO("Engine", "Initializing application");
+    BE_LOG_INFO(MainLog, "Black Engine starting up");
+
+    BE_LOG_DEBUG(MainLog, "Creating application instance");
+    Application app;
+    BE_LOG_INFO(MainLog, "Initializing application");
     if (!app.Initialize()) {
-        BE_CAT_CRITICAL("Engine", "Application initialization failed");
-        LoggerManager::Shutdown();
+        BE_LOG_CRITICAL(MainLog, "Application initialization failed");
+        BlackEngine::LogManager::GetInstance().Shutdown();
         return -1;
     }
 
@@ -35,17 +40,17 @@ int main() {
     const std::string defaultProjectsDir = userHomeDir + "/BlackEngineProjects";
     const std::string defaultProjectPath = defaultProjectsDir + "/MyBlackEngineProject";
 
-    BE_DEBUG_FMT("User home directory: {}", userHomeDir);
-    BE_DEBUG_FMT("Default projects directory: {}", defaultProjectsDir);
+    BE_LOG_DEBUG(MainLog, "User home directory: {}", userHomeDir);
+    BE_LOG_DEBUG(MainLog, "Default projects directory: {}", defaultProjectsDir);
 
-    // Default proje yüklenmeye çalışılıyor; mevcut değilse oluşturuluyor.
+    // Default proje yüklenmeye çalışılıyor; mevcut değilse oluşturuluyor
     if (!FileSystem::BE_Directory_Exists(defaultProjectPath) ||
         !ProjectManager::GetInstance().LoadProject(defaultProjectPath)) {
-        BE_INFO_FMT("Creating default project at: {}", defaultProjectPath);
+        BE_LOG_INFO(MainLog, "Creating default project at: {}", defaultProjectPath);
 
         // Default proje dizini yoksa oluştur
         if (!FileSystem::BE_Directory_Exists(defaultProjectsDir)) {
-            BE_DEBUG("Creating default project structure");
+            BE_LOG_DEBUG(MainLog, "Creating default project structure");
             FileSystem::BE_Create_Directory(defaultProjectsDir);
         }
 
@@ -60,7 +65,7 @@ int main() {
         FileSystem::BE_Create_Directory(defaultProjectPath + "/Assets/Textures");
         FileSystem::BE_Create_Directory(defaultProjectPath + "/Assets/Shaders");
 
-        // project.json dosyasını oluştur (nlohmann::json kullanılarak)
+        // project.json dosyasını oluştur
         nlohmann::json projectJson;
         projectJson["name"] = "MyBlackEngineProject";
         projectJson["version"] = "1.0.0";
@@ -69,7 +74,7 @@ int main() {
 
         // Default projeyi yükle
         if (!ProjectManager::GetInstance().LoadProject(defaultProjectPath)) {
-            BE_ERROR("Failed to load default project");
+            BE_LOG_ERROR(MainLog, "Failed to load default project");
             return 1;
         }
 
@@ -84,7 +89,7 @@ int main() {
     }
 
     int result = app.Run();
-    BE_INFO_FMT("Application exited with code: {}", result);
-    LoggerManager::Shutdown();
+    BE_LOG_INFO(MainLog, "Application exited with code: {}", result);
+    BlackEngine::LogManager::GetInstance().Shutdown();
     return 0;
 }

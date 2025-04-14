@@ -13,6 +13,8 @@
 #include "Engine/Component/TransformComponent.h"
 #include "Core/Logger/LogMacros.h"
 
+BE_DEFINE_LOG_CATEGORY(SceneManagerLog, "SceneManager", ::BlackEngine::LogLevel::Info);
+
 SceneManager &SceneManager::GetInstance() {
     static SceneManager instance;
     return instance;
@@ -70,7 +72,7 @@ std::vector<std::string> SceneManager::GetAvailableScenes() const {
 
 void SceneManager::RegisterScene(const std::string &scenePath) {
     // Check if already registered
-    for (const auto &path : m_RegisteredScenes) {
+    for (const auto &path: m_RegisteredScenes) {
         if (path == scenePath) return;
     }
     m_RegisteredScenes.push_back(scenePath);
@@ -92,13 +94,13 @@ bool SceneManager::DeserializeScene(const std::string &jsonData) {
 
         // Load game objects
         if (sceneJson.contains("gameObjects") && sceneJson["gameObjects"].is_array()) {
-            for (const auto &objJson : sceneJson["gameObjects"]) {
+            for (const auto &objJson: sceneJson["gameObjects"]) {
                 std::string name = objJson.value("name", "GameObject");
                 const auto gameObject = m_ActiveScene->CreateGameObject(name);
 
                 // Add components based on their types
                 if (objJson.contains("components") && objJson["components"].is_array()) {
-                    for (const auto &compJson : objJson["components"]) {
+                    for (const auto &compJson: objJson["components"]) {
                         std::string type = compJson["type"];
 
                         if (type == "TransformComponent") {
@@ -145,10 +147,10 @@ bool SceneManager::DeserializeScene(const std::string &jsonData) {
         }
 
         // Kategori kullanarak loglama
-        BE_CAT_INFO("Scene", "Scene loaded successfully");
+        BE_LOG_INFO(SceneManagerLog, "Scene loaded: {}", m_ActiveScene->GetName());
         return true;
     } catch (const std::exception &e) {
-        BE_CAT_ERROR("Scene", std::string("Failed to parse scene JSON: ") + e.what());
+        BE_LOG_ERROR(SceneManagerLog, "Failed to load scene: {}", e.what());
         // Create an empty scene as fallback
         CreateNewScene();
         return false;
@@ -166,7 +168,7 @@ std::string SceneManager::SerializeCurrentScene() const {
     sceneJson["gameObjects"] = json::array();
 
     // Serialize game objects
-    for (const auto &obj : m_ActiveScene->GetGameObjects()) {
+    for (const auto &obj: m_ActiveScene->GetGameObjects()) {
         json objJson;
         objJson["name"] = obj->name;
         objJson["components"] = json::array();

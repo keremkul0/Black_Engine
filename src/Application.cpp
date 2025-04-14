@@ -5,20 +5,22 @@
 #include "Editor/UI/Layout/EditorLayout.h"
 #include "Core/SceneManager/SceneManager.h"
 #include "Core/Logger/LogMacros.h"
+#include <iostream>
 
-// Dosya seviyesinde kategori tanımlaması
-BE_DEFINE_LOG_CATEGORY("Engine")
+// Log kategorisini doğru formatla tanımla
+BE_DEFINE_LOG_CATEGORY(EngineLog, "Engine", BlackEngine::LogLevel::Info);
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <GLFW/glfw3.h>
 
-// Main window reference for ImGui - required for ImGuiLayer.cpp
+// ImGui için ana pencere referansı - ImGuiLayer.cpp için gerekli
 GLFWwindow *g_Window = nullptr;
 
-// External references to maintain compatibility with existing code
+// Mevcut kodla uyumluluğu korumak için harici referanslar
 glm::mat4 gViewMatrix(1.0f);
 glm::mat4 gProjectionMatrix(1.0f);
 
-// Scroll callback function
+// Kaydırma geri çağrı fonksiyonu
 static void scroll_callback(GLFWwindow *window, double xoffset, const double yoffset) {
     InputManager::SetScrollOffset(static_cast<float>(yoffset));
 }
@@ -31,81 +33,94 @@ Application::Application()
 }
 
 Application::~Application() {
-    // Input manager cleanup
+    // Kapatma mesajını logla
+    BE_LOG_INFO(EngineLog, "Shutting down application");
+
+    // Input manager temizliği
     InputManager::Cleanup();
 
-    // ImGui cleanup
+    // ImGui temizliği
     ImGuiLayer::Shutdown();
+
+    // Log sistemini en son kapat
+    BlackEngine::LogManager::GetInstance().Shutdown();
 }
 
 bool Application::Initialize() {
-    BE_CAT_INFO_CURRENT("Initializing application components");
-    
-    // Initialize window
-    BE_CAT_DEBUG_CURRENT("Initializing window manager");
-    if (!m_WindowManager->Initialize(1280, 720, "Black Engine")) {
-        BE_CAT_ERROR_CURRENT("Failed to initialize window manager");
+    // Önce log sistemini başlat
+    if (!BlackEngine::LogManager::GetInstance().Initialize()) {
+        // Log makroları henüz kullanılamaz, doğrudan hata çıktısı
+        std::cerr << "Failed to initialize logging system!" << std::endl;
         return false;
     }
 
-    // Global window reference for ImGui
+    BE_LOG_INFO(EngineLog, "Initializing application components");
+
+    // Pencereyi başlat
+    BE_LOG_DEBUG(EngineLog, "Initializing window manager");
+    if (!m_WindowManager->Initialize(1280, 720, "Black Engine")) {
+        BE_LOG_ERROR(EngineLog, "Failed to initialize window manager");
+        return false;
+    }
+
+    // ImGui için global pencere referansı
     g_Window = m_WindowManager->GetWindow();
 
-    // Initialize input manager
-    BE_CAT_DEBUG("Engine", "Initializing input systems");
+    // Input manager'ı başlat
+    BE_LOG_DEBUG(EngineLog, "Initializing input systems");
     InputManager::Initialize(m_WindowManager->GetWindow());
     m_InputSystem->Initialize(m_WindowManager->GetWindow());
 
-    // Set up window callbacks
+    // Pencere geri çağrılarını ayarla
     GLFWwindow *window = m_WindowManager->GetWindow();
     glfwSetWindowUserPointer(window, this);
     m_WindowManager->SetScrollCallback(scroll_callback);
 
-    // Set up projection matrix
+    // Projeksiyon matrisini ayarla
     const float aspectRatio = static_cast<float>(m_WindowManager->GetWidth()) /
                               static_cast<float>(m_WindowManager->GetHeight());
     m_ProjectionMatrix = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 100.0f);
     gProjectionMatrix = m_ProjectionMatrix;
 
-    // Initialize ImGui
+    // ImGui'yi başlat
     ImGuiLayer::Init();
 
-    // Initialize editor UI using SceneManager's active scene
+    // Editor arayüzünü SceneManager'ın aktif sahnesiyle başlat
     Scene* activeScene = SceneManager::GetInstance().GetActiveScene();
     m_EditorLayout = std::make_unique<EditorLayout>();
     m_EditorLayout->SetupDefaultLayout(std::shared_ptr<Scene>(activeScene, [](Scene*) {}));
 
-    // Register editor layout with input system
+    // Editor düzenini input sisteme kaydet
     m_InputSystem->RegisterEventReceiver(m_EditorLayout.get());
 
     return true;
 }
 
 int Application::Run() const {
-    // Main loop variables
+    // Ana döngü değişkenleri
     auto lastTime = static_cast<float>(glfwGetTime());
 
-    // Main loop
+    // Ana döngü
     while (!m_WindowManager->ShouldClose()) {
         const auto currentTime = static_cast<float>(glfwGetTime());
         const float deltaTime = currentTime - lastTime;
         lastTime = currentTime;
 
-        // Process input
+        // Girişi işle
         WindowManager::PollEvents();
         m_InputSystem->ProcessInput(deltaTime);
 
-        // Clear screen
+        // Ekranı temizle
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Update and draw the active scene from SceneManager
+        // SceneManager'dan aktif sahneyi güncelle ve çiz
         if (Scene* activeScene = SceneManager::GetInstance().GetActiveScene()) {
             activeScene->UpdateAll(deltaTime);
             activeScene->DrawAll();
         }
 
-        // Render UI
+        // Arayüzü çiz
         ImGuiLayer::Begin();
         if (m_EditorLayout) {
             m_EditorLayout->UpdateAllPanels(deltaTime);
