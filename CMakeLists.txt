@@ -89,6 +89,8 @@ add_executable(Black_Engine
 target_include_directories(Black_Engine PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/external/glm
         ${CMAKE_CURRENT_SOURCE_DIR}/src
+      
+
 )
 
 target_link_libraries(Black_Engine PRIVATE
@@ -96,6 +98,7 @@ target_link_libraries(Black_Engine PRIVATE
         imgui
         glfw
         opengl32
+	   
 )
 
 if (BUILD_TESTS)
