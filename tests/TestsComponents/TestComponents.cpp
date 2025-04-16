@@ -3,7 +3,7 @@
 #include "Engine/Component/BaseComponent.h"
 #include <memory>
 
-class MockComponent : public BaseComponent {
+class MockComponent final : public BaseComponent {
 public:
     bool startCalled = false;
     float lastDeltaTime = 0.f;
@@ -11,12 +11,12 @@ public:
     void Start() override {
         startCalled = true;
     }
-    void Update(float deltaTime) override {
+    void Update(const float deltaTime) override {
         lastDeltaTime = deltaTime;
     }
 };
 
-class ComponentTest : public ::testing::Test {
+class ComponentTest : public testing::Test {
 protected:
     void SetUp() override {
         // Create a new GameObject for each test
@@ -29,14 +29,14 @@ protected:
 TEST_F(ComponentTest, AddComponent) {
     ASSERT_TRUE(gameObject->components.empty());
 
-    auto comp = gameObject->AddComponent<MockComponent>();
+    const auto comp = gameObject->AddComponent<MockComponent>();
     ASSERT_NE(comp, nullptr);
     ASSERT_FALSE(gameObject->components.empty());
     EXPECT_TRUE(comp->startCalled);
 }
 
 TEST_F(ComponentTest, UpdateCallsComponents) {
-    auto comp = gameObject->AddComponent<MockComponent>();
+    const auto comp = gameObject->AddComponent<MockComponent>();
     ASSERT_NE(comp, nullptr);
 
     gameObject->Update(0.016f);

@@ -79,15 +79,15 @@ set(CORE_FILES
         src/Core/AssetDatabase/Asset.h
         
         # Logger sistemi
+        src/Core/Logger/LogMacros.h
+        src/Core/Logger/MockLogger.h
+        src/Core/Logger/MockLogger.cpp
         src/Core/Logger/LogTypes.h
-        src/Core/Logger/ILogBackend.h
         src/Core/Logger/LogManager.h
         src/Core/Logger/LogManager.cpp
-        src/Core/Logger/SpdlogBackend.h
-        src/Core/Logger/SpdlogBackend.cpp
-        src/Core/Logger/MockLogBackend.h
-        src/Core/Logger/MockLogBackend.cpp
-        src/Core/Logger/LogMacros.h
+        src/Core/Logger/CategoryInfo.h
+        src/Core/Logger/CategoryInfo.cpp
+        src/Core/Logger/ConsoleLoggerBackend.cpp
 )
 
 # Engine dosyaları

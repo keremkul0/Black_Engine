@@ -1,25 +1,23 @@
+// file: test_main.cpp
 #include <gtest/gtest.h>
-#include "Core/Logger/LoggerManager.h"
-#include "Core/Logger/MockLogger.h"
+#include "Core/Logger/LogManager.h"
+#include "Core/Logger/MockLogBackend.h"
 
-// Global test environment setup
-class GlobalTestEnvironment : public ::testing::Environment {
+class GlobalTestEnvironment final : public testing::Environment {
 public:
     void SetUp() override {
-        // Directly set a MockLogger instance instead of using Initialize(true)
-        LoggerManager::SetLogger(std::make_shared<MockLogger>());
+        // LogManager singleton üzerinden backend ekleyip log sistemini başlatıyoruz
+        BlackEngine::LogManager::GetInstance().AddBackend(std::make_shared<BlackEngine::MockLogBackend>());
+        BlackEngine::LogManager::GetInstance().Initialize();
     }
 
     void TearDown() override {
-        // Clean up the logger at the end of all tests
-        LoggerManager::Shutdown();
+        BlackEngine::LogManager::GetInstance().Shutdown();
     }
 };
 
-// Main function for running tests
 int main(int argc, char **argv) {
-    ::testing::InitGoogleTest(&argc, argv);
-    // Add global test environment
-    ::testing::AddGlobalTestEnvironment(new GlobalTestEnvironment());
+    testing::InitGoogleTest(&argc, argv);
+    AddGlobalTestEnvironment(new GlobalTestEnvironment());
     return RUN_ALL_TESTS();
 }

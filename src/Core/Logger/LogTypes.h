@@ -1,120 +1,110 @@
 #pragma once
 
 #include <string>
-#include <string_view>
 #include <source_location>
 #include <chrono>
-#include <atomic>
+#include <spdlog/spdlog.h>
+#include <spdlog/common.h>
 
 namespace BlackEngine {
 
 /**
- * @brief Defines the severity levels for log messages
+ * @brief Log seviyeleri
  */
 enum class LogLevel {
-    Trace,
-    Debug,
-    Info,
-    Warning,
-    Error,
+    Off = 0,
     Critical,
-    Off
+    Error,
+    Warning,
+    Info,
+    Debug,
+    Trace
 };
 
 /**
- * @brief Converts a LogLevel to its string representation
+ * @brief LogLevel -> string dönüşümü
  */
-inline std::string LogLevelToString(LogLevel level) {
+inline std::string LogLevelToString(const LogLevel level) {
     switch (level) {
-        case LogLevel::Trace:    return "Trace";
-        case LogLevel::Debug:    return "Debug";
-        case LogLevel::Info:     return "Info";
-        case LogLevel::Warning:  return "Warning";
-        case LogLevel::Error:    return "Error";
-        case LogLevel::Critical: return "Critical";
         case LogLevel::Off:      return "Off";
+        case LogLevel::Critical: return "Critical";
+        case LogLevel::Error:    return "Error";
+        case LogLevel::Warning:  return "Warning";
+        case LogLevel::Info:     return "Info";
+        case LogLevel::Debug:    return "Debug";
+        case LogLevel::Trace:    return "Trace";
         default:                 return "Unknown";
     }
 }
 
 /**
- * @brief Converts a string to corresponding LogLevel
+ * @brief String -> LogLevel dönüşümü
  */
 inline LogLevel StringToLogLevel(const std::string& levelStr) {
-    if (levelStr == "Trace")    return LogLevel::Trace;
-    if (levelStr == "Debug")    return LogLevel::Debug;
-    if (levelStr == "Info")     return LogLevel::Info;
-    if (levelStr == "Warning")  return LogLevel::Warning;
-    if (levelStr == "Error")    return LogLevel::Error;
-    if (levelStr == "Critical") return LogLevel::Critical;
-    if (levelStr == "Off")      return LogLevel::Off;
-    return LogLevel::Info; // Default
+    if (levelStr == "Off" || levelStr == "off")           return LogLevel::Off;
+    else if (levelStr == "Critical" || levelStr == "critical") return LogLevel::Critical;
+    else if (levelStr == "Error" || levelStr == "error")     return LogLevel::Error;
+    else if (levelStr == "Warning" || levelStr == "warning")  return LogLevel::Warning;
+    else if (levelStr == "Debug" || levelStr == "debug")     return LogLevel::Debug;
+    else if (levelStr == "Trace" || levelStr == "trace")     return LogLevel::Trace;
+    else return LogLevel::Info; // Varsayılan
 }
 
 /**
- * @brief Holds information about a log message
+ * @brief BlackEngine LogLevel -> spdlog level dönüşümü
+ */
+inline spdlog::level::level_enum ToSpdlogLevel(const LogLevel level) {
+    switch (level) {
+        case LogLevel::Off:      return spdlog::level::off;
+        case LogLevel::Critical: return spdlog::level::critical;
+        case LogLevel::Error:    return spdlog::level::err;
+        case LogLevel::Warning:  return spdlog::level::warn;
+        case LogLevel::Info:     return spdlog::level::info;
+        case LogLevel::Debug:    return spdlog::level::debug;
+        case LogLevel::Trace:    return spdlog::level::trace;
+        default:                 return spdlog::level::info;
+    }
+}
+
+/**
+ * @brief spdlog level -> BlackEngine LogLevel dönüşümü
+ */
+inline LogLevel FromSpdlogLevel(const spdlog::level::level_enum level) {
+    switch (level) {
+        case spdlog::level::off:      return LogLevel::Off;
+        case spdlog::level::critical: return LogLevel::Critical;
+        case spdlog::level::err:      return LogLevel::Error;
+        case spdlog::level::warn:     return LogLevel::Warning;
+        case spdlog::level::info:     return LogLevel::Info;
+        case spdlog::level::debug:    return LogLevel::Debug;
+        case spdlog::level::trace:    return LogLevel::Trace;
+        default:                      return LogLevel::Info;
+    }
+}
+
+/**
+ * @brief Log mesaj yapısı
  */
 struct LogMessage {
-    std::string message;
     LogLevel level;
-    std::string categoryName;
+    std::string category;
+    std::string message;
     std::source_location location;
     std::chrono::system_clock::time_point timestamp;
     
-    LogMessage(std::string msg,
-              const LogLevel lvl,
-              std::string category,
-              const std::source_location& loc = std::source_location::current(),
-              const std::chrono::system_clock::time_point time = std::chrono::system_clock::now())
-        : message(std::move(msg))
-        , level(lvl)
-        , categoryName(std::move(category))
-        , location(loc)
-        , timestamp(time)
-    {}
-};
-
-/**
- * @brief Stores configuration and state for a log category
- */
-struct CategoryInfo {
-    std::string name;
-    LogLevel level = LogLevel::Info;  // Default log level for this category
-    bool enabled = true;              // Whether logging is enabled for this category
-    
-    // For repeated log handling
-    struct RepeatInfo {
-        std::atomic<int> count{0};
-        std::string lastMessage;
-        LogLevel lastLevel{LogLevel::Off};
-        std::chrono::system_clock::time_point lastTime;
-    };
-    
-    RepeatInfo repeatInfo;
-    
-    CategoryInfo() = default;
-    explicit CategoryInfo(std::string catName, LogLevel catLevel = LogLevel::Info)
-        : name(std::move(catName)), level(catLevel) {}
-};
-
-/**
- * @brief Combines a category name and message for repeat detection hashing
- */
-struct LogMessageIdentifier {
-    std::string categoryName;
-    std::string message;
-    
-    bool operator==(const LogMessageIdentifier& other) const {
-        return categoryName == other.categoryName && message == other.message;
+    // Test için eşitlik operatörü
+    bool operator==(const LogMessage& other) const {
+        return level == other.level && 
+               category == other.category && 
+               message == other.message;
     }
 };
+
+// Forward declarations
+class CategoryInfo;
+class ILoggerBackend;
+class LogManager;
+class MockLogger;
+class ConsoleLoggerBackend;
 
 } // namespace BlackEngine
-
-// Hash function for LogMessageIdentifier
-template<>
-struct std::hash<BlackEngine::LogMessageIdentifier> {
-    size_t operator()(const BlackEngine::LogMessageIdentifier& id) const noexcept {
-        return hash<std::string>()(id.categoryName) ^ hash<std::string>()(id.message);
-    }
-};

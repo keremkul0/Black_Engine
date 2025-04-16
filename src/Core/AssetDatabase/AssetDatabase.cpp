@@ -10,7 +10,7 @@
 using json = nlohmann::json;
 
 // Define and register the Asset log category
-BE_DEFINE_LOG_CATEGORY(AssetLog, "Asset", ::BlackEngine::LogLevel::Info);
+BE_DEFINE_LOG_CATEGORY(AssetLog, "Asset");
 
 // Get singleton instance
 AssetDatabase &AssetDatabase::GetInstance() {

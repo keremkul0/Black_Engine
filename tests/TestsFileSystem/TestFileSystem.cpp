@@ -1,13 +1,13 @@
 #include <gtest/gtest.h>
 #include "Core/FileSystem/FileSystem.h"
-#include "Core/Logger/LoggerManager.h"
+#include "Core/Logger/LogManager.h"
 #include <fstream>
 #include <filesystem>
 #include <chrono>
 
 namespace fs = std::filesystem;
 
-class FileSystemTest : public ::testing::Test {
+class FileSystemTest : public testing::Test {
 protected:
     // Use temp directory and random folder name for tests
     std::filesystem::path tempBasePath = std::filesystem::temp_directory_path() / "black_engine_test";
@@ -23,7 +23,7 @@ protected:
         // Make sure the base path exists - using standard filesystem API instead of our own FileSystem class
         // to avoid circular dependencies in testing
         try {
-            std::filesystem::create_directories(tempBasePath);
+            create_directories(tempBasePath);
         } catch (const std::filesystem::filesystem_error& e) {
             std::cerr << "Failed to create temp directory: " << e.what() << std::endl;
             // Fallback to using just the system temp directory
@@ -59,7 +59,7 @@ protected:
         
         // Make sure the base temp directory is cleaned if empty
         try {
-            if (std::filesystem::exists(tempBasePath) && std::filesystem::is_empty(tempBasePath)) {
+            if (exists(tempBasePath) && is_empty(tempBasePath)) {
                 std::filesystem::remove(tempBasePath);
             }
         } catch (const std::exception&) {
@@ -79,8 +79,8 @@ TEST_F(FileSystemTest, FileExists) {
     
     // Create the file manually using standard C++ file operations
     // Make sure the directory exists for the file first
-    std::filesystem::path filePath(testFile);
-    std::filesystem::create_directories(filePath.parent_path());
+    const std::filesystem::path filePath(testFile);
+    create_directories(filePath.parent_path());
     
     std::ofstream file(testFile);
     ASSERT_TRUE(file.is_open()) << "Failed to open file for writing: " << testFile;
@@ -106,7 +106,7 @@ TEST_F(FileSystemTest, ReadWriteTextFile) {
     EXPECT_TRUE(FileSystem::BE_File_Exists(testFile));
     
     // Read from the text file
-    std::string content = FileSystem::BE_Read_Text_File(testFile);
+    const std::string content = FileSystem::BE_Read_Text_File(testFile);
     EXPECT_EQ(content, testContent);
     
     // Read from a non-existent file should return empty string
@@ -120,7 +120,7 @@ TEST_F(FileSystemTest, ReadWriteBinaryFile) {
     EXPECT_TRUE(FileSystem::BE_File_Exists(testBinaryFile));
     
     // Read from the binary file
-    std::vector<uint8_t> content = FileSystem::BE_Read_Binary_File(testBinaryFile);
+    const std::vector<uint8_t> content = FileSystem::BE_Read_Binary_File(testBinaryFile);
     EXPECT_EQ(content.size(), testBinaryContent.size());
     for (size_t i = 0; i < content.size(); i++) {
         EXPECT_EQ(content[i], testBinaryContent[i]);

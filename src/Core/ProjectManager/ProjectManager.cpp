@@ -6,7 +6,7 @@
 #include "spdlog/fmt/bundled/format.h"
 
 // Define log category for ProjectManager
-BE_DEFINE_LOG_CATEGORY(ProjectManagerLog, "ProjectManager", BlackEngine::LogLevel::Info);
+BE_DEFINE_LOG_CATEGORY(ProjectManagerLog, "ProjectManager");
 
 /**
  * Returns the singleton instance of the Project Manager.

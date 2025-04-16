@@ -1,220 +1,176 @@
 #pragma once
 
-// First include the type definitions
 #include "LogTypes.h"
-#include "ILogBackend.h"
-
-// Then include standard headers
+#include "CategoryInfo.h"
+#include "ILoggerBackend.h"
 #include <string>
 #include <unordered_map>
-#include <memory>
-#include <vector>
 #include <mutex>
 #include <atomic>
+#include <memory>
 #include <source_location>
-#include <format>
+#include <vector>
+#include <spdlog/fmt/fmt.h>
+#include <nlohmann/json.hpp>
 
 namespace BlackEngine {
+
+/**
+ * @brief Ana log yönetim sınıfı
+ * 
+ * Kategorileri ve backend'leri yönetir, log mesajlarını filtreleyip yönlendirir.
+ */
+class LogManager {
+public:
     /**
-     * @brief Manages and configures the logging backends
+     * @brief Singleton örneği alır
      */
-    class LogBackendManager {
-    public:
-        LogBackendManager() = default;
-
-        ~LogBackendManager() = default;
-
-        void AddBackend(const LogBackendPtr &backend);
-
-        void RemoveBackend(const std::string &backendName);
-
-        void RemoveAllBackends();
-
-        LogBackendPtr GetBackend(const std::string &backendName);
-
-        std::vector<LogBackendPtr> GetAllBackends();
-
-        bool Initialize();
-
-        void Shutdown();
-
-        void Log(const LogMessage &message);
-
-        void LogRepeat(const LogMessage &message, int count);
-
-        void Flush();
-
-        void SetMinLogLevel(LogLevel level);
-
-    private:
-        std::vector<LogBackendPtr> m_Backends;
-        std::mutex m_BackendMutex;
-        LogLevel m_MinLogLevel = LogLevel::Trace;
-    };
-
+    static LogManager& GetInstance();
+    
     /**
-     * @brief Manages log categories and their configuration
+     * @brief LogManager'ın kullanılabilir olup olmadığını kontrol eder
      */
-    class CategoryRegistry {
-    public:
-        CategoryRegistry() = default;
-
-        ~CategoryRegistry() = default;
-
-        void RegisterCategory(const std::string &name, LogLevel defaultLevel = LogLevel::Info);
-
-        CategoryInfo *GetCategory(const std::string &name);
-
-        std::vector<std::string> GetAllCategoryNames() const;
-
-        bool SetCategoryLevel(const std::string &name, LogLevel level);
-
-        bool SetCategoryEnabled(const std::string &name, bool enabled);
-
-        // For handling repeated logs
-        bool IsRepeatedMessage(const std::string &categoryName, const std::string &message, LogLevel level);
-
-        void UpdateRepeatCount(const std::string &categoryName, const std::string &message, LogLevel level);
-
-        int GetAndResetRepeatCount(const std::string &categoryName, const std::string &message, LogLevel level);
-
-    private:
-        std::unordered_map<std::string, CategoryInfo> m_Categories;
-        std::unordered_map<LogMessageIdentifier, std::atomic<int> > m_RepeatCounts;
-        mutable std::mutex m_CategoryMutex;
-        mutable std::mutex m_RepeatMutex;
-    };
-
+    static bool IsAvailable();
+    
+    // Silinen üye fonksiyonlar - sınıfın kopyalanması engellendi
+    LogManager(const LogManager&) = delete;
+    LogManager& operator=(const LogManager&) = delete;
+    
     /**
-     * @brief Main log manager singleton class that coordinates the entire logging system
+     * @brief Log sistemini başlatır
+     * @param configPath Konfigürasyon dosya yolu
+     * @return Başarı durumu
      */
-    class LogManager {
-    public:
-        static LogManager &GetInstance();
-
-        // Delete copy/move constructors and assignment operators
-        LogManager(const LogManager &) = delete;
-
-        LogManager(LogManager &&) = delete;
-
-        LogManager &operator=(const LogManager &) = delete;
-
-        LogManager &operator=(LogManager &&) = delete;
-
-        bool Initialize();
-
-        void Shutdown();
-
-        // Category Management
-        void RegisterCategory(const std::string &name, LogLevel defaultLevel = LogLevel::Info);
-
-        CategoryInfo *GetCategory(const std::string &name);
-
-        bool SetCategoryLevel(const std::string &name, LogLevel level);
-
-        bool SetCategoryEnabled(const std::string &name, bool enabled);
-
-        // Backend Management
-        void AddBackend(const LogBackendPtr &backend);
-
-        void RemoveBackend(const std::string &backendName);
-
-        LogBackendPtr GetBackend(const std::string &backendName);
-
-        // Configuration
-        bool LoadConfig(const std::string &configFile = "log_config.json");
-
-        bool SaveConfig(const std::string &configFile = "log_config.json");
-
-        void SetDefaultLogLevel(LogLevel level);
-
-        LogLevel GetDefaultLogLevel() const { return m_DefaultLogLevel; }
-
-        // Logging Operations
-        template<typename... Args>
-        void LogMessage(
-            LogLevel level,
-            const std::string &categoryName,
-            const std::source_location &location,
-            std::string_view fmt,
-            Args &&... args);
-
-        void Flush();
-
-    private:
-        LogManager();
-
-        ~LogManager();
-
-        static constexpr int REPEAT_LOG_THRESHOLD = 5; // Number of repeats before switching to condensed format
-
-        void HandleRepeatedLog(const BlackEngine::LogMessage &message);
-
-        // Core components
-        CategoryRegistry m_CategoryRegistry;
-        LogBackendManager m_BackendManager;
-
-        // Default settings
-        LogLevel m_DefaultLogLevel = LogLevel::Info;
-
-        // For repeated log detection
-        std::unordered_map<std::string, CategoryInfo::RepeatInfo> m_LastCategoryLogs;
-        std::mutex m_LastLogMutex;
-
-        // Current state
-        bool m_Initialized = false;
-        std::mutex m_ConfigMutex;
-    };
-
-    // Template method implementation
+    bool Initialize(const std::string& configPath = "log_config.json");
+    
+    /**
+     * @brief Log sistemini kapatır
+     */
+    void Shutdown();
+    
+    /**
+     * @brief Varsayılan log seviyesini ayarlar
+     */
+    void SetDefaultLogLevel(LogLevel level);
+    
+    /**
+     * @brief Varsayılan log seviyesini döndürür
+     */
+    LogLevel GetDefaultLogLevel() const;
+    
+    /**
+     * @brief Kategori seviyesini ayarlar
+     */
+    void SetCategoryLevel(const std::string& categoryName, LogLevel level);
+    
+    /**
+     * @brief Kategori seviyesini döndürür, yoksa varsayılan seviyeyi kullanır
+     */
+    LogLevel GetCategoryLevel(const std::string& categoryName);
+    
+    /**
+     * @brief Ana loglama fonksiyonu (makrolar üzerinden çağrılır)
+     */
     template<typename... Args>
-    void LogManager::LogMessage(
-        LogLevel level,
-        const std::string &categoryName,
-        const std::source_location &location,
-        std::string_view fmt,
-        Args &&... args) {
-        // Skip if not initialized
-        if (!m_Initialized) return;
-
-        // Skip if level is below default
-        if (level < m_DefaultLogLevel) return;
-
-        // Get category info
-        CategoryInfo *category = GetCategory(categoryName);
-        if (!category || !category->enabled || level < category->level) {
-            return; // Skip if category doesn't exist, is disabled, or level is too low
+    void Log(const LogLevel level, const std::string& categoryName,
+             const std::source_location& location, fmt::format_string<Args...> fmt, Args&&... args) {
+        
+        // Hızlı çıkış kontrolü
+        if (level == LogLevel::Off || !ShouldLog(level, categoryName)) {
+            return;
         }
-
-        // Format the message
+        
+        // Mesajı biçimlendir
         std::string formattedMessage;
         try {
-            if constexpr (sizeof...(args) > 0) {
-                // Çalışma zamanı format dizesini desteklemek için std::vformat kullanma
-                std::string formatStr{fmt};
-
-                // Format argümanlarını std::make_format_args ile paketleme
-                auto formatArgs = std::make_format_args(std::forward<Args>(args)...);
-
-                // vformat ile çalışma zamanında formatlama
-                formattedMessage = std::vformat(formatStr, formatArgs);
-            } else {
-                formattedMessage = fmt;
-            }
-        } catch (const std::exception &e) {
-            // If formatting fails, log the raw format string and error
-            formattedMessage = std::string(fmt) + " [FORMAT ERROR: " + e.what() + "]";
+            formattedMessage = fmt::format(fmt, std::forward<Args>(args)...);
+        } catch (const std::exception& e) {
+            formattedMessage = fmt::format("Mesaj biçimlendirme hatası: {}", e.what());
         }
-
-        // Create the log message
-        BlackEngine::LogMessage message{
-            formattedMessage,
-            level,
-            categoryName,
-            location
-        };
-
-        // Handle repeated logs
-        HandleRepeatedLog(message);
+        
+        // Spam kontrolü
+        if (!PassesSpamControl(categoryName, formattedMessage)) {
+            return;
+        }
+        
+        // Log mesajını oluştur
+        LogMessage message;
+        message.level = level;
+        message.category = categoryName;
+        message.message = std::move(formattedMessage);
+        message.location = location;
+        message.timestamp = std::chrono::system_clock::now();
+        
+        // Tüm backend'lere gönder
+        std::lock_guard<std::mutex> lock(m_backendMutex);
+        for (const auto& backend : m_backends) {
+            backend->Log(message);
+        }
     }
-}
+    
+    /**
+     * @brief Backend ekler
+     * @param backend Eklenecek backend
+     * @return Başarı durumu
+     */
+    bool AddBackend(const std::shared_ptr<ILoggerBackend>& backend);
+    
+    /**
+     * @brief Backend kaldırır
+     * @param backend Kaldırılacak backend
+     * @return Başarı durumu
+     */
+    bool RemoveBackend(const std::shared_ptr<ILoggerBackend>& backend);
+    
+    /**
+     * @brief Tüm backend'leri döndürür
+     */
+    std::vector<std::shared_ptr<ILoggerBackend>> GetBackends() const;
+    
+    /**
+     * @brief JSON yapılandırma dosyasını yükler
+     * @param configPath Dosya yolu
+     * @return Başarı durumu
+     */
+    bool LoadConfig(const std::string& configPath);
+    
+    /**
+     * @brief Tüm spam kontrollerini sıfırlar
+     */
+    void ResetSpamControl();
+
+private:
+    // Singleton implementasyonu
+    LogManager();
+    ~LogManager();
+    
+    /**
+     * @brief Mesajın log level'a göre loglanıp loglanmayacağını kontrol eder
+     */
+    bool ShouldLog(LogLevel level, const std::string& categoryName);
+    
+    /**
+     * @brief Mesajın spam kontrolüne göre loglanıp loglanmayacağını kontrol eder
+     */
+    bool PassesSpamControl(const std::string& categoryName, const std::string& message);
+    
+    /**
+     * @brief Kategori bilgisini alır veya yeni oluşturur
+     */
+    CategoryInfo& GetOrCreateCategory(const std::string& categoryName);
+    
+    static std::atomic<LogManager*> s_instance;
+    static std::mutex s_instanceMutex;
+    
+    std::mutex m_categoryMutex;
+    std::unordered_map<std::string, CategoryInfo> m_categories;
+    
+    LogLevel m_defaultLogLevel;
+    
+    std::vector<std::shared_ptr<ILoggerBackend>> m_backends;
+    mutable std::mutex m_backendMutex;
+    
+    bool m_initialized;
+};
+
+} // namespace BlackEngine

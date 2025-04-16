@@ -13,7 +13,7 @@
 #include "Engine/Component/TransformComponent.h"
 #include "Core/Logger/LogMacros.h"
 
-BE_DEFINE_LOG_CATEGORY(SceneManagerLog, "SceneManager", ::BlackEngine::LogLevel::Info);
+BE_DEFINE_LOG_CATEGORY(SceneManagerLog, "SceneManager");
 
 SceneManager &SceneManager::GetInstance() {
     static SceneManager instance;

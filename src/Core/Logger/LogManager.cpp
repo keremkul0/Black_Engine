@@ -1,451 +1,258 @@
 #include "LogManager.h"
-#include "SpdlogBackend.h"
-#include <nlohmann/json.hpp>
+#include "ConsoleLoggerBackend.h"
 #include <fstream>
 #include <iostream>
 
 namespace BlackEngine {
 
-//------------------------------------------------------------------------------
-// LogBackendManager Implementation
-//------------------------------------------------------------------------------
-
-void LogBackendManager::AddBackend(const LogBackendPtr& backend) {
-    if (!backend) return;
-    
-    std::lock_guard<std::mutex> lock(m_BackendMutex);
-    
-    // Check if backend already exists
-    for (const auto& existing : m_Backends) {
-        if (existing->GetName() == backend->GetName()) {
-            return;  // Backend with same name already exists
-        }
-    }
-    
-    m_Backends.push_back(backend);
-}
-
-void LogBackendManager::RemoveBackend(const std::string& backendName) {
-    std::lock_guard<std::mutex> lock(m_BackendMutex);
-    
-    std::erase_if(m_Backends,
-                  [&backendName](const LogBackendPtr& backend) {
-                      return backend->GetName() == backendName;
-                  });
-}
-
-void LogBackendManager::RemoveAllBackends() {
-    std::lock_guard<std::mutex> lock(m_BackendMutex);
-    m_Backends.clear();
-}
-
-LogBackendPtr LogBackendManager::GetBackend(const std::string& backendName) {
-    std::lock_guard<std::mutex> lock(m_BackendMutex);
-    
-    for (const auto& backend : m_Backends) {
-        if (backend->GetName() == backendName) {
-            return backend;
-        }
-    }
-    
-    return nullptr;
-}
-
-std::vector<LogBackendPtr> LogBackendManager::GetAllBackends() {
-    std::lock_guard<std::mutex> lock(m_BackendMutex);
-    return m_Backends;
-}
-
-bool LogBackendManager::Initialize() {
-    std::lock_guard<std::mutex> lock(m_BackendMutex);
-    
-    bool allInitialized = true;
-    for (const auto& backend : m_Backends) {
-        if (!backend->Initialize()) {
-            allInitialized = false;
-        }
-    }
-    
-    return allInitialized;
-}
-
-void LogBackendManager::Shutdown() {
-    std::lock_guard<std::mutex> lock(m_BackendMutex);
-    
-    for (const auto& backend : m_Backends) {
-        backend->Shutdown();
-    }
-}
-
-void LogBackendManager::Log(const LogMessage& message) {
-    // Skip if below minimum level
-    if (message.level < m_MinLogLevel) {
-        return;
-    }
-    
-    std::lock_guard<std::mutex> lock(m_BackendMutex);
-    
-    for (const auto& backend : m_Backends) {
-        if (backend->IsInitialized() && message.level >= backend->GetMinLogLevel()) {
-            backend->Log(message);
-        }
-    }
-}
-
-void LogBackendManager::LogRepeat(const LogMessage& message, int count) {
-    // Skip if below minimum level
-    if (message.level < m_MinLogLevel) {
-        return;
-    }
-    
-    std::lock_guard<std::mutex> lock(m_BackendMutex);
-    
-    for (const auto& backend : m_Backends) {
-        if (backend->IsInitialized() && message.level >= backend->GetMinLogLevel()) {
-            backend->LogRepeat(message, count);
-        }
-    }
-}
-
-void LogBackendManager::Flush() {
-    std::lock_guard<std::mutex> lock(m_BackendMutex);
-    
-    for (const auto& backend : m_Backends) {
-        if (backend->IsInitialized()) {
-            backend->Flush();
-        }
-    }
-}
-
-void LogBackendManager::SetMinLogLevel(LogLevel level) {
-    m_MinLogLevel = level;
-    
-    std::lock_guard<std::mutex> lock(m_BackendMutex);
-    
-    for (const auto& backend : m_Backends) {
-        backend->SetMinLogLevel(level);
-    }
-}
-
-//------------------------------------------------------------------------------
-// CategoryRegistry Implementation
-//------------------------------------------------------------------------------
-
-void CategoryRegistry::RegisterCategory(const std::string& name, LogLevel defaultLevel) {
-    std::lock_guard<std::mutex> lock(m_CategoryMutex);
-    
-    // Create a new category if it doesn't exist
-    if (!m_Categories.contains(name)) {
-        // Use emplace to construct the CategoryInfo in-place
-        // This avoids using the deleted copy assignment operator
-        m_Categories.emplace(std::piecewise_construct,
-                           std::forward_as_tuple(name),
-                           std::forward_as_tuple(name, defaultLevel));
-    }
-}
-
-CategoryInfo* CategoryRegistry::GetCategory(const std::string& name) {
-    std::lock_guard<std::mutex> lock(m_CategoryMutex);
-
-    const auto it = m_Categories.find(name);
-    if (it != m_Categories.end()) {
-        return &it->second;
-    }
-    
-    return nullptr;
-}
-
-std::vector<std::string> CategoryRegistry::GetAllCategoryNames() const {
-    std::lock_guard<std::mutex> lock(m_CategoryMutex);
-    
-    std::vector<std::string> names;
-    names.reserve(m_Categories.size());
-    
-    for (const auto &name: m_Categories | std::views::keys) {
-        names.push_back(name);
-    }
-    
-    return names;
-}
-
-bool CategoryRegistry::SetCategoryLevel(const std::string& name, LogLevel level) {
-    std::lock_guard<std::mutex> lock(m_CategoryMutex);
-
-    if (const auto it = m_Categories.find(name); it != m_Categories.end()) {
-        it->second.level = level;
-        return true;
-    }
-    
-    return false;
-}
-
-bool CategoryRegistry::SetCategoryEnabled(const std::string& name, bool enabled) {
-    std::lock_guard<std::mutex> lock(m_CategoryMutex);
-
-    if (const auto it = m_Categories.find(name); it != m_Categories.end()) {
-        it->second.enabled = enabled;
-        return true;
-    }
-    
-    return false;
-}
-
-bool CategoryRegistry::IsRepeatedMessage(const std::string& categoryName, 
-                                        const std::string& message, 
-                                        LogLevel level) {
-    const LogMessageIdentifier id{categoryName, message};
-    
-    std::lock_guard<std::mutex> lock(m_RepeatMutex);
-
-    if (const auto it = m_RepeatCounts.find(id); it != m_RepeatCounts.end() && it->second > 0) {
-        return true;
-    }
-    
-    return false;
-}
-
-void CategoryRegistry::UpdateRepeatCount(const std::string& categoryName, 
-                                         const std::string& message, 
-                                         LogLevel level) {
-    const LogMessageIdentifier id{categoryName, message};
-    
-    std::lock_guard<std::mutex> lock(m_RepeatMutex);
-    ++m_RepeatCounts[id];
-}
-
-int CategoryRegistry::GetAndResetRepeatCount(const std::string& categoryName, 
-                                            const std::string& message, 
-                                            LogLevel level) {
-    const LogMessageIdentifier id{categoryName, message};
-    
-    std::lock_guard<std::mutex> lock(m_RepeatMutex);
-
-    if (const auto it = m_RepeatCounts.find(id); it != m_RepeatCounts.end()) {
-        const int count = it->second;
-        m_RepeatCounts.erase(it);
-        return count;
-    }
-    
-    return 0;
-}
-
-//------------------------------------------------------------------------------
-// LogManager Implementation
-//------------------------------------------------------------------------------
+// Singleton implementasyonu
+std::atomic<LogManager*> LogManager::s_instance{nullptr};
+std::mutex LogManager::s_instanceMutex;
 
 LogManager& LogManager::GetInstance() {
-    static LogManager instance;
-    return instance;
+    LogManager* instance = s_instance.load(std::memory_order_acquire);
+    if (!instance) {
+        std::lock_guard<std::mutex> lock(s_instanceMutex);
+        instance = s_instance.load(std::memory_order_relaxed);
+        if (!instance) {
+            instance = new LogManager();
+            s_instance.store(instance, std::memory_order_release);
+        }
+    }
+    return *instance;
 }
 
-LogManager::LogManager() : m_Initialized(false) {
+bool LogManager::IsAvailable() {
+    return s_instance.load(std::memory_order_acquire) != nullptr;
+}
+
+LogManager::LogManager()
+    : m_defaultLogLevel(LogLevel::Info), m_initialized(false) {
 }
 
 LogManager::~LogManager() {
     Shutdown();
 }
 
-bool LogManager::Initialize() {
-    std::lock_guard<std::mutex> lock(m_ConfigMutex);
-    
-    if (m_Initialized) {
-        return true;
+bool LogManager::Initialize(const std::string& configPath) {
+    if (m_initialized) {
+        return true; // Zaten başlatılmış
     }
     
-    // If no backends, add the default spdlog backend
-    if (m_BackendManager.GetAllBackends().empty()) {
-        SpdlogBackend::Config config;
-        const auto backend = std::make_shared<SpdlogBackend>(config);
-        m_BackendManager.AddBackend(backend);
-    }
-
-    const bool initSuccess = m_BackendManager.Initialize();
-    
-    // Load config if available
-    LoadConfig();
-    
-    m_Initialized = initSuccess;
-      // Log initialization message
-    if (m_Initialized) {
-        const BlackEngine::LogMessage initMsg("Logging system initialized", LogLevel::Info, "LogManager");
-        m_BackendManager.Log(initMsg);
+    // Varsayılan konsol backend'i ekle
+    if (m_backends.empty()) {
+        if (const auto consoleBackend = std::make_shared<ConsoleLoggerBackend>(); !AddBackend(consoleBackend)) {
+            std::cerr << "Varsayılan console backend eklenemedi." << std::endl;
+            return false;
+        }
     }
     
-    return m_Initialized;
+    // Yapılandırma dosyasını yükle
+    if (!configPath.empty()) {
+        if (!LoadConfig(configPath)) {
+            std::cerr << "Yapılandırma dosyası yüklenemedi: " << configPath << std::endl;
+            // Yapılandırma başarısız olsa bile devam edebiliriz, varsayılan değerlerle
+        }
+    }
+    
+    m_initialized = true;
+    return true;
 }
 
 void LogManager::Shutdown() {
-    std::lock_guard<std::mutex> lock(m_ConfigMutex);
-    
-    if (!m_Initialized) {
+    if (!m_initialized) {
         return;
     }
     
-    // Save config when shutting down
-    SaveConfig();
-      // Log shutdown message
-    const BlackEngine::LogMessage shutdownMsg("Logging system shutting down", LogLevel::Info, "LogManager");
-    m_BackendManager.Log(shutdownMsg);
-    
-    // Flush all logs
-    m_BackendManager.Flush();
-    
-    // Shutdown all backends
-    m_BackendManager.Shutdown();
-    
-    m_Initialized = false;
-}
-
-void LogManager::RegisterCategory(const std::string& name, LogLevel defaultLevel) {
-    m_CategoryRegistry.RegisterCategory(name, defaultLevel);
-}
-
-CategoryInfo* LogManager::GetCategory(const std::string& name) {
-    CategoryInfo* category = m_CategoryRegistry.GetCategory(name);
-    
-    // Create category if it doesn't exist
-    if (!category) {
-        RegisterCategory(name, m_DefaultLogLevel);
-        category = m_CategoryRegistry.GetCategory(name);
+    // Tüm backend'leri kapat
+    {
+        std::lock_guard<std::mutex> lock(m_backendMutex);
+        for (const auto& backend : m_backends) {
+            backend->Shutdown();
+        }
+        m_backends.clear();
     }
     
-    return category;
-}
-
-bool LogManager::SetCategoryLevel(const std::string& name, LogLevel level) {
-    return m_CategoryRegistry.SetCategoryLevel(name, level);
-}
-
-bool LogManager::SetCategoryEnabled(const std::string& name, bool enabled) {
-    return m_CategoryRegistry.SetCategoryEnabled(name, enabled);
-}
-
-void LogManager::AddBackend(const LogBackendPtr& backend) {
-    m_BackendManager.AddBackend(backend);
+    // Kategorileri temizle
+    {
+        std::lock_guard<std::mutex> lock(m_categoryMutex);
+        m_categories.clear();
+    }
     
-    // Initialize the backend if the logging system is already initialized
-    if (m_Initialized && backend && !backend->IsInitialized()) {
-        backend->Initialize();
-    }
+    m_initialized = false;
 }
 
-void LogManager::RemoveBackend(const std::string& backendName) {
-    m_BackendManager.RemoveBackend(backendName);
+void LogManager::SetDefaultLogLevel(const LogLevel level) {
+    m_defaultLogLevel = level;
 }
 
-LogBackendPtr LogManager::GetBackend(const std::string& backendName) {
-    return m_BackendManager.GetBackend(backendName);
+LogLevel LogManager::GetDefaultLogLevel() const {
+    return m_defaultLogLevel;
 }
 
-bool LogManager::LoadConfig(const std::string& configFile) {
-    try {
-        std::ifstream file(configFile);
-        if (!file.is_open()) {
-            return false;
-        }
-        
-        // Parse JSON
-        nlohmann::json config;
-        file >> config;
-        
-        // Load default log level
-        if (config.contains("defaultLogLevel")) {
-            const auto levelStr = config["defaultLogLevel"].get<std::string>();
-            SetDefaultLogLevel(StringToLogLevel(levelStr));
-        }
-        
-        // Load category settings
-        if (config.contains("categories")) {
-            for (auto& [categoryName, categoryConfig] : config["categories"].items()) {
-                // Register or update the category
-                RegisterCategory(categoryName);
-                
-                if (categoryConfig.contains("level")) {
-                    std::string levelStr = categoryConfig["level"].get<std::string>();
-                    SetCategoryLevel(categoryName, StringToLogLevel(levelStr));
-                }
-                
-                if (categoryConfig.contains("enabled")) {
-                    bool enabled = categoryConfig["enabled"].get<bool>();
-                    SetCategoryEnabled(categoryName, enabled);
-                }
-            }
-        }
-        
-        return true;
-    }
-    catch (const std::exception& e) {
-        // Log the error directly
-        std::cerr << "Failed to load logging config: " << e.what() << std::endl;
-        return false;
-    }
-}
+void LogManager::SetCategoryLevel(const std::string& categoryName, LogLevel level) {
+    std::lock_guard<std::mutex> lock(m_categoryMutex);
 
-bool LogManager::SaveConfig(const std::string& configFile) {
-    try {
-        nlohmann::json config;
-        
-        // Save default log level
-        config["defaultLogLevel"] = LogLevelToString(m_DefaultLogLevel);
-        
-        // Save category settings
-        for (auto categoryNames = m_CategoryRegistry.GetAllCategoryNames(); const auto& name : categoryNames) {
-            if (CategoryInfo* category = m_CategoryRegistry.GetCategory(name)) {
-                config["categories"][name]["level"] = LogLevelToString(category->level);
-                config["categories"][name]["enabled"] = category->enabled;
-            }
-        }
-        
-        // Save to file
-        std::ofstream file(configFile);
-        if (!file.is_open()) {
-            return false;
-        }
-        
-        file << std::setw(4) << config;
-        return true;
-    }
-    catch (const std::exception& e) {
-        std::cerr << "Failed to save logging config: " << e.what() << std::endl;
-        return false;
-    }
-}
-
-void LogManager::SetDefaultLogLevel(LogLevel level) {
-    m_DefaultLogLevel = level;
-    m_BackendManager.SetMinLogLevel(level);
-}
-
-void LogManager::HandleRepeatedLog(const BlackEngine::LogMessage& message) {
-    // Check and track repeated logs
-    const bool isRepeat = m_CategoryRegistry.IsRepeatedMessage(
-        message.categoryName, message.message, message.level);
-    
-    if (isRepeat) {
-        m_CategoryRegistry.UpdateRepeatCount(
-            message.categoryName, message.message, message.level);
-        
-        // Output repeat message at threshold
-        const int repeatCount = m_CategoryRegistry.GetAndResetRepeatCount(
-            message.categoryName, message.message, message.level);
-        
-        if (repeatCount > 0 && repeatCount >= REPEAT_LOG_THRESHOLD) {
-            m_BackendManager.LogRepeat(message, repeatCount + 1);  // +1 for current message
-        } else {
-            // Just log normally if under threshold
-            m_BackendManager.Log(message);
-        }
+    if (const auto it = m_categories.find(categoryName); it != m_categories.end()) {
+        it->second.SetLevel(level);
     } else {
-        // Reset repeat counter and log
-        m_CategoryRegistry.UpdateRepeatCount(
-            message.categoryName, message.message, message.level);
-        m_BackendManager.Log(message);
+        // Insert kullanarak in-place oluşturma (emplace yerine)
+        m_categories.try_emplace(categoryName, categoryName, level);
     }
 }
 
-void LogManager::Flush() {
-    // Flush all backends
-    m_BackendManager.Flush();
+LogLevel LogManager::GetCategoryLevel(const std::string& categoryName) {
+    const CategoryInfo& category = GetOrCreateCategory(categoryName);
+    return category.GetLevel();
+}
+
+bool LogManager::AddBackend(const std::shared_ptr<ILoggerBackend>& backend) {
+    if (!backend) {
+        return false;
+    }
+    
+    std::lock_guard<std::mutex> lock(m_backendMutex);
+    
+    // Zaten eklenmiş mi kontrol et
+    if (std::ranges::find(m_backends, backend) != m_backends.end()) {
+        return true; // Zaten eklenmiş
+    }
+    
+    // Başlat ve ekle
+    if (!backend->Initialize()) {
+        return false;
+    }
+    
+    m_backends.push_back(backend);
+    return true;
+}
+
+bool LogManager::RemoveBackend(const std::shared_ptr<ILoggerBackend>& backend) {
+    if (!backend) {
+        return false;
+    }
+    
+    std::lock_guard<std::mutex> lock(m_backendMutex);
+
+    if (const auto it = std::ranges::find(m_backends, backend); it != m_backends.end()) {
+        (*it)->Shutdown();
+        m_backends.erase(it);
+        return true;
+    }
+    
+    return false;
+}
+
+std::vector<std::shared_ptr<ILoggerBackend>> LogManager::GetBackends() const {
+    std::lock_guard<std::mutex> lock(m_backendMutex);
+    return m_backends;
+}
+
+bool LogManager::LoadConfig(const std::string& configPath) {
+    try {
+        std::ifstream configFile(configPath);
+        if (!configFile.is_open()) {
+            std::cerr << "Yapılandırma dosyası açılamadı: " << configPath << std::endl;
+            return false;
+        }
+        
+        nlohmann::json config;
+        configFile >> config;
+        
+        // Varsayılan log seviyesi
+        if (config.contains("defaultLogLevel") && config["defaultLogLevel"].is_string()) {
+            const std::string defaultLevelStr = config["defaultLogLevel"];
+            SetDefaultLogLevel(StringToLogLevel(defaultLevelStr));
+        }
+        
+        // Kategori seviyeleri
+        if (config.contains("categories") && config["categories"].is_object()) {
+            for (auto& [key, value] : config["categories"].items()) {
+                if (value.is_string()) {
+                    std::string levelStr = value;
+                    SetCategoryLevel(key, StringToLogLevel(levelStr));
+                }
+            }
+        }
+        
+        // Asenkron yapılandırma
+        size_t queueSize = 8192;
+        size_t threadCount = 1;
+        
+        if (config.contains("async") && config["async"].is_object()) {
+            auto& async = config["async"];
+            if (async.contains("queueSize") && async["queueSize"].is_number()) {
+                queueSize = async["queueSize"];
+            }
+            if (async.contains("threadCount") && async["threadCount"].is_number()) {
+                threadCount = async["threadCount"];
+            }
+        }
+        
+        // ConsoleLoggerBackend için async yapılandırmayı uygula
+        std::lock_guard<std::mutex> lock(m_backendMutex);
+        for (auto& backend : m_backends) {
+            // ConsoleLoggerBackend mi?
+            if (const auto consoleBackend = std::dynamic_pointer_cast<ConsoleLoggerBackend>(backend)) {
+                consoleBackend->ConfigureAsync(queueSize, threadCount);
+            }
+        }
+        
+        return true;
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Yapılandırma dosyası yükleme hatası: " << e.what() << std::endl;
+        return false;
+    }
+}
+
+void LogManager::ResetSpamControl() {
+    std::lock_guard<std::mutex> lock(m_categoryMutex);
+    for (auto &category: m_categories | std::views::values) {
+        category.ResetSpamControl();
+    }
+}
+
+bool LogManager::ShouldLog(LogLevel level, const std::string& categoryName) {
+    if (level == LogLevel::Off) {
+        return false;
+    }
+    
+    LogLevel categoryLevel = GetCategoryLevel(categoryName);
+    if (categoryLevel == LogLevel::Off) {
+        return false;
+    }
+    
+    return static_cast<int>(level) <= static_cast<int>(categoryLevel);
+}
+
+bool LogManager::PassesSpamControl(const std::string& categoryName, const std::string& message) {
+    // Önemli mesajlar için spam kontrolü yapma
+    // (Bu kısmı istediğiniz gibi özelleştirebilirsiniz)
+    
+    // Mesaj hash'i oluştur
+    const std::string& messageKey = message;
+    
+    // Kategori için spam kontrolü uygula
+    CategoryInfo& category = GetOrCreateCategory(categoryName);
+    return category.ShouldLog(messageKey);
+}
+
+CategoryInfo& LogManager::GetOrCreateCategory(const std::string& categoryName) {
+    std::lock_guard<std::mutex> lock(m_categoryMutex);
+
+    if (const auto it = m_categories.find(categoryName); it != m_categories.end()) {
+        return it->second;
+    }
+    
+    // Kategori yoksa varsayılan seviye ile oluştur
+    auto [newIt, inserted] = m_categories.try_emplace(
+        categoryName, 
+        categoryName,
+        m_defaultLogLevel
+    );
+    
+    return newIt->second;
 }
 
 } // namespace BlackEngine

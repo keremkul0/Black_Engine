@@ -8,7 +8,7 @@
 #include <iostream>
 
 // Log kategorisini doğru formatla tanımla
-BE_DEFINE_LOG_CATEGORY(EngineLog, "Engine", BlackEngine::LogLevel::Info);
+BE_DEFINE_LOG_CATEGORY(EngineLog, "Engine");
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <GLFW/glfw3.h>
@@ -102,6 +102,7 @@ int Application::Run() const {
 
     // Ana döngü
     while (!m_WindowManager->ShouldClose()) {
+        BE_LOG_INFO( EngineLog, "Main loop iteration");
         const auto currentTime = static_cast<float>(glfwGetTime());
         const float deltaTime = currentTime - lastTime;
         lastTime = currentTime;

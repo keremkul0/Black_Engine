@@ -23,7 +23,7 @@
 namespace fs = std::filesystem;
 
 // Define and register the FileSystem log category
-BE_DEFINE_LOG_CATEGORY(FileSystemLog, "FileSystem", ::BlackEngine::LogLevel::Info);
+BE_DEFINE_LOG_CATEGORY(FileSystemLog, "FileSystem");
 
 bool FileSystem::BE_Initialize() {
     // Subsystem initialization message

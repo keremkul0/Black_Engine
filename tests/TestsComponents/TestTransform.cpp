@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include <memory>
 
-class TransformTest : public ::testing::Test {
+class TransformTest : public testing::Test {
 protected:
     void SetUp() override {
         // Create a new GameObject for each test

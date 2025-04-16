@@ -1,37 +1,14 @@
 {
-    "defaultLogLevel": "Info",
-    "categories": {
-        "Core": {
-            "level": "Info",
-            "enabled": true
-        },
-        "Renderer": {
-            "level": "Debug",
-            "enabled": true
-        },
-        "Physics": {
-            "level": "Warning",
-            "enabled": true
-        },
-        "Audio": {
-            "level": "Info",
-            "enabled": true
-        },
-        "Input": {
-            "level": "Debug",
-            "enabled": true
-        },
-        "FileSystem": {
-            "level": "Info",
-            "enabled": true
-        },
-        "Editor": {
-            "level": "Debug",
-            "enabled": true
-        },
-        "UI": {
-            "level": "Info",
-            "enabled": true
-        }
-    }
+  "defaultLogLevel": "Info",
+  "categories": {
+    "Main": "Info",
+    "Renderer": "Debug",
+    "Physics": "Warning",
+    "Audio": "Off",
+    "Network": "Trace"
+  },
+  "async": {
+    "queueSize": 8192,
+    "threadCount": 2
+  }
 }

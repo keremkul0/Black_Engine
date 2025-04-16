@@ -8,11 +8,11 @@
 #include <nlohmann/json.hpp>
 
 // Ana log kategorisi tanımlama
-BE_DEFINE_LOG_CATEGORY(MainLog, "Main", BlackEngine::LogLevel::Info);
+BE_DEFINE_LOG_CATEGORY(MainLog, "Main");
 
 int main() {
     // Log yapılandırma dosyası yolu
-    std::string configPath = "c:/Users/Kerem/CLionProjects/Black_Engine/log_config.json";
+    const std::string configPath = "c:/Users/Kerem/CLionProjects/Black_Engine/log_config.json";
 
     // Log sistemini başlat
     BlackEngine::LogManager::GetInstance().Initialize();
