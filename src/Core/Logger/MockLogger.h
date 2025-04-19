@@ -8,9 +8,9 @@
 
 namespace BlackEngine {
     /**
-     * @brief Test amaçlı Mock Logger sınıfı
+     * @brief Mock Logger class for testing purposes
      *
-     * Log mesajlarını bellekte saklar ve test tarafından incelenebilir.
+     * Stores log messages in memory and can be inspected by the test.
      */
     class MockLogger final : public ILoggerBackend {
     public:
@@ -38,20 +38,20 @@ namespace BlackEngine {
 
             std::lock_guard<std::mutex> lock(m_mutex);
 
-            // Log'u kaydet
+            // Save the log
             m_logs.push_back(message);
 
-            // Dosya yolundan sadece dosya adını al
+            // Get only the file name from the file path
             std::string fileName = message.location.file_name();
             const size_t lastSlash = fileName.find_last_of("\\/");
             if (lastSlash != std::string::npos) {
                 fileName = fileName.substr(lastSlash + 1);
             }
 
-            // Formatlı log mesajı
+            // Formatted log message
             std::ostringstream formattedMsg;
 
-            // Tekrar bilgisi ekle
+            // Add repeat information
             std::string repeatInfo;
             if (message.repeatCount > 1) {
                 repeatInfo = fmt::format(" (x{})", message.repeatCount);
@@ -70,7 +70,7 @@ namespace BlackEngine {
             return m_initialized;
         }
 
-        // Test yardımcı fonksiyonlar:
+        // Test helper functions:
 
         int GetLogCount() const {
             std::lock_guard<std::mutex> lock(m_mutex);
@@ -80,7 +80,7 @@ namespace BlackEngine {
         LogMessage GetLastMessage() const {
             std::lock_guard<std::mutex> lock(m_mutex);
             if (m_logs.empty()) {
-                // Boş bir mesaj döndür
+                // Return an empty message
                 return {};
             }
             return m_logs.back();

@@ -1,3 +1,4 @@
+// ConsoleLoggerBackend.h
 #pragma once
 
 #include "ILoggerBackend.h"
@@ -7,61 +8,32 @@
 
 namespace BlackEngine {
 
-/**
- * @brief Spdlog tabanlı konsol logger backend
- * 
- * Spdlog'un asenkron logger ve renkli stdout sink'ini kullanarak
- * loglama yapar.
- */
-class ConsoleLoggerBackend final : public ILoggerBackend {
-public:
-    ConsoleLoggerBackend();
+    class ConsoleLoggerBackend final : public ILoggerBackend {
+    public:
+        ConsoleLoggerBackend();
+        ~ConsoleLoggerBackend() override = default;
 
-    ~ConsoleLoggerBackend() override = default;
-    
-    /**
-     * @brief Backend'i başlatır ve spdlog yapılandırmasını yapar
-     * @return Başarı durumu
-     */
-    bool Initialize() override;
-    
-    /**
-     * @brief Backend'i kapatır
-     */
-    void Shutdown() override;
-    
-    /**
-     * @brief Log mesajını spdlog üzerinden konsola yazar
-     * @param message Log mesajı
-     */
-    void Log(const LogMessage& message) override;
-    
-    /**
-     * @brief Backend'in başlatılma durumunu kontrol eder
-     */
-    [[nodiscard]] bool IsInitialized() const override { return m_initialized; }
-    
-    /**
-     * @brief Async thread pool ve kuyruk ayarlarını yapılandırır
-     * @param queueSize Async kuyruk boyutu
-     * @param threadCount Worker thread sayısı
-     * @param overflowPolicy Taşma politikası ("block", "overrun_oldest", "discard")
-     * @return Başarı durumu
-     */
-    bool ConfigureAsync(size_t queueSize = 8192, 
-                        size_t threadCount = 1, 
-                        const std::string& overflowPolicy = "block");
+        bool Initialize() override;
+        void Shutdown() override;
+        void Log(const LogMessage& message) override;
+        [[nodiscard]] bool IsInitialized() const override { return m_initialized; }
 
-    // Test-only getter for overflow policy
-    spdlog::async_overflow_policy GetOverflowPolicyForTest() const;
+        bool ConfigureAsync(size_t queueSize = 8192,
+                            size_t threadCount = 1,
+                            const std::string& overflowPolicy = "block");
 
-private:
-    bool m_initialized;
-    std::shared_ptr<spdlog::logger> m_logger;
-    std::shared_ptr<spdlog::sinks::stdout_color_sink_mt> m_consoleSink;
-    std::mutex m_mutex;
-    bool m_asyncConfigured;
-    spdlog::async_overflow_policy m_overflowPolicy; // Store the policy
-};
+        [[nodiscard]] spdlog::async_overflow_policy GetOverflowPolicyForTest() const;
+
+    private:
+        bool m_initialized;
+        bool m_asyncConfigured;
+        size_t m_queueSize;
+        size_t m_threadCount;
+        spdlog::async_overflow_policy m_overflowPolicy;
+
+        std::shared_ptr<spdlog::logger> m_logger;
+        std::shared_ptr<spdlog::sinks::stdout_color_sink_mt> m_consoleSink;
+        std::mutex m_mutex;
+    };
 
 } // namespace BlackEngine

@@ -1,12 +1,11 @@
 #pragma once
 #include "LogManager.h"
 
-// Kategori tanımlama makrosu
-// Kullanım: BE_DEFINE_LOG_CATEGORY(MainLog, "Main");
+// Category definition macro
+// Usage: BE_DEFINE_LOG_CATEGORY(MainLog, "Main");
 #define BE_DEFINE_LOG_CATEGORY(varName, catName) \
     static const std::string varName = catName
 
-// Aşağıdaki makrolar tek tip kullanım sağlar
 
 // Trace log
 #define BE_LOG_TRACE(catVar, fmt, ...) \
