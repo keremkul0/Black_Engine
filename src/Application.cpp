@@ -128,7 +128,6 @@ int Application::Run() const {
             m_EditorLayout->RenderLayout();
         }
         ImGuiLayer::End();
-
         m_WindowManager->SwapBuffers();
     }
 

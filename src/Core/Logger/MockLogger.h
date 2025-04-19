@@ -2,74 +2,112 @@
 
 #include "ILoggerBackend.h"
 #include <vector>
+#include <sstream>
 #include <mutex>
+#include <spdlog/fmt/fmt.h>
 
 namespace BlackEngine {
+    /**
+     * @brief Test amaçlı Mock Logger sınıfı
+     *
+     * Log mesajlarını bellekte saklar ve test tarafından incelenebilir.
+     */
+    class MockLogger final : public ILoggerBackend {
+    public:
+        MockLogger() : m_initialized(false) {
+        }
 
-/**
- * @brief Test amaçlı mock logger backend
- * 
- * Log mesajlarını belleğe kaydeder ve test sırasında sorgular yapmaya olanak tanır
- */
-class MockLogger final : public ILoggerBackend {
-public:
-    MockLogger();
-    ~MockLogger() override = default;
-    
-    /**
-     * @brief Mock logger'ı başlatır
-     * @return Başarı durumu
-     */
-    bool Initialize() override;
-    
-    /**
-     * @brief Mock logger'ı kapatır
-     */
-    void Shutdown() override;
-    
-    /**
-     * @brief Log mesajını belleğe kaydeder
-     * @param message Log mesajı
-     */
-    void Log(const LogMessage& message) override;
-    
-    /**
-     * @brief Backend'in başlatılma durumunu kontrol eder
-     */
-    bool IsInitialized() const override { return m_initialized; }
-    
-    /**
-     * @brief Tüm kayıtlı log mesajlarını döndürür
-     * @return Log mesajları
-     */
-    std::vector<LogMessage> GetMessages() const;
-    
-    /**
-     * @brief Kayıtlı log mesajlarını temizler
-     */
-    void Clear();
-    
-    /**
-     * @brief Belirli kriterlere göre mesaj arar
-     * @param level Log seviyesi
-     * @param category Kategori adı
-     * @param messageContains Mesaj içeriği
-     * @return Mesaj bulundu mu
-     */
-    bool ContainsMessage(LogLevel level, const std::string& category, const std::string& messageContains) const;
-    
-    /**
-     * @brief Belirli kriterlere göre mesaj sayısını döndürür
-     * @param level Log seviyesi
-     * @param category Kategori adı (boş ise tüm kategoriler)
-     * @return Mesaj sayısı
-     */
-    int CountMessages(LogLevel level, const std::string& category = "") const;
+        ~MockLogger() override = default;
 
-private:
-    bool m_initialized;
-    mutable std::mutex m_mutex;
-    std::vector<LogMessage> m_messages;
-};
+        bool Initialize() override {
+            m_initialized = true;
+            return true;
+        }
 
-} // namespace BlackEngine
+        void Shutdown() override {
+            std::lock_guard<std::mutex> lock(m_mutex);
+            m_logs.clear();
+            m_formattedLogs.clear();
+            m_initialized = false;
+        }
+
+        void Log(const LogMessage &message) override {
+            if (!m_initialized || message.level == LogLevel::Off) {
+                return;
+            }
+
+            std::lock_guard<std::mutex> lock(m_mutex);
+
+            // Log'u kaydet
+            m_logs.push_back(message);
+
+            // Dosya yolundan sadece dosya adını al
+            std::string fileName = message.location.file_name();
+            const size_t lastSlash = fileName.find_last_of("\\/");
+            if (lastSlash != std::string::npos) {
+                fileName = fileName.substr(lastSlash + 1);
+            }
+
+            // Formatlı log mesajı
+            std::ostringstream formattedMsg;
+
+            // Tekrar bilgisi ekle
+            std::string repeatInfo;
+            if (message.repeatCount > 1) {
+                repeatInfo = fmt::format(" (x{})", message.repeatCount);
+            }
+
+            // Format: "[Category] Message (file:line) repeatInfo"
+            formattedMsg << "[" << message.category << "] "
+                    << message.message
+                    << repeatInfo
+                    << " (" << fileName << ":" << message.location.line() << ")";
+
+            m_formattedLogs.push_back(formattedMsg.str());
+        }
+
+        [[nodiscard]] bool IsInitialized() const override {
+            return m_initialized;
+        }
+
+        // Test yardımcı fonksiyonlar:
+
+        int GetLogCount() const {
+            std::lock_guard<std::mutex> lock(m_mutex);
+            return static_cast<int>(m_logs.size());
+        }
+
+        LogMessage GetLastMessage() const {
+            std::lock_guard<std::mutex> lock(m_mutex);
+            if (m_logs.empty()) {
+                // Boş bir mesaj döndür
+                return {};
+            }
+            return m_logs.back();
+        }
+
+        std::string GetLastFormattedMessage() const {
+            std::lock_guard<std::mutex> lock(m_mutex);
+            if (m_formattedLogs.empty()) {
+                return {};
+            }
+            return m_formattedLogs.back();
+        }
+
+        void ClearLogs() {
+            std::lock_guard<std::mutex> lock(m_mutex);
+            m_logs.clear();
+            m_formattedLogs.clear();
+        }
+
+        const std::vector<LogMessage> &GetAllLogs() const {
+            return m_logs;
+        }
+
+    private:
+        bool m_initialized;
+        mutable std::mutex m_mutex;
+        std::vector<LogMessage> m_logs;
+        std::vector<std::string> m_formattedLogs;
+    };
+}

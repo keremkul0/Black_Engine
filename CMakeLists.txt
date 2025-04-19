@@ -81,7 +81,6 @@ set(CORE_FILES
         # Logger sistemi
         src/Core/Logger/LogMacros.h
         src/Core/Logger/MockLogger.h
-        src/Core/Logger/MockLogger.cpp
         src/Core/Logger/LogTypes.h
         src/Core/Logger/LogManager.h
         src/Core/Logger/LogManager.cpp

@@ -2,6 +2,7 @@
 #include "ConsoleLoggerBackend.h"
 #include <fstream>
 #include <iostream>
+#include <sstream>
 
 namespace BlackEngine {
 
@@ -101,6 +102,13 @@ void LogManager::SetCategoryLevel(const std::string& categoryName, LogLevel leve
     }
 }
 
+void LogManager::SetCategorySpamControl(const std::string& categoryName, 
+                                        bool enabled, 
+                                        std::chrono::milliseconds interval) {
+    CategoryInfo& category = GetOrCreateCategory(categoryName);
+    category.SetRateLimit(enabled, interval);
+}
+
 LogLevel LogManager::GetCategoryLevel(const std::string& categoryName) {
     const CategoryInfo& category = GetOrCreateCategory(categoryName);
     return category.GetLevel();
@@ -175,9 +183,54 @@ bool LogManager::LoadConfig(const std::string& configPath) {
             }
         }
         
+        // Spam kontrol ayarları
+        if (config.contains("spamControl") && config["spamControl"].is_object()) {
+            for (auto& [categoryName, settings] : config["spamControl"].items()) {
+                if (settings.is_object()) {
+                    bool enabled = false;
+                    int intervalMs = 0;
+                    
+                    if (settings.contains("enabled") && settings["enabled"].is_boolean()) {
+                        enabled = settings["enabled"];
+                    }
+                    
+                    if (settings.contains("intervalMs") && settings["intervalMs"].is_number()) {
+                        intervalMs = settings["intervalMs"];
+                    }
+                    
+                    if (enabled) {
+                        SetCategorySpamControl(categoryName, enabled, std::chrono::milliseconds(intervalMs));
+                    }
+                }
+            }
+        }
+        
+        // Spam kontrol ayarları
+        if (config.contains("spamControl") && config["spamControl"].is_object()) {
+            for (auto& [categoryName, settings] : config["spamControl"].items()) {
+                if (settings.is_object()) {
+                    bool enabled = false;
+                    int intervalMs = 0;
+                    
+                    if (settings.contains("enabled") && settings["enabled"].is_boolean()) {
+                        enabled = settings["enabled"];
+                    }
+                    
+                    if (settings.contains("intervalMs") && settings["intervalMs"].is_number()) {
+                        intervalMs = settings["intervalMs"];
+                    }
+                    
+                    if (enabled) {
+                        SetCategorySpamControl(categoryName, enabled, std::chrono::milliseconds(intervalMs));
+                    }
+                }
+            }
+        }
+        
         // Asenkron yapılandırma
         size_t queueSize = 8192;
         size_t threadCount = 1;
+        std::string overflowPolicy = "block"; // Varsayılan
         
         if (config.contains("async") && config["async"].is_object()) {
             auto& async = config["async"];
@@ -187,6 +240,9 @@ bool LogManager::LoadConfig(const std::string& configPath) {
             if (async.contains("threadCount") && async["threadCount"].is_number()) {
                 threadCount = async["threadCount"];
             }
+            if (async.contains("overflowPolicy") && async["overflowPolicy"].is_string()) {
+                overflowPolicy = async["overflowPolicy"];
+            }
         }
         
         // ConsoleLoggerBackend için async yapılandırmayı uygula
@@ -194,7 +250,7 @@ bool LogManager::LoadConfig(const std::string& configPath) {
         for (auto& backend : m_backends) {
             // ConsoleLoggerBackend mi?
             if (const auto consoleBackend = std::dynamic_pointer_cast<ConsoleLoggerBackend>(backend)) {
-                consoleBackend->ConfigureAsync(queueSize, threadCount);
+                consoleBackend->ConfigureAsync(queueSize, threadCount, overflowPolicy);
             }
         }
         
@@ -226,15 +282,22 @@ bool LogManager::ShouldLog(LogLevel level, const std::string& categoryName) {
     return static_cast<int>(level) <= static_cast<int>(categoryLevel);
 }
 
-bool LogManager::PassesSpamControl(const std::string& categoryName, const std::string& message) {
-    // Önemli mesajlar için spam kontrolü yapma
-    // (Bu kısmı istediğiniz gibi özelleştirebilirsiniz)
-    
-    // Mesaj hash'i oluştur
-    const std::string& messageKey = message;
+bool LogManager::PassesSpamControl(const std::string& categoryName, 
+                                   const std::string& message, 
+                                   const std::source_location& location, 
+                                   int& repeatCount) {
+    // Mesaj anahtarını dosya adı + satır numarası ile oluştur
+    std::stringstream keyBuilder;
+    keyBuilder << location.file_name() << ':' << location.line();
+    const std::string messageKey = keyBuilder.str();
     
     // Kategori için spam kontrolü uygula
     CategoryInfo& category = GetOrCreateCategory(categoryName);
+    
+    // Tekrar sayısını al
+    repeatCount = category.GetMessageRepeatCount(messageKey);
+    
+    // Spam kontrolünü uygula
     return category.ShouldLog(messageKey);
 }
 

@@ -3,7 +3,10 @@ add_executable(unit_tests
         TestsComponents/TestComponents.cpp
         TestsComponents/TestTransform.cpp
         TestsFileSystem/TestFileSystem.cpp
-        TestLogger/test_SpdlogBackend.cpp
+        TestLogger/CategoryInfoTests.cpp
+        TestLogger/LogManagerTests.cpp
+        TestLogger/BackendTests.cpp
+        TestLogger/ConfigLoadTests.cpp
 )
 
 target_link_libraries(unit_tests

@@ -45,9 +45,15 @@ public:
      * @brief Async thread pool ve kuyruk ayarlarını yapılandırır
      * @param queueSize Async kuyruk boyutu
      * @param threadCount Worker thread sayısı
+     * @param overflowPolicy Taşma politikası ("block", "overrun_oldest", "discard")
      * @return Başarı durumu
      */
-    bool ConfigureAsync(size_t queueSize = 8192, size_t threadCount = 1);
+    bool ConfigureAsync(size_t queueSize = 8192, 
+                        size_t threadCount = 1, 
+                        const std::string& overflowPolicy = "block");
+
+    // Test-only getter for overflow policy
+    spdlog::async_overflow_policy GetOverflowPolicyForTest() const;
 
 private:
     bool m_initialized;
@@ -55,6 +61,7 @@ private:
     std::shared_ptr<spdlog::sinks::stdout_color_sink_mt> m_consoleSink;
     std::mutex m_mutex;
     bool m_asyncConfigured;
+    spdlog::async_overflow_policy m_overflowPolicy; // Store the policy
 };
 
 } // namespace BlackEngine

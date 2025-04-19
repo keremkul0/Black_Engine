@@ -7,8 +7,15 @@
     "Audio": "Off",
     "Network": "Trace"
   },
+  "spamControl": {
+    "Engine": { "enabled": true, "intervalMs": 2000 },
+    "Renderer": { "enabled": true, "intervalMs": 3000 },
+    "Physics": { "enabled": true, "intervalMs": 500 },
+    "FileSystem": { "enabled": false, "intervalMs": 0 }
+  },
   "async": {
     "queueSize": 8192,
-    "threadCount": 2
+    "threadCount": 2,
+    "overflowPolicy": "overrun_oldest"
   }
 }

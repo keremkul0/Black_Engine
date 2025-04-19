@@ -69,6 +69,16 @@ public:
     LogLevel GetCategoryLevel(const std::string& categoryName);
     
     /**
+     * @brief Kategori için spam kontrol ayarlarını yapar
+     * @param categoryName Kategori adı
+     * @param enabled Spam kontrolü etkin mi?
+     * @param interval Minimum basım aralığı (ms)
+     */
+    void SetCategorySpamControl(const std::string& categoryName, 
+                                bool enabled, 
+                                std::chrono::milliseconds interval);
+    
+    /**
      * @brief Ana loglama fonksiyonu (makrolar üzerinden çağrılır)
      */
     template<typename... Args>
@@ -88,8 +98,9 @@ public:
             formattedMessage = fmt::format("Mesaj biçimlendirme hatası: {}", e.what());
         }
         
-        // Spam kontrolü
-        if (!PassesSpamControl(categoryName, formattedMessage)) {
+        // Spam kontrolü ve tekrar sayısını al
+        int repeatCount = 1;
+        if (!PassesSpamControl(categoryName, formattedMessage, location, repeatCount)) {
             return;
         }
         
@@ -100,6 +111,7 @@ public:
         message.message = std::move(formattedMessage);
         message.location = location;
         message.timestamp = std::chrono::system_clock::now();
+        message.repeatCount = repeatCount;  // Tekrar sayısını mesaja aktar
         
         // Tüm backend'lere gönder
         std::lock_guard<std::mutex> lock(m_backendMutex);
@@ -151,8 +163,16 @@ private:
     
     /**
      * @brief Mesajın spam kontrolüne göre loglanıp loglanmayacağını kontrol eder
+     * @param categoryName Kategori adı
+     * @param message Mesaj içeriği
+     * @param location Kaynak dosya konumu
+     * @param[out] repeatCount Mesajın tekrar sayısı (referans ile döndürülür)
+     * @return true: mesaj loglanmalı, false: spam kontrolü engelledi
      */
-    bool PassesSpamControl(const std::string& categoryName, const std::string& message);
+    bool PassesSpamControl(const std::string& categoryName, 
+                          const std::string& message, 
+                          const std::source_location& location,
+                          int& repeatCount);
     
     /**
      * @brief Kategori bilgisini alır veya yeni oluşturur

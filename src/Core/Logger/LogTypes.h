@@ -91,6 +91,7 @@ struct LogMessage {
     std::string message;
     std::source_location location;
     std::chrono::system_clock::time_point timestamp;
+    int repeatCount = 1;   // Mesajın tekrar sayısı
     
     // Test için eşitlik operatörü
     bool operator==(const LogMessage& other) const {
