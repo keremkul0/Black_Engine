@@ -66,13 +66,76 @@ std::string ProjectManager::GetProjectPath() const {
 }
 
 /**
+ * Creates a new project with the standard directory structure.
+ * @param projectPath Path where the project will be created
+ * @return True if the project was created successfully
+ */
+bool ProjectManager::CreateNewProject(const std::string &projectPath) {
+    BE_LOG_INFO(ProjectManagerLog, "Creating new project at: {}", projectPath);
+
+    // Eğer klasör zaten varsa proje oluşturulamaz
+    if (FileSystem::BE_File_Exists(projectPath)) {
+        BE_LOG_WARNING(ProjectManagerLog, "Project path already exists: {}", projectPath);
+        return false;
+    }
+
+    // Ana proje dizinini oluştur
+    if (!FileSystem::BE_Create_Directory(projectPath)) {
+        BE_LOG_ERROR(ProjectManagerLog, "Failed to create project directory: {}", projectPath);
+        return false;
+    }
+
+    // Alt klasörleri oluştur
+    const std::string assetsDir = projectPath + "/Assets";
+    const std::string projectSettingsDir = projectPath + "/ProjectSettings";
+    const std::string libraryDir = projectPath + "/Library";
+
+    if (!FileSystem::BE_Create_Directory(assetsDir) ||
+        !FileSystem::BE_Create_Directory(projectSettingsDir) ||
+        !FileSystem::BE_Create_Directory(libraryDir)) {
+        BE_LOG_ERROR(ProjectManagerLog, "Failed to create one or more subdirectories.");
+        return false;
+    }
+
+    BE_LOG_INFO(ProjectManagerLog, "Created Assets, ProjectSettings and Library directories");
+
+    // Yol ve proje adı ayarları
+    m_ProjectPath = projectPath;
+    size_t lastSlash = projectPath.find_last_of("/\\");
+    m_ProjectName = (lastSlash != std::string::npos)
+        ? projectPath.substr(lastSlash + 1)
+        : projectPath;
+    m_ProjectVersion = "1.0.0";
+
+    // project.json dosyasını oluştur
+    nlohmann::json projectData = {
+        {"name", m_ProjectName},
+        {"version", m_ProjectVersion},
+        {"engine", "Black Engine"}
+    };
+
+    const std::string projectFilePath = projectPath + "/project.json";
+    if (!FileSystem::BE_Write_Text_File(projectFilePath, projectData.dump(4))) {
+        BE_LOG_ERROR(ProjectManagerLog, "Failed to write project file: {}", projectFilePath);
+        return false;
+    }
+
+    // Varsayılan ayarları oluştur
+    CreateDefaultSettings();
+
+    BE_LOG_INFO(ProjectManagerLog, "Project created successfully: {}", m_ProjectName);
+    return true;
+}
+
+
+/**
  * Loads project settings from settings.json file.
  * Creates default settings if file doesn't exist.
  * @return True if settings were loaded successfully
  */
 bool ProjectManager::LoadProjectSettings() {
     BE_LOG_DEBUG(ProjectManagerLog, "Loading project settings");
-    std::string settingsFilePath = m_ProjectPath + "/settings.json";
+    std::string settingsFilePath = m_ProjectPath + "/ProjectSettings/settings.json";
 
     // Check if settings file exists
     if (!FileSystem::BE_File_Exists(settingsFilePath)) {
@@ -165,10 +228,17 @@ bool ProjectManager::SaveProjectSettings() {
         // Render settings
         settingsJson["render"]["msaaLevel"] = m_Settings.renderSettings.msaaLevel;
         settingsJson["render"]["shadowQuality"] = m_Settings.renderSettings.shadowQuality;
-        settingsJson["render"]["useHDR"] = m_Settings.renderSettings.useHDR;
-
-        // Save to file
-        std::string settingsFilePath = m_ProjectPath + "/settings.json";
+        settingsJson["render"]["useHDR"] = m_Settings.renderSettings.useHDR;        // Save to file
+        std::string settingsDir = m_ProjectPath + "/ProjectSettings";
+        // Ensure the directory exists
+        if (!FileSystem::BE_Directory_Exists(settingsDir)) {
+            if (!FileSystem::BE_Create_Directory(settingsDir)) {
+                BE_LOG_ERROR(ProjectManagerLog, "Failed to create ProjectSettings directory");
+                return false;
+            }
+        }
+        
+        std::string settingsFilePath = settingsDir + "/settings.json";
         BE_LOG_DEBUG(ProjectManagerLog, "Writing settings file: {}", settingsFilePath);
         const bool success = FileSystem::BE_Write_Text_File(settingsFilePath, settingsJson.dump(4));
 

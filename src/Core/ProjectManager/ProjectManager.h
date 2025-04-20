@@ -40,13 +40,14 @@ struct ProjectSettings {
 
 class ProjectManager {
 public:
-    static ProjectManager& GetInstance();
-
-    bool LoadProject(const std::string& projectPath);
+    static ProjectManager& GetInstance();    bool LoadProject(const std::string& projectPath);
     bool LoadProjectSettings();
     bool SaveProject();
     [[nodiscard]] std::string GetProjectPath() const;
 
+    // Create a new project with the standard directory structure
+    bool CreateNewProject(const std::string& projectPath);
+    
     // Added missing methods
     void CreateDefaultSettings();
     bool SaveProjectSettings();

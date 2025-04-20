@@ -102,7 +102,6 @@ int Application::Run() const {
 
     // Ana döngü
     while (!m_WindowManager->ShouldClose()) {
-        BE_LOG_INFO( EngineLog, "Main loop iteration");
         const auto currentTime = static_cast<float>(glfwGetTime());
         const float deltaTime = currentTime - lastTime;
         lastTime = currentTime;

@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <cstdint>
+#include <nlohmann/json.hpp>
 
 /**
  * @class FileSystem
@@ -147,12 +148,34 @@ public:
      * @return Normalized path
      */
     static std::string BE_Normalize_Path(const std::string& path);
-    
-    /**
+      /**
      * @brief Combines two paths
      * @param path1 First path
      * @param path2 Second path
      * @return Combined path
      */
     static std::string BE_Combine_Paths(const std::string& path1, const std::string& path2);
+    
+    /**
+     * @brief Copies a file from source to destination, creating directories if needed
+     * @param src Source file path
+     * @param dst Destination file path 
+     * @return True if successful, false otherwise
+     */
+    static bool BE_Copy_File(const std::string& src, const std::string& dst);
+    
+    /**
+     * @brief Writes JSON data to a file with UTF-8 encoding and pretty-printing (indent = 4)
+     * @param path Path to the file
+     * @param j JSON data to write
+     * @return True if successful, false otherwise
+     */
+    static bool BE_Write_JSON(const std::string& path, const nlohmann::json& j);
+    
+    /**
+     * @brief Reads and parses a JSON file
+     * @param path Path to the JSON file
+     * @return The parsed JSON data, or empty JSON object if file doesn't exist or is invalid
+     */
+    static nlohmann::json BE_Read_JSON(const std::string& path);
 };
