@@ -2,6 +2,8 @@
 #include "Core/ProjectManager/ProjectManager.h"
 #include "Core/Utils/GuidUtils.h"
 #include "Core/Logger/LogMacros.h"
+#include "Core/AssetImporter/ImporterRegistry.h"
+#include "Core/AssetImporter/ImportContext.h"
 #include <filesystem>
 #include <algorithm>
 
@@ -264,6 +266,71 @@ const std::string& AssetDatabase::GetAssetPath(const std::string& guid) const {
     
     BE_LOG_WARNING(AssetDatabaseLog, "Asset with GUID {} not found", guid);
     return emptyString;
+}
+
+bool AssetDatabase::Reimport(const std::string& guid) const {
+    BE_LOG_INFO(AssetDatabaseLog, "Reimporting asset with GUID: {}", guid);
+    
+    // Get the asset path from the GUID
+    const std::string& assetPath = GetAssetPath(guid);
+    if (assetPath.empty()) {
+        BE_LOG_ERROR(AssetDatabaseLog, "Cannot reimport: Asset with GUID {} not found", guid);
+        return false;
+    }
+    
+    // Get the project path
+    const std::string projectPath = ProjectManager::GetInstance().GetProjectPath();
+    if (projectPath.empty()) {
+        BE_LOG_ERROR(AssetDatabaseLog, "Cannot reimport asset: No active project");
+        return false;
+    }
+    
+    // Calculate full asset path
+    const std::string fullAssetPath = FileSystem::BE_Combine_Paths(projectPath, assetPath);
+    if (!FileSystem::BE_File_Exists(fullAssetPath)) {
+        BE_LOG_ERROR(AssetDatabaseLog, "Cannot reimport: Asset file not found at {}", fullAssetPath);
+        return false;
+    }
+    
+    // Get the file extension to find the appropriate importer
+    std::string extension = FileSystem::BE_Get_File_Extension(fullAssetPath);
+    
+    // Find the appropriate importer based on the file extension
+    IAssetImporter* importer = ImporterRegistry::GetInstance().GetImporterForExtension(extension);
+    if (!importer) {
+        BE_LOG_ERROR(AssetDatabaseLog, "Cannot reimport: No importer found for extension '{}'", extension);
+        return false;
+    }
+    
+    // Load asset meta file to get import settings
+    nlohmann::json metaData = MetaFile::Load(fullAssetPath);
+    if (metaData.empty()) {
+        BE_LOG_ERROR(AssetDatabaseLog, "Cannot reimport: Failed to load meta file for {}", fullAssetPath);
+        return false;
+    }
+    
+    // Extract import settings (if any)
+    nlohmann::json importSettings;
+    if (metaData.contains("importSettings")) {
+        importSettings = metaData["importSettings"];
+    }
+    
+    // Create import context
+    ImportContext ctx;
+    ctx.guid = guid;
+    ctx.assetPath = fullAssetPath;
+    ctx.importSettings = importSettings;
+    
+    // Perform the import
+    BE_LOG_INFO(AssetDatabaseLog, "Using {} to reimport {}", metaData.value("importer", "UnknownImporter"), assetPath);
+    if (!importer->Import(ctx)) {
+        BE_LOG_ERROR(AssetDatabaseLog, "Failed to reimport asset {}", assetPath);
+        return false;
+    }
+    
+    // Asset import was successful, refresh the cache
+    BE_LOG_INFO(AssetDatabaseLog, "Successfully reimported {}", assetPath);
+    return true;
 }
 
 std::string AssetDatabase::DetectType(const std::string& path) {

@@ -9,6 +9,8 @@ add_executable(unit_tests
         TestLogger/ConfigLoadTests.cpp
         TestsProjectManager/TestProjectManager.cpp
         TestsAssetDatabase/AssetDatabaseTests.cpp
+        TestsAssetImporter/AssetImporterTests.cpp
+
 )
 
 target_link_libraries(unit_tests
@@ -24,6 +26,7 @@ target_include_directories(unit_tests PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/TestLogger
         ${CMAKE_CURRENT_SOURCE_DIR}/TestsFileSystem
         ${CMAKE_CURRENT_SOURCE_DIR}/TestsProjectManager
+        ${CMAKE_CURRENT_SOURCE_DIR}/TestsAssetImporter
 )
 
 include(GoogleTest)

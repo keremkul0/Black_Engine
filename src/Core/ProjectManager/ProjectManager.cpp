@@ -66,6 +66,15 @@ std::string ProjectManager::GetProjectPath() const {
 }
 
 /**
+ * Sets the project path directly (useful for tests).
+ * @param projectPath The path to set for the project
+ */
+void ProjectManager::SetProjectPath(const std::string& projectPath) {
+    m_ProjectPath = projectPath;
+    BE_LOG_INFO(ProjectManagerLog, "Project path set to: {}", m_ProjectPath);
+}
+
+/**
  * Creates a new project with the standard directory structure.
  * @param projectPath Path where the project will be created
  * @return True if the project was created successfully

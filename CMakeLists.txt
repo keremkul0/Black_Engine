@@ -92,6 +92,12 @@ set(CORE_FILES
         src/Core/Utils/GuidUtils.cpp
         src/Core/Utils/MetaFile.h
         src/Core/Utils/MetaFile.cpp
+
+        # Asset Importer
+        src/Core/AssetImporter/ImporterRegistry.cpp
+        src/Core/AssetImporter/MeshImporter.cpp
+        src/Core/AssetImporter/ShaderImporter.cpp
+        src/Core/AssetImporter/TextureImporter.cpp
 )
 
 # Engine dosyaları

@@ -38,15 +38,24 @@ public:
      * updates the internal GUID-to-path mapping, and writes the mapping to 
      * Library/asset_map.json.
      */
-    void RefreshAssetCache();
-
-    /**
+    void RefreshAssetCache();    /**
      * @brief Gets the asset path corresponding to a GUID
      * 
      * @param guid The GUID to look up
      * @return The asset path, or empty string if GUID is not found
      */
     const std::string& GetAssetPath(const std::string& guid) const;
+    
+    /**
+     * @brief Reimports an asset, updating its binary representation
+     * 
+     * This method finds the appropriate importer for the asset and
+     * triggers the import process to regenerate the binary file.
+     * 
+     * @param guid The GUID of the asset to reimport
+     * @return True if reimport was successful, false otherwise
+     */
+    bool Reimport(const std::string& guid) const;
 
 private:
     AssetDatabase();

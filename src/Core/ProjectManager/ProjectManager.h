@@ -44,6 +44,9 @@ public:
     bool LoadProjectSettings();
     bool SaveProject();
     [[nodiscard]] std::string GetProjectPath() const;
+    
+    // Allows setting the project path directly (useful for tests)
+    void SetProjectPath(const std::string& projectPath);
 
     // Create a new project with the standard directory structure
     bool CreateNewProject(const std::string& projectPath);
