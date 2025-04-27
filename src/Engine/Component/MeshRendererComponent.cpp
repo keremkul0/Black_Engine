@@ -46,6 +46,13 @@ void MeshRendererComponent::Draw() {
     // Shader'ı aktif et
     m_shader->use();
 
+    // Texture varsa aktif et
+    if (m_texture) {
+        m_texture->Bind();
+        m_texture->texUnit(m_shader, "tex0", 0);
+    }
+
+
     // Model matrisi
     const glm::mat4 model = m_cachedTransform->GetModelMatrix();
     m_shader->setMat4("model", model);
@@ -56,4 +63,9 @@ void MeshRendererComponent::Draw() {
 
     // Mesh'i çiz
     mesh->Draw();
+
+    // Texture varsa unbind et
+    if (m_texture) {
+        m_texture->Unbind();
+    }
 }

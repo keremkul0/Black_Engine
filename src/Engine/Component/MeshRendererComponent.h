@@ -6,11 +6,13 @@
 #include <memory>
 #include "TransformComponent.h"
 #include "Engine/Render/Shader/Shader.h"
+#include "Engine/Render/Texture/Texture.h"
 
 class MeshRendererComponent final : public BaseComponent
 {
 private:
     std::shared_ptr<Shader> m_shader;
+    std::shared_ptr<Texture> m_texture;
 
 public:
     MeshRendererComponent() = default;
@@ -19,6 +21,9 @@ public:
     // Shader setter/getter
     void SetShader(const std::shared_ptr<Shader> &shader) { m_shader = shader; }
     [[nodiscard]] std::shared_ptr<Shader> GetShader() const { return m_shader; }
+
+    void SetTexture(const std::shared_ptr<Texture> &texture) { m_texture = texture; }
+
     // BaseComponent overrides
     void Start() override;
     void Draw() override;

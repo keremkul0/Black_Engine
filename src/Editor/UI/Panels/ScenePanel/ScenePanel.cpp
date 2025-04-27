@@ -12,6 +12,7 @@
 #include "Core/InputManager/InputEvent.h"
 
 extern glm::mat4 gViewMatrix;
+extern glm::mat4 gProjectionMatrix;
 
 ScenePanel::ScenePanel(const std::string &title)
     : Panel(title), m_CurrentCursor(InputManager::DEFAULT_CURSOR)
@@ -258,7 +259,7 @@ void ScenePanel::DrawContent()
     }
 
     // Opsiyonel: Debug bilgileri çizilebilir.
-    ImGui::SetCursorPos(ImVec2(10, 10));
+    ImGui::SetCursorPos(ImVec2(20, 20));
     ImGui::Text("Camera: %.1f, %.1f, %.1f", m_CameraPosition.x, m_CameraPosition.y, m_CameraPosition.z);
 }
 
@@ -272,6 +273,7 @@ void ScenePanel::ResizeFramebuffer(const int width, const int height)
 
     const float aspectRatio = static_cast<float>(width) / static_cast<float>(height);
     m_ProjectionMatrix = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 1000.0f);
+    gProjectionMatrix = m_ProjectionMatrix;
 }
 
 void ScenePanel::CleanupResources()

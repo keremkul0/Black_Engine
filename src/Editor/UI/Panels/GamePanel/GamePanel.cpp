@@ -8,6 +8,7 @@
 #include "Engine/Scene/Scene.h"
 
 extern glm::mat4 gViewMatrix;
+extern glm::mat4 gProjectionMatrix;
 
     GamePanel::GamePanel(const std::string &title)
         : Panel(title) {

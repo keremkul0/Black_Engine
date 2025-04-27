@@ -84,19 +84,35 @@ add_executable(Black_Engine
         src/Engine/Component/MeshComponent.cpp
         src/Editor/UI/Panels/InspectorPanel/ComponentDrawers.h
         src/Editor/UI/Panels/InspectorPanel/ComponentDrawers.cpp
+        src/Engine/Render/Texture/Texture.cpp
+        src/Engine/Render/Texture/Texture.h
+        src/Engine/Render/Mesh/VBO/VBO.cpp
+        src/Engine/Render/Mesh/VBO/VBO.h
+        src/Engine/Render/Mesh/VAO/VAO.cpp
+        src/Engine/Render/Mesh/VAO/VAO.h
+        src/Engine/Render/Mesh/EBO/EBO.cpp
+        src/Engine/Render/Mesh/EBO/EBO.h
 )
 
 target_include_directories(Black_Engine PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/external/stb
         ${CMAKE_CURRENT_SOURCE_DIR}/external/glm
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
+# stb.cpp için statik kütüphane oluştur
+add_library(stb STATIC external/stb/stb.cpp)
 
 target_link_libraries(Black_Engine PRIVATE
         glad
         imgui
         glfw
         opengl32
+        stb
 )
+
+
+
+
 
 if (BUILD_TESTS)
     enable_testing()

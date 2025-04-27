@@ -6,12 +6,14 @@
 #include <string>
 #include <glm/glm.hpp>
 #include "Engine/Entity/GameObject.h"
+#include "Engine/render/Texture/Texture.h"
 
 class Scene
 {
 public:
     Scene() = default;
     ~Scene() = default;
+
 
     void LoadDefaultScene();
     static bool LoadSceneFromFile(const std::string& path);

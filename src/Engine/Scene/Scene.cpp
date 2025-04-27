@@ -6,6 +6,8 @@
 #include "Engine/Render/Shader/Shader.h"
 #include "Engine/Render/Primitives/Primitives.h"
 
+#include "Engine/render/Texture/Texture.h"
+
 
 std::shared_ptr<GameObject> Scene::CreateGameObject(const std::string &name) {
     auto obj = std::make_shared<GameObject>();
@@ -42,15 +44,33 @@ void Scene::LoadDefaultScene() {
     auto sphereRenderer = sphereObj->AddComponent<MeshRendererComponent>();
     sphereRenderer->SetShader(defaultShader);
 
+
+
+
     // 3. Plane
     auto planeObj = CreateGameObject("Plane");
     auto planeTransform = planeObj->AddComponent<TransformComponent>();
     planeTransform->position = glm::vec3(-2.0f, -1.0f, 0.0f);
-    planeTransform->scale = glm::vec3(2.0f, 1.0f, 2.0f);
+    planeTransform->scale = glm::vec3(1.0f, 0.0f, 1.0f);
     auto planeMesh = planeObj->AddComponent<MeshComponent>();
     planeMesh->SetMesh(Primitives::CreatePlane(2.0f, 2.0f, 1));
     auto planeRenderer = planeObj->AddComponent<MeshRendererComponent>();
     planeRenderer->SetShader(defaultShader);
+    auto planeTexture = std::make_shared<Texture>("../src/Engine/Render/Texture/TextureImages/planks.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+    planeRenderer->SetTexture(planeTexture);
+
+    ////////////////////
+    //////plane texture
+    /*
+    defaultShader->use();
+    Texture planksTexture("../src/Engine/Scene/planks.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+    planksTexture.texUnit(defaultShader, "tex0", 0);
+    planksTexture.Bind();*/
+
+
+
+    ///plane texture
+    ////////////////////
 
     // 4. Quad
     auto quadObj = CreateGameObject("Quad");
@@ -60,6 +80,9 @@ void Scene::LoadDefaultScene() {
     quadMesh->SetMesh(Primitives::CreateQuad(2.0f, 1.0f));
     auto quadRenderer = quadObj->AddComponent<MeshRendererComponent>();
     quadRenderer->SetShader(defaultShader);
+    auto quadTexture = std::make_shared<Texture>("../src/Engine/Render/Texture/TextureImages/brick.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+    quadRenderer->SetTexture(quadTexture);
+
 
     // 5. Cylinder
     auto cylinderObj = CreateGameObject("Cylinder");
@@ -95,6 +118,7 @@ void Scene::UpdateAll(const float dt) {
 }
 
 void Scene::DrawAll() {
+
     for (const auto &obj: m_GameObjects) {
         obj->Draw();
     }
