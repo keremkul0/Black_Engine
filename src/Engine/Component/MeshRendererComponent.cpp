@@ -28,7 +28,7 @@ void MeshRendererComponent::CacheComponents() {
 }
 
 void MeshRendererComponent::Draw() {
-    if (!owner || !m_shader) return;
+    if (!owner || !m_material) return;
 
     // Bileşenler önbellekte yoksa, tekrar dene
     if (!m_cachedMeshComponent || !m_cachedTransform) {
@@ -39,33 +39,19 @@ void MeshRendererComponent::Draw() {
     if (!m_cachedMeshComponent || !m_cachedMeshComponent->IsLoaded()) return;
 
     const auto mesh = m_cachedMeshComponent->GetMesh();
-    if (!mesh) return;
+    if (!mesh || !m_cachedTransform) return;
 
-    if (!m_cachedTransform) return;
+    // Material'ı aktif et (shader'ı aktif eder ve varsa texture'u bağlar)
+    m_material->Apply();
 
-    // Shader'ı aktif et
-    m_shader->use();
-
-    // Texture varsa aktif et
-    if (m_texture) {
-        m_texture->Bind();
-        m_texture->texUnit(m_shader, "tex0", 0);
+    // Material'ın shader'ı üzerinden uniform'ları güncelle
+    if (auto shader = m_material->GetShader()) {
+        const glm::mat4 model = m_cachedTransform->GetModelMatrix();
+        shader->setMat4("model", model);
+        shader->setMat4("view", gViewMatrix);
+        shader->setMat4("projection", gProjectionMatrix);
     }
-
-
-    // Model matrisi
-    const glm::mat4 model = m_cachedTransform->GetModelMatrix();
-    m_shader->setMat4("model", model);
-
-    // Global kamera matrislerini uniform olarak ayarla
-    m_shader->setMat4("view", gViewMatrix);
-    m_shader->setMat4("projection", gProjectionMatrix);
 
     // Mesh'i çiz
     mesh->Draw();
-
-    // Texture varsa unbind et
-    if (m_texture) {
-        m_texture->Unbind();
-    }
 }

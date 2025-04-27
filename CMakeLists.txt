@@ -92,6 +92,8 @@ add_executable(Black_Engine
         src/Engine/Render/Mesh/VAO/VAO.h
         src/Engine/Render/Mesh/EBO/EBO.cpp
         src/Engine/Render/Mesh/EBO/EBO.h
+        src/Engine/Render/Material/Material.cpp
+        src/Engine/Render/Material/Material.h
 )
 
 target_include_directories(Black_Engine PRIVATE

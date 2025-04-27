@@ -24,7 +24,12 @@ void Scene::LoadDefaultScene() {
         (shaderPath + "simple.frag").c_str()
     );
 
-    // Create and position each primitive with increased spacing
+
+    const std::string shaderPath0 = "../src/shaders/";
+    const auto defaultShader0 = std::make_shared<Shader>(
+        (shaderPath + "default.vert").c_str(),
+        (shaderPath + "default.frag").c_str()
+    );
 
     // 1. Cube
     auto cubeObj = CreateGameObject("Cube");
@@ -33,7 +38,11 @@ void Scene::LoadDefaultScene() {
     auto cubeMesh = cubeObj->AddComponent<MeshComponent>();
     cubeMesh->SetMesh(Primitives::CreateCube());
     auto cubeRenderer = cubeObj->AddComponent<MeshRendererComponent>();
-    cubeRenderer->SetShader(defaultShader);
+    {
+        auto material = std::make_shared<Material>();
+        material->SetShader(defaultShader0);
+        cubeRenderer->SetMaterial(material);
+    }
 
     // 2. Sphere
     auto sphereObj = CreateGameObject("Sphere");
@@ -42,10 +51,11 @@ void Scene::LoadDefaultScene() {
     auto sphereMesh = sphereObj->AddComponent<MeshComponent>();
     sphereMesh->SetMesh(Primitives::CreateSphere(1.0f, 32));
     auto sphereRenderer = sphereObj->AddComponent<MeshRendererComponent>();
-    sphereRenderer->SetShader(defaultShader);
-
-
-
+    {
+        auto material = std::make_shared<Material>();
+        material->SetShader(defaultShader0);
+        sphereRenderer->SetMaterial(material);
+    }
 
     // 3. Plane
     auto planeObj = CreateGameObject("Plane");
@@ -55,22 +65,13 @@ void Scene::LoadDefaultScene() {
     auto planeMesh = planeObj->AddComponent<MeshComponent>();
     planeMesh->SetMesh(Primitives::CreatePlane(2.0f, 2.0f, 1));
     auto planeRenderer = planeObj->AddComponent<MeshRendererComponent>();
-    planeRenderer->SetShader(defaultShader);
-    auto planeTexture = std::make_shared<Texture>("../src/Engine/Render/Texture/TextureImages/planks.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
-    planeRenderer->SetTexture(planeTexture);
-
-    ////////////////////
-    //////plane texture
-    /*
-    defaultShader->use();
-    Texture planksTexture("../src/Engine/Scene/planks.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
-    planksTexture.texUnit(defaultShader, "tex0", 0);
-    planksTexture.Bind();*/
-
-
-
-    ///plane texture
-    ////////////////////
+    {
+        auto material = std::make_shared<Material>();
+        material->SetShader(defaultShader0);
+        auto planeTexture = std::make_shared<Texture>("../src/Engine/Render/Texture/TextureImages/planks.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+        material->SetTexture(planeTexture);
+        planeRenderer->SetMaterial(material);
+    }
 
     // 4. Quad
     auto quadObj = CreateGameObject("Quad");
@@ -79,10 +80,13 @@ void Scene::LoadDefaultScene() {
     auto quadMesh = quadObj->AddComponent<MeshComponent>();
     quadMesh->SetMesh(Primitives::CreateQuad(2.0f, 1.0f));
     auto quadRenderer = quadObj->AddComponent<MeshRendererComponent>();
-    quadRenderer->SetShader(defaultShader);
-    auto quadTexture = std::make_shared<Texture>("../src/Engine/Render/Texture/TextureImages/brick.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
-    quadRenderer->SetTexture(quadTexture);
-
+    {
+        auto material = std::make_shared<Material>();
+        material->SetShader(defaultShader0);
+        auto quadTexture = std::make_shared<Texture>("../src/Engine/Render/Texture/TextureImages/brick.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+        material->SetTexture(quadTexture);
+        quadRenderer->SetMaterial(material);
+    }
 
     // 5. Cylinder
     auto cylinderObj = CreateGameObject("Cylinder");
@@ -91,7 +95,11 @@ void Scene::LoadDefaultScene() {
     auto cylinderMesh = cylinderObj->AddComponent<MeshComponent>();
     cylinderMesh->SetMesh(Primitives::CreateCylinder(1.0f, 2.0f, 32));
     auto cylinderRenderer = cylinderObj->AddComponent<MeshRendererComponent>();
-    cylinderRenderer->SetShader(defaultShader);
+    {
+        auto material = std::make_shared<Material>();
+        material->SetShader(defaultShader0);
+        cylinderRenderer->SetMaterial(material);
+    }
 
     // 6. Capsule
     auto capsuleObj = CreateGameObject("Capsule");
@@ -100,7 +108,11 @@ void Scene::LoadDefaultScene() {
     auto capsuleMesh = capsuleObj->AddComponent<MeshComponent>();
     capsuleMesh->SetMesh(Primitives::CreateCapsule(1.0f, 2.0f, 32));
     auto capsuleRenderer = capsuleObj->AddComponent<MeshRendererComponent>();
-    capsuleRenderer->SetShader(defaultShader);
+    {
+        auto material = std::make_shared<Material>();
+        material->SetShader(defaultShader0);
+        capsuleRenderer->SetMaterial(material);
+    }
 
     // You'll need to position your camera farther back to see all objects
     // Consider using a z-position of around -15 to -20
@@ -123,3 +135,4 @@ void Scene::DrawAll() {
         obj->Draw();
     }
 }
+
