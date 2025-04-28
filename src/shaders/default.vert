@@ -13,10 +13,16 @@ uniform mat4 projection;
 // Output to fragment shader
 out vec3 Normal;
 out vec2 TexCoord;
+// Outputs the current position for the Fragment Shader
+out vec3 crntPos;
 
 void main()
 {
-    gl_Position = projection * view * model * vec4(aPos, 1.0);
+// Calculates the current position of the vertex in world space
+    crntPos = vec3(model * vec4(aPos, 1.0));
     Normal = aNormal;
     TexCoord = aTexCoord;
+
+
+    gl_Position = projection * view * model * vec4(aPos, 1.0);
 }

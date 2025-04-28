@@ -30,6 +30,10 @@ ScenePanel::~ScenePanel()
 void ScenePanel::SetScene(const std::shared_ptr<Scene> &scene)
 {
     m_Scene = scene;
+    if (m_Scene && m_Camera)
+    {
+        m_Scene->SetCamera(m_Camera.get());
+    }
 }
 
 void ScenePanel::OnUpdate(const float deltaTime)
@@ -56,6 +60,7 @@ void ScenePanel::OnUpdate(const float deltaTime)
         // Yalnızca rotasyon modunda WASD hareketleri ile kamera hareketini işle.
         if (m_IsRotating)
         {
+
             const float speedMultiplier = (InputManager::IsKeyPressed(GLFW_KEY_LEFT_SHIFT) ||
                                              InputManager::IsKeyPressed(GLFW_KEY_RIGHT_SHIFT))
                                                 ? 3.0f : 1.0f;
@@ -294,3 +299,4 @@ void ScenePanel::CleanupResources()
         m_DepthRenderBuffer = 0;
     }
 }
+

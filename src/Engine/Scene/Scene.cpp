@@ -6,8 +6,6 @@
 #include "Engine/Render/Shader/Shader.h"
 #include "Engine/Render/Primitives/Primitives.h"
 
-#include "Engine/render/Texture/Texture.h"
-
 
 std::shared_ptr<GameObject> Scene::CreateGameObject(const std::string &name) {
     auto obj = std::make_shared<GameObject>();
@@ -61,7 +59,7 @@ void Scene::LoadDefaultScene() {
     auto planeObj = CreateGameObject("Plane");
     auto planeTransform = planeObj->AddComponent<TransformComponent>();
     planeTransform->position = glm::vec3(-2.0f, -1.0f, 0.0f);
-    planeTransform->scale = glm::vec3(1.0f, 0.0f, 1.0f);
+    planeTransform->scale = glm::vec3(20.0f, 0.0f, 20.0f);
     auto planeMesh = planeObj->AddComponent<MeshComponent>();
     planeMesh->SetMesh(Primitives::CreatePlane(2.0f, 2.0f, 1));
     auto planeRenderer = planeObj->AddComponent<MeshRendererComponent>();
@@ -130,9 +128,13 @@ void Scene::UpdateAll(const float dt) {
 }
 
 void Scene::DrawAll() {
+    // Set the camera position for shaders if a camera is attached
+    if (m_Camera) {
+        Material::SetCameraPosition(m_Camera->GetPosition());
+        // Updated line to correctly print camera position:
 
+    }
     for (const auto &obj: m_GameObjects) {
         obj->Draw();
     }
 }
-
