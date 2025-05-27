@@ -33,12 +33,12 @@ void EditorLayout::RenderLayout() {
     if (m_UseDockspace) {
         SetupDockspace();
     }
-
     // Render all panels
     for (auto &[name, panel]: m_Panels) {
         panel->Render();
     }
 }
+
 
 void EditorLayout::UpdateAllPanels(float deltaTime) {
     for (auto &panelPair: m_Panels) {

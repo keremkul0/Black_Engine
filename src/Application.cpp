@@ -93,8 +93,8 @@ int Application::Run() const {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Update and draw the scene
-        m_Scene->UpdateAll(deltaTime);
-        m_Scene->DrawAll();
+        //m_Scene->UpdateAll(deltaTime);
+        //m_Scene->DrawAll();
 
         // Render UI
         ImGuiLayer::Begin();

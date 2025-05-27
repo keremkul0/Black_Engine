@@ -76,6 +76,15 @@ void Shader::setMat4(const std::string &name, const glm::mat4 &mat) const
     glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(mat));
 }
 
+void Shader::setVec3(const std::string &name, const glm::vec3 &value) const {
+    int location = glGetUniformLocation(ID, name.c_str());
+    if (location == -1) {
+        // Opsiyonel: uniform bulunamadı diye uyarı verebilirsiniz
+        // std::cerr << "Warning: uniform '" << name << "' doesn't exist!\n";
+    }
+    glUniform3f(location, value.x, value.y, value.z);
+}
+
 // Hata kontrolü (derleme/link)
 void Shader::checkCompileErrors(const unsigned int shader, const std::string& type)
 {
@@ -102,3 +111,4 @@ void Shader::checkCompileErrors(const unsigned int shader, const std::string& ty
         }
     }
 }
+

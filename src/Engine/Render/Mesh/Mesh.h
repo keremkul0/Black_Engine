@@ -4,29 +4,32 @@
 #include <vector>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include "VBO/VBO.h"
+#include "EBO/EBO.h"
+#include "VAO/VAO.h"
 
-struct Vertex {
-    glm::vec3 position;
-    glm::vec3 normal;
-    glm::vec2 texCoords;
-};
+
 
 class Mesh {
 public:
+    std::vector<Vertex> vertices;
+    std::vector<GLuint> indices;
+    VAO VAO;;
+
+
+    /////////////////////////
     Mesh() = default; // Added default constructor
     ~Mesh();
 
     void Initialize(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices);
 
-    void Draw() const;
+    void Draw();
 
-    [[nodiscard]] unsigned int GetIndexCount() const { return indexCount; }
 
 private:
-    GLuint VAO = 0;
-    GLuint VBO = 0;
-    GLuint EBO = 0;
-    unsigned int indexCount = 0;
+
+    /////////////////////////
+    //GLuint VAO = 0;
 };
 
 #endif // MESH_H
