@@ -27,6 +27,7 @@ Application::Application()
       m_Scene(std::make_shared<Scene>()) {
 }
 
+
 Application::~Application() {
     // Input manager cleanup
     InputManager::Cleanup();
