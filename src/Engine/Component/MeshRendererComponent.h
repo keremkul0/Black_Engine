@@ -19,9 +19,14 @@ public:
     // Shader setter/getter
     void SetShader(const std::shared_ptr<Shader> &shader) { m_shader = shader; }
     [[nodiscard]] std::shared_ptr<Shader> GetShader() const { return m_shader; }
+    
+    // Get the mesh from the associated MeshComponent
+    [[nodiscard]] std::shared_ptr<Mesh> GetMesh() const;
+    
     // BaseComponent overrides
     void Start() override;
     void Draw() override;
+    void DrawWireframe() override; // Add wireframe drawing for selection highlighting
     void OnEnable() override;
     void OnDisable() override;
 

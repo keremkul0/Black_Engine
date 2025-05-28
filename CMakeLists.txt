@@ -22,6 +22,7 @@ target_include_directories(glad PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/external/glad/include
 )
 
+# First define imgui library so ImGuizmo can find it
 add_library(imgui STATIC
         external/imgui/imgui.cpp
         external/imgui/imgui_draw.cpp
@@ -35,6 +36,16 @@ target_include_directories(imgui PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui
         ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui/backends
         ${CMAKE_CURRENT_SOURCE_DIR}/external/glfw/include
+)
+
+# Now define ImGuizmo library after imgui is set up
+add_library(ImGuizmo STATIC
+        external/ImGuizmo/ImGuizmo.cpp
+)
+
+target_include_directories(ImGuizmo PUBLIC
+        external/ImGuizmo
+        ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui
 )
 
 add_executable(Black_Engine
@@ -84,11 +95,16 @@ add_executable(Black_Engine
         src/Engine/Component/MeshComponent.cpp
         src/Editor/UI/Panels/InspectorPanel/ComponentDrawers.h
         src/Editor/UI/Panels/InspectorPanel/ComponentDrawers.cpp
+        src/Editor/SelectionManager.h
+        src/Editor/SelectionManager.cpp
+
 )
 
 target_include_directories(Black_Engine PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/external/glm
         ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/external/ImGuizmo
+        ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui
 )
 
 target_link_libraries(Black_Engine PRIVATE
@@ -96,6 +112,7 @@ target_link_libraries(Black_Engine PRIVATE
         imgui
         glfw
         opengl32
+        ImGuizmo
 )
 
 if (BUILD_TESTS)

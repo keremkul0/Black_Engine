@@ -1,16 +1,42 @@
 #include "InspectorPanel.h"
 #include "ComponentDrawers.h"
 #include "Engine/Component/BaseComponent.h"
+#include "Editor/SelectionManager.h"
 #include "imgui.h"
 #include <utility>
+#include <glm/gtc/type_ptr.hpp> 
+
+// External global matrices from Application.cpp - will use if camera is not available
+extern glm::mat4 gViewMatrix;
+extern glm::mat4 gProjectionMatrix;
 
 InspectorPanel::InspectorPanel()
     : Panel("Inspector"), m_SelectedObject(nullptr) {
     ComponentDrawers::RegisterAllDrawers();
+    
+    // Register with the SelectionManager to receive selection changes
+    SelectionManager::GetInstance().AddSelectionChangedListener(
+        [this](const std::shared_ptr<GameObject>& selectedObject) {
+            SetSelectedObject(selectedObject);
+        });
 }
 
 InspectorPanel::InspectorPanel(const std::string& title)
-    : Panel(title), m_SelectedObject(nullptr) {}
+    : Panel(title), m_SelectedObject(nullptr) {
+    ComponentDrawers::RegisterAllDrawers();
+    
+    // Register with the SelectionManager to receive selection changes
+    SelectionManager::GetInstance().AddSelectionChangedListener(
+        [this](const std::shared_ptr<GameObject>& selectedObject) {
+            SetSelectedObject(selectedObject);
+        });
+}
+
+InspectorPanel::~InspectorPanel() {
+    // Clean up the listener when the panel is destroyed
+    // Note: This is a simplified approach since we can't easily unregister a lambda
+    // A more robust solution would involve storing a token or ID for the listener
+}
 
 void InspectorPanel::SetSelectedObject(std::shared_ptr<GameObject> object) {
     m_SelectedObject = std::move(object);

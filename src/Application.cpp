@@ -6,6 +6,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <GLFW/glfw3.h>
 #include "Editor/UI/Panels/InspectorPanel/ComponentDrawers.h"
+// Add ImGui backend headers
+#include "imgui_impl_opengl3.h"
+#include "imgui_impl_glfw.h"
+#include "ImGuizmo.h" // Add ImGuizmo header
 
 // Main window reference for ImGui - required for ImGuiLayer.cpp
 GLFWwindow *g_Window = nullptr;
@@ -103,6 +107,7 @@ int Application::Run() const {
 
         // Render UI
         ImGuiLayer::Begin();
+        ImGuizmo::BeginFrame(); // Initialize ImGuizmo for this frame
         if (m_EditorLayout) {
             m_EditorLayout->UpdateAllPanels(deltaTime); // Add this line
             m_EditorLayout->RenderLayout();

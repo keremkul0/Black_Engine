@@ -14,6 +14,10 @@ Mesh::~Mesh()
 void Mesh::Initialize(const std::vector<Vertex>& vertices,
                       const std::vector<unsigned int>& indices)
 {
+    // Store a copy of the mesh data for collision detection, ray casting, etc.
+    m_Vertices = vertices;
+    m_Indices = indices;
+    
     indexCount = static_cast<unsigned int>(indices.size());
 
     glGenVertexArrays(1, &VAO);
@@ -54,6 +58,9 @@ void Mesh::Initialize(const std::vector<Vertex>& vertices,
                           reinterpret_cast<void *>(offsetof(Vertex, texCoords)));
 
     glBindVertexArray(0);
+
+    // Calculate bounds after initialization
+    CalculateBounds();
 }
 
 void Mesh::Draw() const
@@ -61,4 +68,47 @@ void Mesh::Draw() const
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
     glBindVertexArray(0);
+}
+
+glm::vec3 Mesh::GetMinBounds() const
+{
+    if (m_BoundsDirty) {
+        const_cast<Mesh*>(this)->CalculateBounds();
+    }
+    return m_MinBounds;
+}
+
+glm::vec3 Mesh::GetMaxBounds() const
+{
+    if (m_BoundsDirty) {
+        const_cast<Mesh*>(this)->CalculateBounds();
+    }
+    return m_MaxBounds;
+}
+
+void Mesh::CalculateBounds()
+{
+    if (m_Vertices.empty()) {
+        m_MinBounds = glm::vec3(0.0f);
+        m_MaxBounds = glm::vec3(0.0f);
+        m_BoundsDirty = false;
+        return;
+    }
+    
+    // Reset bounds
+    m_MinBounds = glm::vec3(std::numeric_limits<float>::max());
+    m_MaxBounds = glm::vec3(std::numeric_limits<float>::lowest());
+    
+    // Find min and max for each axis
+    for (const auto& vertex : m_Vertices) {
+        m_MinBounds.x = std::min(m_MinBounds.x, vertex.position.x);
+        m_MinBounds.y = std::min(m_MinBounds.y, vertex.position.y);
+        m_MinBounds.z = std::min(m_MinBounds.z, vertex.position.z);
+        
+        m_MaxBounds.x = std::max(m_MaxBounds.x, vertex.position.x);
+        m_MaxBounds.y = std::max(m_MaxBounds.y, vertex.position.y);
+        m_MaxBounds.z = std::max(m_MaxBounds.z, vertex.position.z);
+    }
+    
+    m_BoundsDirty = false;
 }

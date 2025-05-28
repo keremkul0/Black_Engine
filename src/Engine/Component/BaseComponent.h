@@ -27,6 +27,10 @@ public:
     virtual void Draw() {
     }
 
+    // Her karede çağrılabilecek tel çerçeve çizim metodu
+    virtual void DrawWireframe() {
+    }
+
     // Bileşen aktif edildiğinde çağrılır
     virtual void OnEnable() {
     }

@@ -13,6 +13,8 @@ extern glm::mat4 gViewMatrix;
         : Panel(title) {
         SetupFramebuffer();
     }
+        
+        // ForceRenderUpdate metodu kaldırıldı - dosya derlenme hatasını gidermek için
 
     GamePanel::~GamePanel() {
         CleanupFramebuffer();

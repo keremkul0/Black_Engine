@@ -8,6 +8,10 @@ void TransformComponent::Start()
 void TransformComponent::Update(float deltaTime)
 {
     // Güncelleme işlemleri
+
+    // We need to reset the transform dirty flag after all dependent components
+    // have had a chance to check it and update themselves
+    transformDirty = false;
 }
 
 void TransformComponent::OnEnable()
