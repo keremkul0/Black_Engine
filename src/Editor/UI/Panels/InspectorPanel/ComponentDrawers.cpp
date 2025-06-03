@@ -80,11 +80,19 @@ void DrawMeshRendererComponent(BaseComponent* component) {
     ImGui::Combo("Material", &currentMaterial, materials, IM_ARRAYSIZE(materials));
 }
 
+// Rigid body component drawer
+
+
 // Register all component drawers
 void ComponentDrawers::RegisterAllDrawers() {
     auto& drawers = GetDrawerMap();
 
-    RegisterDrawer("TransformComponent", DrawTransformComponent);
-    RegisterDrawer("MeshComponent", DrawMeshComponent);
-    RegisterDrawer("MeshRendererComponent", DrawMeshRendererComponent);
+    // Use std::function to properly cast the function pointers
+    RegisterDrawer("TransformComponent", 
+                  std::function<void(BaseComponent*)>(DrawTransformComponent));
+    RegisterDrawer("MeshComponent", 
+                  std::function<void(BaseComponent*)>(DrawMeshComponent));
+    RegisterDrawer("MeshRendererComponent", 
+                  std::function<void(BaseComponent*)>(DrawMeshRendererComponent));
+
 }

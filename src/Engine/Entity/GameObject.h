@@ -70,10 +70,11 @@ public:
             return true;
         }
         return false;
-    }
+    }    void AddChild(const std::shared_ptr<GameObject> &child);
+    void RemoveChild(const std::shared_ptr<GameObject> &child);    // Special helper method for adding a RigidBodyComponent and registering it with the physics world
 
-    void AddChild(const std::shared_ptr<GameObject> &child);
-    void RemoveChild(const std::shared_ptr<GameObject> &child);
+    // Special helper method for removing a RigidBodyComponent and unregistering it from the physics world
+    bool RemoveRigidBodyComponent();
 
     bool IsActive() const { return active; }
     void SetActive(bool isActive);

@@ -14,6 +14,7 @@
 #include "Core/InputManager/InputEvent.h"
 
 extern glm::mat4 gViewMatrix;
+extern glm::mat4 gProjectionMatrix;
 
 ScenePanel::ScenePanel(const std::string &title)
     : Panel(title), m_CurrentCursor(InputManager::DEFAULT_CURSOR) {
@@ -29,6 +30,10 @@ ScenePanel::~ScenePanel() {
 
 void ScenePanel::SetScene(const std::shared_ptr<Scene> &scene) {
     m_Scene = scene;
+    if (m_Scene && m_Camera)
+    {
+        m_Scene->SetCamera(m_Camera.get());
+    }
 }
 
 void ScenePanel::OnUpdate(const float deltaTime) {
@@ -51,7 +56,13 @@ void ScenePanel::OnUpdate(const float deltaTime) {
         UpdateCursor();
 
         // Yalnızca rotasyon modunda WASD hareketleri ile kamera hareketini işle.
+<<<<<<< HEAD
         if (m_IsRotating) {
+=======
+        if (m_IsRotating)
+        {
+
+>>>>>>> 2c7472b480e34724b9cb0c0c9d3a71e9720ac2f2
             const float speedMultiplier = (InputManager::IsKeyPressed(GLFW_KEY_LEFT_SHIFT) ||
                                            InputManager::IsKeyPressed(GLFW_KEY_RIGHT_SHIFT))
                                               ? 3.0f
@@ -314,8 +325,13 @@ void ScenePanel::DrawContent() {
         DrawGuizmo();
     }
 
+<<<<<<< HEAD
     // Debug information
     ImGui::SetCursorPos(ImVec2(10, 10));
+=======
+    // Opsiyonel: Debug bilgileri çizilebilir.
+    ImGui::SetCursorPos(ImVec2(20, 20));
+>>>>>>> 2c7472b480e34724b9cb0c0c9d3a71e9720ac2f2
     ImGui::Text("Camera: %.1f, %.1f, %.1f", m_CameraPosition.x, m_CameraPosition.y, m_CameraPosition.z);
 
     // Display mouse coordinates and ray information for debugging
@@ -347,6 +363,7 @@ void ScenePanel::ResizeFramebuffer(const int width, const int height) {
 
     const float aspectRatio = static_cast<float>(width) / static_cast<float>(height);
     m_ProjectionMatrix = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 1000.0f);
+    gProjectionMatrix = m_ProjectionMatrix;
 }
 
 void ScenePanel::CleanupResources() {
@@ -364,6 +381,7 @@ void ScenePanel::CleanupResources() {
     }
 }
 
+<<<<<<< HEAD
 Math::Ray ScenePanel::ScreenToWorldRay(const glm::vec2 &mousePos) {
     // 1. NDC (Normalized Device Coordinates)
     float x = (2.0f * mousePos.x) / m_PanelSize.x - 1.0f;
@@ -594,3 +612,5 @@ void ScenePanel::CustomizeImGuizmoStyle() {
     style.ScaleLineCircleSize = 7.0f;
     style.CenterCircleSize = 7.0f;
 }
+=======
+>>>>>>> 2c7472b480e34724b9cb0c0c9d3a71e9720ac2f2

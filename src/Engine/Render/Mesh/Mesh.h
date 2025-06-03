@@ -4,23 +4,32 @@
 #include <vector>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+<<<<<<< HEAD
 #include <limits>
+=======
+#include "VBO/VBO.h"
+#include "EBO/EBO.h"
+#include "VAO/VAO.h"
 
-struct Vertex {
-    glm::vec3 position;
-    glm::vec3 normal;
-    glm::vec2 texCoords;
-};
+>>>>>>> 2c7472b480e34724b9cb0c0c9d3a71e9720ac2f2
+
 
 class Mesh {
 public:
+    std::vector<Vertex> vertices;
+    std::vector<GLuint> indices;
+    VAO VAO;;
+
+
+    /////////////////////////
     Mesh() = default; // Added default constructor
     ~Mesh();
 
     void Initialize(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices);
 
-    void Draw() const;
+    void Draw();
 
+<<<<<<< HEAD
     [[nodiscard]] unsigned int GetIndexCount() const { return indexCount; }
     
     // Add accessor methods for vertices and indices
@@ -46,6 +55,13 @@ private:
     glm::vec3 m_MinBounds = glm::vec3(std::numeric_limits<float>::max());
     glm::vec3 m_MaxBounds = glm::vec3(std::numeric_limits<float>::lowest());
     bool m_BoundsDirty = true;
+=======
+
+private:
+
+    /////////////////////////
+    //GLuint VAO = 0;
+>>>>>>> 2c7472b480e34724b9cb0c0c9d3a71e9720ac2f2
 };
 
 #endif // MESH_H

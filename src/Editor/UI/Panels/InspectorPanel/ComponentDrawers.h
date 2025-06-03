@@ -6,6 +6,10 @@
 
 class BaseComponent;
 
+namespace Black {
+    class RigidBodyComponent;
+}
+
 class ComponentDrawers {
 public:
     // Register all component drawers at once
@@ -17,6 +21,8 @@ public:
 
     // Draw a component using the appropriate drawer
     static void DrawComponent(BaseComponent* component);
+      // RigidBody drawer
+    static void DrawRigidBodyComponent(Black::RigidBodyComponent* component);
 };
 
 #endif // COMPONENT_DRAWERS_H

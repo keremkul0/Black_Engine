@@ -6,56 +6,39 @@
 Mesh::~Mesh()
 {
     // Yok edici
-    if (EBO) glDeleteBuffers(1, &EBO);
-    if (VBO) glDeleteBuffers(1, &VBO);
-    if (VAO) glDeleteVertexArrays(1, &VAO);
+    if (VAO.ID) VAO.Delete();
 }
 
-void Mesh::Initialize(const std::vector<Vertex>& vertices,
-                      const std::vector<unsigned int>& indices)
+void Mesh::Initialize(const std::vector<Vertex>& vertices,const std::vector<unsigned int>& indices)
 {
+<<<<<<< HEAD
     // Store a copy of the mesh data for collision detection, ray casting, etc.
     m_Vertices = vertices;
     m_Indices = indices;
     
     indexCount = static_cast<unsigned int>(indices.size());
+=======
+    Mesh::vertices = vertices;
+    Mesh::indices = indices;
+>>>>>>> 2c7472b480e34724b9cb0c0c9d3a71e9720ac2f2
 
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
+
+    VAO.Bind();
 
     // VBO
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER,
-                 vertices.size() * sizeof(Vertex),
-                 vertices.data(),
-                 GL_STATIC_DRAW);
+    VBO VBO(Mesh::vertices);
 
     // EBO
-    glGenBuffers(1, &EBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 indices.size() * sizeof(unsigned int),
-                 indices.data(),
-                 GL_STATIC_DRAW);
+    EBO EBO(Mesh::indices);
 
     // Position (layout=0)
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
-                          sizeof(Vertex),
-                          static_cast<void *>(nullptr));
+    VAO.LinkAttrib(VBO, 0, 3, GL_FLOAT, sizeof(Vertex), (void*)0);
 
     // Normal (layout=1)
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE,
-                          sizeof(Vertex),
-                          reinterpret_cast<void *>(offsetof(Vertex, normal)));
+    VAO.LinkAttrib(VBO, 1, 3, GL_FLOAT, sizeof(Vertex),(void*)(3 * sizeof(float)));
 
     // TexCoords (layout=2)
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(Vertex),
-                          reinterpret_cast<void *>(offsetof(Vertex, texCoords)));
+    VAO.LinkAttrib(VBO, 2, 2, GL_FLOAT, sizeof(Vertex), (void*)(6 * sizeof(float)));
 
     glBindVertexArray(0);
 
@@ -63,10 +46,12 @@ void Mesh::Initialize(const std::vector<Vertex>& vertices,
     CalculateBounds();
 }
 
-void Mesh::Draw() const
+void Mesh::Draw()
 {
-    glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
+    VAO.Bind();
+
+    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
+
     glBindVertexArray(0);
 }
 

@@ -5,17 +5,18 @@
 #include "MeshComponent.h"
 #include <memory>
 #include "TransformComponent.h"
-#include "Engine/Render/Shader/Shader.h"
+#include "Engine/Render/Material/Material.h"
 
 class MeshRendererComponent final : public BaseComponent
 {
 private:
-    std::shared_ptr<Shader> m_shader;
+    std::shared_ptr<Material> m_material;
 
 public:
     MeshRendererComponent() = default;
     ~MeshRendererComponent() override = default;
 
+<<<<<<< HEAD
     // Shader setter/getter
     void SetShader(const std::shared_ptr<Shader> &shader) { m_shader = shader; }
     [[nodiscard]] std::shared_ptr<Shader> GetShader() const { return m_shader; }
@@ -23,6 +24,12 @@ public:
     // Get the mesh from the associated MeshComponent
     [[nodiscard]] std::shared_ptr<Mesh> GetMesh() const;
     
+=======
+    // Material setter/getter
+    void SetMaterial(const std::shared_ptr<Material>& material) { m_material = material; }
+    [[nodiscard]] std::shared_ptr<Material> GetMaterial() const { return m_material; }
+
+>>>>>>> 2c7472b480e34724b9cb0c0c9d3a71e9720ac2f2
     // BaseComponent overrides
     void Start() override;
     void Draw() override;
@@ -36,7 +43,6 @@ public:
 private:
     MeshComponent* m_cachedMeshComponent = nullptr;
     TransformComponent* m_cachedTransform = nullptr;
-
 
     void CacheComponents();
 };

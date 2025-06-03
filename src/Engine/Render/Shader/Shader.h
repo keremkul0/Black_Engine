@@ -23,7 +23,7 @@ public:
     void setVec4(const std::string &name, const glm::vec4 &value) const;
 
     // İhtiyaca göre setVec3, setFloat, setInt vb. de ekleyebilirsiniz:
-    // void setVec3(const std::string &name, const glm::vec3 &value) const;
+    void setVec3(const std::string &name, const glm::vec3 &value) const;
     // void setFloat(const std::string &name, float value) const;
     // void setInt(const std::string &name, int value) const;
 
@@ -33,3 +33,4 @@ private:
 };
 
 #endif
+

@@ -192,6 +192,26 @@ namespace Primitives {
             }
         }
 
+        /*
+        // Vertices coordinates
+        Vertex vertices[] =
+        { //               COORDINATES             /           NORMALS         /       TEXTURE COORDINATES    //
+            Vertex{glm::vec3(-1.0f, 0.0f,  1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 0.0f)},
+            Vertex{glm::vec3(-1.0f, 0.0f, -1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f)},
+            Vertex{glm::vec3(1.0f, 0.0f, -1.0f),  glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f)},
+            Vertex{glm::vec3(1.0f, 0.0f,  1.0f),  glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 0.0f)}
+        };
+
+        // Indices for vertices order
+        GLuint indices[] =
+        {
+            0, 1, 2,
+            0, 2, 3
+        };
+
+        std::vector <Vertex> verts(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
+        std::vector <GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));*/
+
         auto mesh = std::make_shared<Mesh>();
         mesh->Initialize(vertices, indices);
         return mesh;

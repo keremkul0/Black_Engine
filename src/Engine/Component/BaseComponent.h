@@ -9,6 +9,11 @@ public:
     std::shared_ptr<GameObject> owner = nullptr;
     std::string fullName = typeid(*this).name();
 
+    // Return the GameObject this component is attached to
+    GameObject* GetGameObject() const {
+        return owner.get();
+    }
+
     // Sanal yıkıcı (miras için gerekli)
     virtual ~BaseComponent() = default;
 
