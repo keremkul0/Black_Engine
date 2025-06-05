@@ -20,12 +20,7 @@ public:
 
     TransformComponent() = default;
     ~TransformComponent() override = default;
-
-    // TransformComponent.h dosyasındaki public bölümüne ekleyin
-    void UpdateModelMatrix() {
-        matrixDirty = true;
-        transformDirty = true;
-    }
+   
     
     // Get transform dirty flag
     [[nodiscard]] bool GetTransformDirty() const { return transformDirty; }
@@ -38,6 +33,7 @@ public:
         position = newPosition;
         matrixDirty = true;
         transformDirty = true;
+        OnTransformChanged();
     }
 
     // Rotation setter
@@ -45,6 +41,7 @@ public:
         rotation = newRotation;
         matrixDirty = true;
         transformDirty = true;
+        OnTransformChanged();
     }
 
     // Scale setter
@@ -52,7 +49,11 @@ public:
         scale = newScale;
         matrixDirty = true;
         transformDirty = true;
+        OnTransformChanged();
     }
+
+    // Eğer transform doğrudan değiştirildiyse collider güncellemesi için callback
+    void NotifyColliderUpdate(GameObject* owner);
 
     // Model matrix hesapla - önbellekleyen versiyon
     glm::mat4 GetModelMatrix() const;
@@ -66,9 +67,16 @@ public:
     // Bileşen tipi bilgisi
     [[nodiscard]] std::string GetTypeName() const override { return "TransformComponent"; }
 
+    // Her yerden erişilebilen, public bir MarkDirty fonksiyonu
+    void MarkDirty() {
+        matrixDirty = true;
+        transformDirty = true;
+    }
+
 private:
     // Model matrisini yeniden hesapla
     void RecalculateModelMatrix() const;
+    void OnTransformChanged();
 };
 
 #endif // TRANSFORM_COMPONENT_H

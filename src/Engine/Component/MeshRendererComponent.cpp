@@ -55,10 +55,9 @@ void MeshRendererComponent::Draw() {
     // Mesh'i çiz
     mesh->Draw();
 }
-<<<<<<< HEAD
 
 void MeshRendererComponent::DrawWireframe() {
-    if (!owner || !m_shader) return;
+    if (!owner || !m_material) return;
 
     // Bileşenler önbellekte yoksa, tekrar dene
     if (!m_cachedMeshComponent || !m_cachedTransform) {
@@ -73,19 +72,23 @@ void MeshRendererComponent::DrawWireframe() {
 
     if (!m_cachedTransform) return;
 
+    // Get the shader from material
+    auto shader = m_material->GetShader();
+    if (!shader) return;
+
     // Shader'ı aktif et
-    m_shader->use();
+    shader->use();
 
     // Model matrisi
     const glm::mat4 model = m_cachedTransform->GetModelMatrix();
-    m_shader->setMat4("model", model);
+    shader->setMat4("model", model);
 
     // Global kamera matrislerini uniform olarak ayarla
-    m_shader->setMat4("view", gViewMatrix);
-    m_shader->setMat4("projection", gProjectionMatrix);
+    shader->setMat4("view", gViewMatrix);
+    shader->setMat4("projection", gProjectionMatrix);
 
     // Set wireframe color (white outline)
-    m_shader->setVec4("color", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    shader->setVec4("color", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
     // Draw wireframe
     mesh->Draw();
@@ -107,5 +110,4 @@ std::shared_ptr<Mesh> MeshRendererComponent::GetMesh() const {
     
     return nullptr;
 }
-=======
->>>>>>> 2c7472b480e34724b9cb0c0c9d3a71e9720ac2f2
+

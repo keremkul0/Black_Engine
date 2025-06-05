@@ -8,6 +8,7 @@
 #include "Editor/SelectionManager.h"
 #include <iostream>
 #include <algorithm>
+#include <filesystem>
 
 // Initialize static member
 Scene* Scene::s_ActiveScene = nullptr;
@@ -128,110 +129,74 @@ void Scene::LoadDefaultScene() {
     // You'll need to position your camera farther back to see all objects
     // Consider using a z-position of around -15 to -20
 }
-
 std::shared_ptr<GameObject> Scene::CreatePrimitive(const std::string& primitiveType) {
-    // Get default shader
     const std::string shaderPath = "../src/shaders/";
     const auto defaultShader = std::make_shared<Shader>(
         (shaderPath + "simple.vert").c_str(),
         (shaderPath + "simple.frag").c_str()
     );
-    
-    std::shared_ptr<GameObject> newObject;
-    
-    // Create based on primitive type
-    if (primitiveType == "Empty") {
-        newObject = CreateGameObject("New GameObject");
-        newObject->AddComponent<TransformComponent>();
-    }
-    else if (primitiveType == "Cube") {
-        newObject = CreateGameObject("Cube");
-        auto transform = newObject->AddComponent<TransformComponent>();
-        auto mesh = newObject->AddComponent<MeshComponent>();
+    const auto defaultShader0 = std::make_shared<Shader>(
+        (shaderPath + "default.vert").c_str(),
+        (shaderPath + "default.frag").c_str()
+    );
+
+    auto obj = CreateGameObject(primitiveType);
+
+    // Her primitive için mutlaka bir TransformComponent ekle
+    obj->AddComponent<TransformComponent>();
+
+    auto mesh = obj->AddComponent<MeshComponent>();
+    auto renderer = obj->AddComponent<MeshRendererComponent>();
+    auto material = std::make_shared<Material>();
+    material->SetShader(defaultShader0);
+
+    if (primitiveType == "Cube") {
         mesh->SetMesh(Primitives::CreateCube());
-        auto renderer = newObject->AddComponent<MeshRendererComponent>();
-        renderer->SetShader(defaultShader);
-    }
-    else if (primitiveType == "Sphere") {
-        newObject = CreateGameObject("Sphere");
-        auto transform = newObject->AddComponent<TransformComponent>();
-        auto mesh = newObject->AddComponent<MeshComponent>();
+    } else if (primitiveType == "Sphere") {
         mesh->SetMesh(Primitives::CreateSphere(1.0f, 32));
-        auto renderer = newObject->AddComponent<MeshRendererComponent>();
-        renderer->SetShader(defaultShader);
-    }
-    else if (primitiveType == "Plane") {
-        newObject = CreateGameObject("Plane");
-        auto transform = newObject->AddComponent<TransformComponent>();
-        auto mesh = newObject->AddComponent<MeshComponent>();
-        mesh->SetMesh(Primitives::CreatePlane(2.0f, 2.0f, 1));
-        auto renderer = newObject->AddComponent<MeshRendererComponent>();
-        renderer->SetShader(defaultShader);
-    }
-    else if (primitiveType == "Quad") {
-        newObject = CreateGameObject("Quad");
-        auto transform = newObject->AddComponent<TransformComponent>();
-        auto mesh = newObject->AddComponent<MeshComponent>();
-        mesh->SetMesh(Primitives::CreateQuad(2.0f, 2.0f));
-        auto renderer = newObject->AddComponent<MeshRendererComponent>();
-        renderer->SetShader(defaultShader);
-    }
-    else if (primitiveType == "Cylinder") {
-        newObject = CreateGameObject("Cylinder");
-        auto transform = newObject->AddComponent<TransformComponent>();
-        auto mesh = newObject->AddComponent<MeshComponent>();
+    } else if (primitiveType == "Plane") {
+        auto transform = obj->GetComponent<TransformComponent>();
+        if (transform) {
+            transform->scale = glm::vec3(20.0f, 0.0f, 20.0f);
+        }
+        auto mesh = obj->GetComponent<MeshComponent>();
+        if (mesh) {
+            mesh->SetMesh(Primitives::CreatePlane(2.0f, 2.0f, 1));
+        }
+        auto renderer = obj->GetComponent<MeshRendererComponent>();
+        if (renderer) {
+            renderer->SetShader(defaultShader0);
+        }
+    } else if (primitiveType == "Quad") {
+        mesh->SetMesh(Primitives::CreateQuad(2.0f, 1.0f));
+        auto quadTexture = std::make_shared<Texture>("../src/Engine/Render/Texture/TextureImages/brick.png",
+                                                      GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+        material->SetTexture(quadTexture);
+    } else if (primitiveType == "Cylinder") {
         mesh->SetMesh(Primitives::CreateCylinder(1.0f, 2.0f, 32));
-        auto renderer = newObject->AddComponent<MeshRendererComponent>();
-        renderer->SetShader(defaultShader);
-    }
-   /* else if (primitiveType == "Cone") {
-        newObject = CreateGameObject("Cone");
-        auto transform = newObject->AddComponent<TransformComponent>();
-        auto mesh = newObject->AddComponent<MeshComponent>();
-        mesh->SetMesh(Primitives::CreateCone(1.0f, 2.0f, 32));
-        auto renderer = newObject->AddComponent<MeshRendererComponent>();
-        renderer->SetShader(defaultShader);
-    }*/
-    else if (primitiveType == "Capsule") {
-        newObject = CreateGameObject("Capsule");
-        auto transform = newObject->AddComponent<TransformComponent>();
-        auto mesh = newObject->AddComponent<MeshComponent>();
+    } else if (primitiveType == "Capsule") {
         mesh->SetMesh(Primitives::CreateCapsule(1.0f, 2.0f, 32));
-        auto renderer = newObject->AddComponent<MeshRendererComponent>();
-        renderer->SetShader(defaultShader);
+    } else {
+        std::cerr << "Unknown primitive: " << primitiveType << std::endl;
+        return obj;
     }
-    else if (primitiveType == "DirectionalLight") {
-        // Implement directional light creation
-        newObject = CreateGameObject("Directional Light");
-        auto transform = newObject->AddComponent<TransformComponent>();
-        // Add light component logic here
+
+    // Finish up
+    renderer->SetMaterial(material);
+
+    return obj;
+}
+
+// Overload: CreatePrimitive with position
+std::shared_ptr<GameObject> Scene::CreatePrimitive(const std::string& primitiveType, const glm::vec3& position) {
+    auto obj = CreatePrimitive(primitiveType);
+    if (obj) {
+        auto transform = obj->GetComponent<TransformComponent>();
+        if (transform) {
+            transform->SetPosition(position);
+        }
     }
-    else if (primitiveType == "PointLight") {
-        // Implement point light creation
-        newObject = CreateGameObject("Point Light");
-        auto transform = newObject->AddComponent<TransformComponent>();
-        // Add light component logic here
-    }
-    else if (primitiveType == "SpotLight") {
-        // Implement spot light creation
-        newObject = CreateGameObject("Spot Light");
-        auto transform = newObject->AddComponent<TransformComponent>();
-        // Add light component logic here
-    }
-    else if (primitiveType == "Camera") {
-        // Implement camera creation
-        newObject = CreateGameObject("Camera");
-        auto transform = newObject->AddComponent<TransformComponent>();
-        // Add camera component logic here
-    }
-    else {
-        // Default empty object if type not recognized
-        newObject = CreateGameObject("Unknown Object");
-        auto transform = newObject->AddComponent<TransformComponent>();
-    }
-    
-    // Return the newly created object
-    return newObject;
+    return obj;
 }
 
 bool Scene::LoadSceneFromFile(const std::string &path) {

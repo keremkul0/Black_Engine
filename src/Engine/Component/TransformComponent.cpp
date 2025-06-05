@@ -1,4 +1,5 @@
 #include "TransformComponent.h"
+#include "Engine/Entity/GameObject.h"
 
 void TransformComponent::Start()
 {
@@ -47,4 +48,16 @@ void TransformComponent::RecalculateModelMatrix() const
 
     // Scale
     cachedModelMatrix = glm::scale(cachedModelMatrix, scale);
+}
+
+void TransformComponent::NotifyColliderUpdate(GameObject* owner) {
+    if (owner) {
+        owner->UpdateBoundingBox();
+    }
+}
+
+void TransformComponent::OnTransformChanged() {
+    if (owner) {
+        owner->UpdateBoundingBox();
+    }
 }

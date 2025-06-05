@@ -76,23 +76,24 @@ void HierarchyPanel::DrawContent() {
         
         if (ImGui::Button("Cube", ImVec2(buttonWidth, 0))) {
             std::cout << "Tıklama alındı" << std::endl;
-            m_Scene->CreatePrimitive("Cube");
+            m_Scene->CreatePrimitive("Cube", {-10.0f, 0.0f, 0.0f});
+;
         }
         ImGui::SameLine();
         if (ImGui::Button("Sphere", ImVec2(buttonWidth, 0))) {
-            m_Scene->CreatePrimitive("Sphere");
+            m_Scene->CreatePrimitive("Sphere", {-6.0f, 0.0f, 0.0f});
         }
         
         if (ImGui::Button("Plane", ImVec2(buttonWidth, 0))) {
-            m_Scene->CreatePrimitive("Plane");
+            m_Scene->CreatePrimitive("Plane", {-2.0f, -1.0f, 0.0f});
         }
         ImGui::SameLine();
         if (ImGui::Button("Cylinder", ImVec2(buttonWidth, 0))) {
-            m_Scene->CreatePrimitive("Cylinder");
+            m_Scene->CreatePrimitive("Cylinder", {6.0f, 0.0f, 0.0f});
         }
         
         if (ImGui::Button("Capsule", ImVec2(buttonWidth, 0))) {
-            m_Scene->CreatePrimitive("Capsule");
+            m_Scene->CreatePrimitive("Capsule", {10.0f, 0.0f, 0.0f});
         }
         
         ImGui::Unindent(10.0f);
@@ -104,7 +105,7 @@ void HierarchyPanel::DrawContent() {
         if (selectedObject) {
             ImGui::BeginGroup();
             ImGui::Text("Seçili: %s", selectedObject->GetName().c_str());
-            
+
             ImGui::SameLine(ImGui::GetWindowWidth() - 100);
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.1f, 0.1f, 1.0f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.0f, 0.2f, 0.2f, 1.0f));
@@ -114,14 +115,14 @@ void HierarchyPanel::DrawContent() {
             }
             ImGui::PopStyleColor(2);
             ImGui::EndGroup();
-            
+
             ImGui::Separator();
             ImGui::TextColored(ImVec4(0.6f, 0.6f, 0.6f, 1.0f), "Silmek için DELETE tuşunu kullanabilirsiniz");
             ImGui::Separator();
         }
 
         const auto& objects = m_Scene->GetGameObjects();
-        
+
         if (objects.empty()) {
             ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), "Sahnede nesne yok");
         } else {

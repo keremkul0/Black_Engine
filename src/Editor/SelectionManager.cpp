@@ -9,34 +9,25 @@ SelectionManager& SelectionManager::GetInstance() {
 
 void SelectionManager::SetSelectedObject(const std::shared_ptr<GameObject>& object) {
     try {
-        // If object is already selected, do nothing
-        if (m_SelectedObject == object) {
-            return;
-        }
-        
+
         std::cout << "--------- Selection Change ---------" << std::endl;
-        
+
         // Clear selection state on previously selected object
         if (m_SelectedObject) {
             m_SelectedObject->isSelected = false;
             std::cout << "Deselected: " << m_SelectedObject->GetName() << std::endl;
         }
-        
-        // Update selected object
+
         m_SelectedObject = object;
-        
-        // Set selection state on newly selected object
+
         if (m_SelectedObject) {
             m_SelectedObject->isSelected = true;
             std::cout << "Selected: " << m_SelectedObject->GetName() << std::endl;
         } else {
             std::cout << "Selection cleared" << std::endl;
         }
-        
-        // Log the number of registered listeners
+
         std::cout << "Notifying " << m_Listeners.size() << " listeners of selection change" << std::endl;
-        
-        // Notify all listeners of the selection change
         NotifyListeners();
         
         std::cout << "----------------------------------" << std::endl;

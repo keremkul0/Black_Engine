@@ -4,21 +4,18 @@
 #include <vector>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
-<<<<<<< HEAD
 #include <limits>
-=======
 #include "VBO/VBO.h"
 #include "EBO/EBO.h"
 #include "VAO/VAO.h"
 
->>>>>>> 2c7472b480e34724b9cb0c0c9d3a71e9720ac2f2
 
 
 class Mesh {
 public:
     std::vector<Vertex> vertices;
     std::vector<GLuint> indices;
-    VAO VAO;;
+    VAO vao; // Fixed double semicolon and renamed to lowercase to avoid conflict
 
 
     /////////////////////////
@@ -29,7 +26,6 @@ public:
 
     void Draw();
 
-<<<<<<< HEAD
     [[nodiscard]] unsigned int GetIndexCount() const { return indexCount; }
     
     // Add accessor methods for vertices and indices
@@ -42,9 +38,8 @@ public:
     void CalculateBounds();
 
 private:
-    GLuint VAO = 0;
-    GLuint VBO = 0;
-    GLuint EBO = 0;
+    // Remove these as we're using the VBO/EBO/VAO classes instead
+    // of raw OpenGL IDs
     unsigned int indexCount = 0;
     
     // Store the mesh data for ray intersection and other operations
@@ -55,13 +50,11 @@ private:
     glm::vec3 m_MinBounds = glm::vec3(std::numeric_limits<float>::max());
     glm::vec3 m_MaxBounds = glm::vec3(std::numeric_limits<float>::lowest());
     bool m_BoundsDirty = true;
-=======
 
 private:
 
     /////////////////////////
     //GLuint VAO = 0;
->>>>>>> 2c7472b480e34724b9cb0c0c9d3a71e9720ac2f2
 };
 
 #endif // MESH_H

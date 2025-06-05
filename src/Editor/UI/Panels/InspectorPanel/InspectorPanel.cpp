@@ -43,6 +43,8 @@ void InspectorPanel::SetSelectedObject(std::shared_ptr<GameObject> object) {
 }
 
 void InspectorPanel::DrawContent() {
+    // Her zaman güncel seçili objeyi SelectionManager'dan al
+    m_SelectedObject = SelectionManager::GetInstance().GetSelectedObject();
     if (!m_SelectedObject) {
         ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), "No object selected");
         return;

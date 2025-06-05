@@ -46,19 +46,17 @@ public:
 
     // Bileşenin tipi için sabit dize döndürür
     [[nodiscard]] virtual std::string GetTypeName() const {
-        // Extract clean name from typeid
-        const std::string fullName = typeid(*this).name();
-
-        // Skip any leading numbers and "class " prefix
-        size_t startPos = 0;
-        while (startPos < fullName.size() && (std::isdigit(fullName[startPos]) || std::isspace(fullName[startPos])))
-            startPos++;
-
-        // Also skip "class " prefix if present
-        if (fullName.substr(startPos, 6) == "class ")
-            startPos += 6;
-
-        return fullName.substr(startPos);
+        std::string name = typeid(*this).name();
+        // Sadece son kısmı al (ör: "class TransformComponent" -> "TransformComponent")
+        size_t pos = name.find_last_of(" :");
+        if (pos != std::string::npos)
+            name = name.substr(pos + 1);
+        // Eğer başta "class " veya "struct " varsa onları da temizle
+        if (name.rfind("class ", 0) == 0)
+            name = name.substr(6);
+        else if (name.rfind("struct ", 0) == 0)
+            name = name.substr(7);
+        return name;
     }
 
     // Bileşenin aktif/inaktif durumunu değiştirmek için yardımcı fonksiyon

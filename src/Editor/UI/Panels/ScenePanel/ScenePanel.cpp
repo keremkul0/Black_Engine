@@ -36,7 +36,7 @@ void ScenePanel::SetScene(const std::shared_ptr<Scene> &scene) {
     }
 }
 
-void ScenePanel::OnUpdate(const float deltaTime) {
+void ScenePanel::OnUpdate(float deltaTime) {
     // Eğer panel aktif değilse veya açık değilse güncelleme yapılmasın.
     if (!m_IsActive || !m_IsOpen)
         return;
@@ -53,16 +53,9 @@ void ScenePanel::OnUpdate(const float deltaTime) {
         m_IsPanning = middleMouseDown;
 
         // Kamera moduna göre cursor'u güncelle (durum değişiminde).
-        UpdateCursor();
-
-        // Yalnızca rotasyon modunda WASD hareketleri ile kamera hareketini işle.
-<<<<<<< HEAD
+        UpdateCursor();        // Yalnızca rotasyon modunda WASD hareketleri ile kamera hareketini işle.
         if (m_IsRotating) {
-=======
-        if (m_IsRotating)
-        {
 
->>>>>>> 2c7472b480e34724b9cb0c0c9d3a71e9720ac2f2
             const float speedMultiplier = (InputManager::IsKeyPressed(GLFW_KEY_LEFT_SHIFT) ||
                                            InputManager::IsKeyPressed(GLFW_KEY_RIGHT_SHIFT))
                                               ? 3.0f
@@ -84,8 +77,7 @@ void ScenePanel::OnUpdate(const float deltaTime) {
 
             UpdateCamera(deltaTime);
         }
-    } else {
-        // Panel focus veya hover değilse, kamera kontrol modlarını sıfırla ve cursor'u default yap.
+    } else {        // Panel focus veya hover değilse, kamera kontrol modlarını sıfırla ve cursor'u default yap.
         m_IsRotating = false;
         m_IsPanning = false;
         if (m_CurrentCursor != InputManager::DEFAULT_CURSOR) {
@@ -93,9 +85,9 @@ void ScenePanel::OnUpdate(const float deltaTime) {
             InputManager::SetCursor(m_CurrentCursor);
         }
     }
-}
+} // End of OnUpdate
 
-bool ScenePanel::OnInputEvent(const InputEvent &event) {
+bool ScenePanel::OnInputEvent(const InputEvent& event) {
     // Input olaylarını yalnızca panel aktif ve focus/hover durumdaysa işleyelim.
     if (!m_IsActive || !m_IsOpen || (!m_IsFocused && !m_IsHovered))
         return false;
@@ -301,7 +293,7 @@ void ScenePanel::DrawContent() {
     if (m_FramebufferID > 0) {
         glBindFramebuffer(GL_FRAMEBUFFER, m_FramebufferID);
         glViewport(0, 0, static_cast<int>(contentRegionAvail.x), static_cast<int>(contentRegionAvail.y));
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClearColor(0.17f, 0.1f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         if (m_Scene) {
@@ -325,13 +317,10 @@ void ScenePanel::DrawContent() {
         DrawGuizmo();
     }
 
-<<<<<<< HEAD
     // Debug information
     ImGui::SetCursorPos(ImVec2(10, 10));
-=======
     // Opsiyonel: Debug bilgileri çizilebilir.
     ImGui::SetCursorPos(ImVec2(20, 20));
->>>>>>> 2c7472b480e34724b9cb0c0c9d3a71e9720ac2f2
     ImGui::Text("Camera: %.1f, %.1f, %.1f", m_CameraPosition.x, m_CameraPosition.y, m_CameraPosition.z);
 
     // Display mouse coordinates and ray information for debugging
@@ -354,7 +343,7 @@ void ScenePanel::DrawContent() {
     }
 }
 
-void ScenePanel::ResizeFramebuffer(const int width, const int height) {
+void ScenePanel::ResizeFramebuffer(int width, int height) {
     glBindTexture(GL_TEXTURE_2D, m_TextureID);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
 
@@ -381,8 +370,7 @@ void ScenePanel::CleanupResources() {
     }
 }
 
-<<<<<<< HEAD
-Math::Ray ScenePanel::ScreenToWorldRay(const glm::vec2 &mousePos) {
+Math::Ray ScenePanel::ScreenToWorldRay(const glm::vec2& mousePos) {
     // 1. NDC (Normalized Device Coordinates)
     float x = (2.0f * mousePos.x) / m_PanelSize.x - 1.0f;
     float y = 1.0f - (2.0f * mousePos.y) / m_PanelSize.y;
@@ -400,7 +388,7 @@ Math::Ray ScenePanel::ScreenToWorldRay(const glm::vec2 &mousePos) {
     return Math::Ray(m_CameraPosition, rayWorld);
 }
 
-std::shared_ptr<GameObject> ScenePanel::FindObjectUnderMouse(const Math::Ray &ray) {
+std::shared_ptr<GameObject> ScenePanel::FindObjectUnderMouse(const Math::Ray& ray) {
     if (!m_Scene) {
         return nullptr;
     }
@@ -449,7 +437,7 @@ void ScenePanel::SelectObjectAtMousePos() {
         SelectionManager::GetInstance().SetSelectedObject(hitObject);
 
         // Update our local reference to the selected object
-        m_SelectedObject = hitObject;
+        // m_SelectedObject = hitObject; // Artık gerek yok, kaldırıldı
     } catch (const std::exception &e) {
         std::cerr << "Error during object selection: " << e.what() << std::endl;
     } catch (...) {
@@ -468,10 +456,9 @@ void ScenePanel::ClearSelection() {
 
 
 void ScenePanel::HighlightSelectedObject() {
-    if (!m_SelectedObject || !m_SelectedObject->IsActive() || !m_Scene || !m_Scene->HasGameObject(m_SelectedObject)) {
-        // Silinmiş veya sahnede olmayan obje varsa temizle
+    auto selected = SelectionManager::GetInstance().GetSelectedObject();
+    if (!selected || !selected->IsActive() || !m_Scene || !m_Scene->HasGameObject(selected)) {
         SelectionManager::GetInstance().ClearSelection();
-        m_SelectedObject = nullptr;
         return;
     }
 
@@ -479,7 +466,7 @@ void ScenePanel::HighlightSelectedObject() {
     glLineWidth(2.0f);
     glDisable(GL_DEPTH_TEST);
 
-    for (const auto& comp: m_SelectedObject->GetComponents()) {
+    for (const auto& comp: selected->GetComponents()) {
         comp->DrawWireframe();
     }
 
@@ -490,66 +477,47 @@ void ScenePanel::HighlightSelectedObject() {
 
 
 void ScenePanel::DrawGuizmo() {
-    // Seçili obje yoksa gizmo'yu çizme
-    if (!m_SelectedObject || !m_Scene || !m_Scene->HasGameObject(m_SelectedObject)) {
+    auto selected = SelectionManager::GetInstance().GetSelectedObject();
+    if (!selected || !m_Scene || !m_Scene->HasGameObject(selected)) {
         SelectionManager::GetInstance().ClearSelection();
-        m_SelectedObject = nullptr;
         return;
     }
 
-    auto transformComp = m_SelectedObject->GetComponent<TransformComponent>();
+    auto transformComp = selected->GetComponent<TransformComponent>();
     if (!transformComp) return;
 
-    // ImGuizmo ayarları
-    ImGuizmo::SetOrthographic(false); // Perspektif kamera kullanılıyor
+    ImGuizmo::SetOrthographic(false);
     ImGuizmo::SetDrawlist();
     ImGuizmo::SetRect(m_PanelMin.x, m_PanelMin.y, m_PanelSize.x, m_PanelSize.y);
-
-    // ImGuizmo'nun ekran içinde daha belirgin görünmesi için boyutunu ayarla
     ImGuizmo::SetGizmoSizeClipSpace(0.15f);
+    ImGuizmo::AllowAxisFlip(false);
 
-    // Eksen çizgilerinin sabit kalması için ekstra ayarlar
-    ImGuizmo::AllowAxisFlip(false); // Eksenlerin ters dönmesini engelle
-
-    // Güncel model matrisini al - Her çerçevede yeniden hesaplanmalı
     glm::mat4 modelMatrix = transformComp->GetModelMatrix();
-
-    // View ve projection matrisleri
     float *view = glm::value_ptr(m_ViewMatrix);
     float *proj = glm::value_ptr(m_ProjectionMatrix);
     float *model = glm::value_ptr(modelMatrix);
-
-    // Gizmo operasyon ve mod ayarları
     const ImGuizmo::OPERATION operation = m_CurrentGizmoOperation;
     const ImGuizmo::MODE mode = m_CurrentGizmoMode;
-
-    // Snap ayarları
-    float snapValues[3] = {0.5f, 0.5f, 0.5f}; // Varsayılan snap değerleri
+    float snapValues[3] = {0.5f, 0.5f, 0.5f};
     bool useSnap = ImGui::IsKeyPressed(ImGuiKey_LeftShift) || ImGui::IsKeyPressed(ImGuiKey_RightShift);
-
-    // Operasyon türüne göre snap değerlerini ayarla
     if (useSnap) {
         if (operation == ImGuizmo::TRANSLATE) {
-            snapValues[0] = snapValues[1] = snapValues[2] = 0.5f; // 0.5 birim hareket
+            snapValues[0] = snapValues[1] = snapValues[2] = 0.5f;
         } else if (operation == ImGuizmo::ROTATE) {
-            snapValues[0] = snapValues[1] = snapValues[2] = 45.0f; // 45 derece rotasyon
+            snapValues[0] = snapValues[1] = snapValues[2] = 45.0f;
         } else if (operation == ImGuizmo::SCALE) {
-            snapValues[0] = snapValues[1] = snapValues[2] = 0.1f; // 0.1 ölçek adımı
+            snapValues[0] = snapValues[1] = snapValues[2] = 0.1f;
         }
     }
-
-    // MANIPULATE ÇAĞRISI - Burada ImGuizmo model matrisini manipüle ediyor
     ImGuizmo::Manipulate(
         view,
         proj,
         operation,
         mode,
         model,
-        nullptr, // delta matris
+        nullptr,
         useSnap ? snapValues : nullptr
     );
-
-    // Gizmo durum göstergeleri
     ImGui::SetCursorPos(ImVec2(10, 90));
     if (ImGuizmo::IsOver()) {
         ImGui::TextColored(ImVec4(1.0f, 0.2f, 0.2f, 1.0f), "Gizmo uzerinde!");
@@ -562,27 +530,17 @@ void ScenePanel::DrawGuizmo() {
                                        ? "Rotate"
                                        : "Scale";
         const char *modeName = (mode == ImGuizmo::LOCAL) ? "Local" : "World";
-
         ImGui::TextColored(ImVec4(0.8f, 0.8f, 0.8f, 1.0f), "Gizmo: %s (%s)", opName, modeName);
     }
-
-    // ImGuizmo kullanılıyorsa ve değişiklik olduysa transform bileşenini güncelle
     if (ImGuizmo::IsUsing()) {
-        // Manipüle edilmiş model matrisi -> transform değerlerine dönüştür
         glm::vec3 translation, rotation, scale;
         bool success = Math::DecomposeTransform(modelMatrix, translation, rotation, scale);
-
         if (success) {
-            // Rotasyon değerlerini derece cinsine çevir
             rotation = glm::degrees(rotation);
-
-            // Transform bileşenini yeni değerlerle güncelle
             transformComp->SetPosition(translation);
             transformComp->SetRotation(rotation);
             transformComp->SetScale(scale);
-
-            // Model matrisinin güncellendiğinden emin ol
-            transformComp->UpdateModelMatrix();
+            transformComp->MarkDirty();
         }
     }
 }
@@ -607,10 +565,7 @@ void ScenePanel::CustomizeImGuizmoStyle() {
     style.TranslationLineThickness = 4.0f;
     style.TranslationLineArrowSize = 8.0f;
     style.RotationLineThickness = 3.0f;
-    style.RotationOuterLineThickness = 4.0f;
-    style.ScaleLineThickness = 3.0f;
+    style.RotationOuterLineThickness = 4.0f;    style.ScaleLineThickness = 3.0f;
     style.ScaleLineCircleSize = 7.0f;
     style.CenterCircleSize = 7.0f;
 }
-=======
->>>>>>> 2c7472b480e34724b9cb0c0c9d3a71e9720ac2f2
