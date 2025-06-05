@@ -22,6 +22,7 @@ target_include_directories(glad PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/external/glad/include
 )
 
+# First define imgui library so ImGuizmo can find it
 add_library(imgui STATIC
         external/imgui/imgui.cpp
         external/imgui/imgui_draw.cpp
@@ -35,6 +36,16 @@ target_include_directories(imgui PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui
         ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui/backends
         ${CMAKE_CURRENT_SOURCE_DIR}/external/glfw/include
+)
+
+# Now define ImGuizmo library after imgui is set up
+add_library(ImGuizmo STATIC
+        external/ImGuizmo/ImGuizmo.cpp
+)
+
+target_include_directories(ImGuizmo PUBLIC
+        external/ImGuizmo
+        ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui
 )
 
 add_executable(Black_Engine
@@ -94,12 +105,17 @@ add_executable(Black_Engine
         src/Engine/Render/Mesh/EBO/EBO.h
         src/Engine/Render/Material/Material.cpp
         src/Engine/Render/Material/Material.h
+        src/Editor/SelectionManager.h
+        src/Editor/SelectionManager.cpp
+
 )
 
 target_include_directories(Black_Engine PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/external/stb
         ${CMAKE_CURRENT_SOURCE_DIR}/external/glm
         ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/external/ImGuizmo
+        ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui
 )
 # stb.cpp için statik kütüphane oluştur
 add_library(stb STATIC external/stb/stb.cpp)
@@ -109,6 +125,7 @@ target_link_libraries(Black_Engine PRIVATE
         imgui
         glfw
         opengl32
+        ImGuizmo
         stb
 )
 

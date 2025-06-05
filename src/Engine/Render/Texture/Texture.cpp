@@ -6,15 +6,18 @@ Texture::Texture(const char* image, GLenum texType, GLenum slot, GLenum format, 
 	type = texType;
 
 	// Stores the width, height, and the number of color channels of the image
-	int widthImg, heightImg, numColCh;
+	int widthImg = 0, heightImg = 0, numColCh = 0;
 	// Flips the image so it appears right side up
 	stbi_set_flip_vertically_on_load(true);
 	// Reads the image from a file and stores it in bytes
 	unsigned char* bytes = stbi_load(image, &widthImg, &heightImg, &numColCh, 0);
-	if (!bytes) std::cout << "ERROR::TEXTURE::FAILED_TO_LOAD_IMAGE" << std::endl;
+
+	std::cout << "[Texture] Loading: " << image << std::endl;
+	std::cout << "[Texture] stbi_load returned: " << (void*)bytes << ", width: " << widthImg << ", height: " << heightImg << ", channels: " << numColCh << std::endl;
 
 	// Generates an OpenGL texture object
 	glGenTextures(1, &ID);
+	std::cout << "[Texture] OpenGL texture ID: " << ID << std::endl;
 	// Assigns the texture to a Texture Unit
 	glActiveTexture(slot);
 	glBindTexture(texType, ID);
@@ -27,17 +30,33 @@ Texture::Texture(const char* image, GLenum texType, GLenum slot, GLenum format, 
 	glTexParameteri(texType, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(texType, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	// Extra lines in case you choose to use GL_CLAMP_TO_BORDER
-	// float flatColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
-	// glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, flatColor);
+	GLenum imgFormat = GL_RGBA;
+	GLenum imgInternalFormat = GL_RGBA;
+	if (numColCh == 1) {
+		imgFormat = GL_RED;
+		imgInternalFormat = GL_RED;
+	} else if (numColCh == 3) {
+		imgFormat = GL_RGB;
+		imgInternalFormat = GL_RGB;
+	} else if (numColCh == 4) {
+		imgFormat = GL_RGBA;
+		imgInternalFormat = GL_RGBA;
+	} else {
+		std::cout << "[Texture] WARNING: Unexpected channel count (" << numColCh << "). Defaulting to RGBA." << std::endl;
+	}
 
-	// Assigns the image to the OpenGL Texture object
-	glTexImage2D(texType, 0, GL_RGBA, widthImg, heightImg, 0, format, pixelType, bytes);
+	if (!bytes || widthImg <= 0 || heightImg <= 0) {
+		std::cout << "[Texture] ERROR: Failed to load image or invalid dimensions. Using fallback 1x1 white texture for: " << image << std::endl;
+		unsigned char whitePixel[] = {255, 255, 255, 255};
+		glTexImage2D(texType, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, whitePixel);
+	} else {
+		std::cout << "[Texture] SUCCESS: Image loaded. Dimensions: " << widthImg << "x" << heightImg << ", Channels: " << numColCh << std::endl;
+		// Assigns the image to the OpenGL Texture object
+		glTexImage2D(texType, 0, imgInternalFormat, widthImg, heightImg, 0, imgFormat, pixelType, bytes);
+		stbi_image_free(bytes);
+	}
 	// Generates MipMaps
 	glGenerateMipmap(texType);
-
-	// Deletes the image data as it is already in the OpenGL Texture object
-	stbi_image_free(bytes);
 
 	// Unbinds the OpenGL Texture object so that it can't accidentally be modified
 	glBindTexture(texType, 0);

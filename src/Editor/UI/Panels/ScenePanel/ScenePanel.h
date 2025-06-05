@@ -4,11 +4,17 @@
 #include <string>
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
+
+#include "imgui.h"  // Include ImGui first
+#include "ImGuizmo.h" // Then include ImGuizmo
+
 #include "Editor/UI/Panels/Panel.h"
 #include "Engine/Scene/Scene.h"
 #include "Core/Camera/Camera.h"
 #include "Core/InputManager/InputEvent.h"
 #include "Core/InputManager/InputManager.h"
+#include "Core/Math/Ray.h" // Include the Ray class
+#include "Editor/SelectionManager.h"
 
 class ScenePanel final : public Panel {
 public:
@@ -20,6 +26,13 @@ public:
     bool OnInputEvent(const InputEvent &event) override;
     void OnUpdate(float deltaTime) override;
 
+    // Mouse pozisyonundan ışın oluştur
+    Math::Ray ScreenToWorldRay(const glm::vec2& screenPos);
+    
+    // Selection functionality
+    void SelectObjectAtMousePos();
+    void ClearSelection();
+
 protected:
     void DrawContent() override;
 
@@ -29,9 +42,15 @@ private:
     glm::mat4 m_ViewMatrix = glm::mat4(1.0f);
     glm::mat4 m_ProjectionMatrix = glm::mat4(1.0f);
 
+    // Mouse picking özellikleri
+    glm::vec2 m_MousePosInPanel = glm::vec2(0.0f);
+    glm::vec2 m_PanelMin = glm::vec2(0.0f);
+    glm::vec2 m_PanelSize = glm::vec2(0.0f);
+    bool m_MouseInPanel = false;
+
     // Kamera kontrol ayarları
     float m_CameraSpeed = 5.0f;
-    float m_CameraRotationSpeed = 0.1f;
+    float m_CameraRotationSpeed = 0.3f; // Updated rotation speed
     glm::vec3 m_CameraPosition = glm::vec3(0.0f, 0.0f, 5.0f);
     float m_CameraYaw = -90.0f;
     float m_CameraPitch = 0.0f;
@@ -53,6 +72,15 @@ private:
     // Cursor durumu
     InputManager::CursorType m_CurrentCursor = InputManager::DEFAULT_CURSOR;
 
+    // Selection properties
+    std::shared_ptr<GameObject> m_SelectedObject = nullptr;
+
+    // ImGuizmo implementation
+    void DrawGuizmo();
+    static void CustomizeImGuizmoStyle();
+    ImGuizmo::OPERATION m_CurrentGizmoOperation = ImGuizmo::TRANSLATE;
+    ImGuizmo::MODE m_CurrentGizmoMode = ImGuizmo::LOCAL;
+    
     // Yardımcı fonksiyonlar
     void SetupFramebuffer();
     void ResizeFramebuffer(int width, int height);
@@ -60,4 +88,6 @@ private:
     void SetupCamera();
     void UpdateCamera(float deltaTime);
     void UpdateCursor();
+    std::shared_ptr<GameObject> FindObjectUnderMouse(const Math::Ray& ray);
+    void HighlightSelectedObject();
 };

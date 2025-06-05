@@ -25,9 +25,10 @@ private:
     std::unique_ptr<WindowManager> m_WindowManager;
     std::unique_ptr<Camera> m_Camera;
     std::unique_ptr<EditorLayout> m_EditorLayout;
-    std::unique_ptr<InputSystem> m_InputSystem;
-    // Scene management
+    std::unique_ptr<InputSystem> m_InputSystem;    // Scene management
     std::shared_ptr<Scene> m_Scene;
+    
+    // Physics world
 
     // Projection matrix
     glm::mat4 m_ProjectionMatrix{};

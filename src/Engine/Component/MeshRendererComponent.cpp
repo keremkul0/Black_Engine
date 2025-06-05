@@ -55,3 +55,59 @@ void MeshRendererComponent::Draw() {
     // Mesh'i çiz
     mesh->Draw();
 }
+
+void MeshRendererComponent::DrawWireframe() {
+    if (!owner || !m_material) return;
+
+    // Bileşenler önbellekte yoksa, tekrar dene
+    if (!m_cachedMeshComponent || !m_cachedTransform) {
+        CacheComponents();
+    }
+
+    // Önbelleğe alınmış bileşenleri kullan
+    if (!m_cachedMeshComponent || !m_cachedMeshComponent->IsLoaded()) return;
+
+    const auto mesh = m_cachedMeshComponent->GetMesh();
+    if (!mesh) return;
+
+    if (!m_cachedTransform) return;
+
+    // Get the shader from material
+    auto shader = m_material->GetShader();
+    if (!shader) return;
+
+    // Shader'ı aktif et
+    shader->use();
+
+    // Model matrisi
+    const glm::mat4 model = m_cachedTransform->GetModelMatrix();
+    shader->setMat4("model", model);
+
+    // Global kamera matrislerini uniform olarak ayarla
+    shader->setMat4("view", gViewMatrix);
+    shader->setMat4("projection", gProjectionMatrix);
+
+    // Set wireframe color (white outline)
+    shader->setVec4("color", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+
+    // Draw wireframe
+    mesh->Draw();
+}
+
+std::shared_ptr<Mesh> MeshRendererComponent::GetMesh() const {
+    if (!m_cachedMeshComponent) {
+        // Try to find the MeshComponent if not cached yet
+        if (owner) {
+            const_cast<MeshRendererComponent*>(this)->m_cachedMeshComponent = 
+                owner->GetComponent<MeshComponent>().get();
+        }
+    }
+    
+    // Return the mesh if we have a valid MeshComponent
+    if (m_cachedMeshComponent) {
+        return m_cachedMeshComponent->GetMesh();
+    }
+    
+    return nullptr;
+}
+

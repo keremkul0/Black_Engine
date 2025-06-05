@@ -5,6 +5,7 @@
 #include "Editor/UI/Panels/HierarchyPanel/HierarchyPanel.h"
 #include "Editor/UI/Panels/InspectorPanel/InspectorPanel.h"
 #include "Editor/UI/Panels/ScenePanel/ScenePanel.h"
+#include "iostream"
 
 
 EditorLayout::EditorLayout() : m_FirstFrame(true), m_DockspaceID(0), m_DockspaceInitialized(false) {
@@ -23,6 +24,21 @@ void EditorLayout::SetupDefaultLayout(const std::shared_ptr<Scene> &scene) {
     hierarchyPanel->OnSelectionChanged = [inspectorPanel](std::shared_ptr<GameObject> selectedObject) {
         inspectorPanel->SetSelectedObject(selectedObject);
     };
+    
+    // SelectionManager olaylarını dinle ve HierarchyPanel'e bildir
+    SelectionManager::GetInstance().AddSelectionChangedListener(
+        [hierarchyPanel](std::shared_ptr<GameObject> selectedObject) {
+            // HierarchyPanel'i güncelle
+            hierarchyPanel->SetSelectedObject(selectedObject);
+            
+            // Seçim değiştiğinde log
+            if (!selectedObject) {
+                std::cout << "SelectionManager: Seçim temizlendi" << std::endl;
+            }
+        }
+    );
+    
+    std::cout << "EditorLayout: SelectionManager ve HierarchyPanel arasında bağlantı kuruldu" << std::endl;
 }
 
 void EditorLayout::SetupCustomLayout(const std::string &layoutName, const std::shared_ptr<Scene> &scene) {
@@ -147,6 +163,20 @@ void EditorLayout::ProcessInput(const InputEvent &event) {
                              event.type == InputEventType::KeyUp ||
                              event.type == InputEventType::KeyHeld);
 
+    // DELETE tuşu için özel işlem
+    if (event.type == InputEventType::KeyDown && event.key == GLFW_KEY_DELETE) {
+        // Hierarchy panelini bul ve seçili nesneyi sil
+        auto hierarchyIt = m_Panels.find("Hierarchy");
+        if (hierarchyIt != m_Panels.end()) {
+            auto hierarchyPanel = std::dynamic_pointer_cast<HierarchyPanel>(hierarchyIt->second);
+            if (hierarchyPanel) {
+                std::cout << "DELETE tuşu algılandı, nesne silme deneniyor..." << std::endl;
+                hierarchyPanel->DeleteSelectedObject();
+                return; // Tuş işlendi
+            }
+        }
+    }
+
     // Process panel-specific input even when ImGui wants capture
     // This allows game panels to receive input when focused
     if (isMouseEvent) {
@@ -202,4 +232,20 @@ void EditorLayout::SaveLayoutConfig(const std::string &filename) {
 
 void EditorLayout::LoadLayoutConfig(const std::string &filename) {
     //TODO: Implement loading layout configuration
+}
+
+void EditorLayout::DeleteSelectedObject() {
+    // Hierarchy panelini bul ve seçili nesneyi sil
+    auto hierarchyIt = m_Panels.find("Hierarchy");
+    if (hierarchyIt != m_Panels.end()) {
+        auto hierarchyPanel = std::dynamic_pointer_cast<HierarchyPanel>(hierarchyIt->second);
+        if (hierarchyPanel) {
+            std::cout << "EditorLayout: DeleteSelectedObject çağrıldı" << std::endl;
+            hierarchyPanel->DeleteSelectedObject();
+        } else {
+            std::cout << "EditorLayout: Hierarchy paneli bulunamadı" << std::endl;
+        }
+    } else {
+        std::cout << "EditorLayout: 'Hierarchy' isimli panel bulunamadı" << std::endl;
+    }
 }

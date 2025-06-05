@@ -1,4 +1,5 @@
 #include "TransformComponent.h"
+#include "Engine/Entity/GameObject.h"
 
 void TransformComponent::Start()
 {
@@ -8,6 +9,10 @@ void TransformComponent::Start()
 void TransformComponent::Update(float deltaTime)
 {
     // Güncelleme işlemleri
+
+    // We need to reset the transform dirty flag after all dependent components
+    // have had a chance to check it and update themselves
+    transformDirty = false;
 }
 
 void TransformComponent::OnEnable()
@@ -43,4 +48,16 @@ void TransformComponent::RecalculateModelMatrix() const
 
     // Scale
     cachedModelMatrix = glm::scale(cachedModelMatrix, scale);
+}
+
+void TransformComponent::NotifyColliderUpdate(GameObject* owner) {
+    if (owner) {
+        owner->UpdateBoundingBox();
+    }
+}
+
+void TransformComponent::OnTransformChanged() {
+    if (owner) {
+        owner->UpdateBoundingBox();
+    }
 }

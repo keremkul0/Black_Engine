@@ -1,92 +1,98 @@
+#include "ComponentDrawers.h"
+#include "Engine/Component/BaseComponent.h"
 #include "Engine/Component/TransformComponent.h"
 #include "Engine/Component/MeshComponent.h"
-#include "ComponentDrawers.h"
-#include "imgui.h"
-#include <typeinfo>
-#include <typeindex>
+#include "Engine/Component/MeshRendererComponent.h"
+#include <imgui.h>
+#include <string>
 #include <unordered_map>
 #include <functional>
 #include <iostream>
 
-// Type-erased drawer function map
-using DrawerFunction = std::function<void(BaseComponent *)>;
-static std::unordered_map<std::type_index, DrawerFunction> s_DrawerFunctions;
+using DrawerFunction = std::function<void(BaseComponent*)>;
 
-void ComponentDrawers::RegisterAllDrawers() {
-    // Print hash codes during registration
-    std::cout << "Registering TransformComponent with hash: "
-              << std::type_index(typeid(TransformComponent)).hash_code() << std::endl;
-    std::cout << "Registering MeshComponent with hash: "
-              << std::type_index(typeid(MeshComponent)).hash_code() << std::endl;
-
-    // Register all drawer functions by component type
-    s_DrawerFunctions[std::type_index(typeid(MeshComponent))] = [](BaseComponent *comp) {
-        DrawMeshComponent(dynamic_cast<MeshComponent *>(comp));
-    };
-
-    s_DrawerFunctions[std::type_index(typeid(TransformComponent))] = [](BaseComponent *comp) {
-        DrawTransformComponent(dynamic_cast<TransformComponent *>(comp));
-    };
-
-    // Register more component drawers here
+std::unordered_map<std::string, DrawerFunction>& GetDrawerMap() {
+    static std::unordered_map<std::string, DrawerFunction> instance;
+    return instance;
 }
 
-void ComponentDrawers::DrawComponent(BaseComponent *component) {
+void ComponentDrawers::RegisterDrawer(const std::string& typeName, DrawerFunction drawerFunction) {
+    auto& drawers = GetDrawerMap();
+    drawers[typeName] = drawerFunction;
+}
+
+void ComponentDrawers::DrawComponent(BaseComponent* component) {
     if (!component) return;
 
-    // Find and call appropriate drawer function
-    const auto typeIndex = std::type_index(typeid(*component));
-    const std::string typeName = component->GetTypeName();
+    auto& drawers = GetDrawerMap();
+    std::string typeName = component->GetTypeName();
 
-    if (const auto it = s_DrawerFunctions.find(typeIndex); it != s_DrawerFunctions.end()) {
-        // Use registered drawer function
+    auto it = drawers.find(typeName);
+    if (it != drawers.end()) {
         it->second(component);
     } else {
-        // Improved fallback for components without specialized drawers
-        ImGui::Text("%s", typeName.c_str());
-        ImGui::Text("No specialized editor for this component type");
+        ImGui::TextColored(ImVec4(1.0f, 0.5f, 0.0f, 1.0f), "No drawer for %s", typeName.c_str());
     }
 }
 
-void ComponentDrawers::DrawMeshComponent(const MeshComponent *component) {
-    if (!component) return;
+// Transform component drawer
+void DrawTransformComponent(BaseComponent* component) {
+    auto* transform = static_cast<TransformComponent*>(component);
 
-    ImGui::Text("Mesh Component");
-
-    // Mesh information display
-    if (component->IsLoaded() && component->GetMesh()) {
-        ImGui::Text("Mesh: %s", component->GetMeshPath().c_str());
-
-        // Mesh properties
-        // TODO: Display vertex/face counts
-    } else {
-        ImGui::TextColored(ImVec4(1.0f, 0.5f, 0.5f, 1.0f), "No mesh assigned");
+    glm::vec3 position = transform->position;
+    if (ImGui::DragFloat3("Position", &position[0], 0.1f)) {
+        transform->SetPosition(position);
     }
 
-    // Mesh selection button
-    if (ImGui::Button("Select Mesh")) {
-        // TODO: Open file dialog
+    glm::vec3 rotation = transform->rotation;
+    if (ImGui::DragFloat3("Rotation", &rotation[0], 0.5f)) {
+        transform->SetRotation(rotation);
+    }
+
+    glm::vec3 scale = transform->scale;
+    if (ImGui::DragFloat3("Scale", &scale[0], 0.1f, 0.01f)) {
+        transform->SetScale(scale);
     }
 }
 
-void ComponentDrawers::DrawTransformComponent(TransformComponent *component) {
-    if (!component) return;
+// Mesh component drawer
+void DrawMeshComponent(BaseComponent* component) {
+    ImGui::Text("Mesh Component Properties");
 
-    // Position
-    glm::vec3 &position = component->position;
-    if (ImGui::DragFloat3("Position", &position.x, 0.1f)) {
-        // Optional: Handle position change
+    char buffer[128] = "default_mesh";
+    if (ImGui::InputText("Mesh Path", buffer, sizeof(buffer))) {
+        // component->SetMeshPath(buffer);
     }
+}
 
-    // Rotation
-    glm::vec3 &rotation = component->rotation;
-    if (ImGui::DragFloat3("Rotation", &rotation.x, 0.1f)) {
-        // Optional: Handle rotation change
-    }
+// Mesh renderer component drawer
+void DrawMeshRendererComponent(BaseComponent* component) {
+    ImGui::Text("Mesh Renderer Properties");
 
-    // Scale
-    glm::vec3 &scale = component->scale;
-    if (ImGui::DragFloat3("Scale", &scale.x, 0.1f, 0.01f, 100.0f)) {
-        // Optional: Handle scale change
-    }
+    bool castShadows = true;
+    ImGui::Checkbox("Cast Shadows", &castShadows);
+
+    bool receiveShadows = true;
+    ImGui::Checkbox("Receive Shadows", &receiveShadows);
+
+    const char* materials[] = { "Default", "Metal", "Wood", "Glass", "Plastic" };
+    int currentMaterial = 0;
+    ImGui::Combo("Material", &currentMaterial, materials, IM_ARRAYSIZE(materials));
+}
+
+// Rigid body component drawer
+
+
+// Register all component drawers
+void ComponentDrawers::RegisterAllDrawers() {
+    auto& drawers = GetDrawerMap();
+
+    // Use std::function to properly cast the function pointers
+    RegisterDrawer("TransformComponent", 
+                  std::function<void(BaseComponent*)>(DrawTransformComponent));
+    RegisterDrawer("MeshComponent", 
+                  std::function<void(BaseComponent*)>(DrawMeshComponent));
+    RegisterDrawer("MeshRendererComponent", 
+                  std::function<void(BaseComponent*)>(DrawMeshRendererComponent));
+
 }

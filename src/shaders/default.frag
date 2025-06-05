@@ -12,6 +12,7 @@ in vec3 crntPos;
 
 // Gets the Texture Unit from the main function
 uniform sampler2D tex0;
+uniform bool hasTexture;
 // Added uniform for camera position
 uniform vec3 camPos;
 
@@ -36,7 +37,19 @@ vec4 directLight()
     // local lightColor variable defined as vec4
     vec4 lightColor = vec4(1.0, 1.0, 1.0, 1.0);
 
-    return (texture(tex0, TexCoord) * (diffuse + ambient) + specular) * lightColor;
+    vec4 texColor;
+    if (hasTexture) {
+        texColor = texture(tex0, TexCoord);
+        // If the texture is grayscale (R only), replicate R to G and B
+        if (texColor.g == 0.0 && texColor.b == 0.0) {
+            texColor.g = texColor.r;
+            texColor.b = texColor.r;
+        }
+    } else {
+        texColor = vec4(1.0, 1.0, 1.0, 1.0); // fallback white
+    }
+
+    return (texColor * (diffuse + ambient) + specular) * lightColor;
 }
 
 void main()

@@ -41,6 +41,9 @@ public:
     void SaveLayoutConfig(const std::string &filename);
     void LoadLayoutConfig(const std::string &filename);
 
+    // Yardımcı işlevler
+    void DeleteSelectedObject();
+    
 private:
     void SetupDockspace();
     std::shared_ptr<Panel> GetPanelUnderMouse();

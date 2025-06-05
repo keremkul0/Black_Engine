@@ -10,34 +10,21 @@ in vec2 TexCoord;
 
 // Gets the Texture Unit from the main function
 uniform sampler2D tex0;
+uniform bool hasTexture;
 
 void main()
 {
-    // Determine color based on normal direction
-    vec3 color = vec3(0.1, 0.1, 0.5); // Default color
-
-    /*// Front face (z positive) - red
-    if(Normal.z > 0.5)
-        color = vec3(1.0, 0.0, 0.0);
-    // Back face (z negative) - green
-    else if(Normal.z < -0.5)
-        color = vec3(0.0, 1.0, 0.0);
-    // Right face (x positive) - blue
-    else if(Normal.x > 0.5)
-        color = vec3(0.0, 0.0, 1.0);
-    // Left face (x negative) - yellow
-    else if(Normal.x < -0.5)
-        color = vec3(1.0, 1.0, 0.0);
-    // Top face (y positive) - cyan
-    else if(Normal.y > 0.5)
-        color = vec3(0.0, 1.0, 1.0);
-    // Bottom face (y negative) - magenta
-    else if(Normal.y < -0.5)
-        color = vec3(1.0, 0.0, 1.0);
-    // Fallback color
-    else
-        color = vec3(0.5, 0.5, 0.5);*/
-
-    //FragColor = vec4(color, 1.0);
-    FragColor = texture(tex0, TexCoord);
+    vec4 color;
+    if (hasTexture) {
+        vec4 texColor = texture(tex0, TexCoord);
+        // If the texture is grayscale (R only), replicate R to G and B
+        if (texColor.g == 0.0 && texColor.b == 0.0) {
+            texColor.g = texColor.r;
+            texColor.b = texColor.r;
+        }
+        color = texColor;
+    } else {
+        color = vec4(1.0, 1.0, 1.0, 1.0); // fallback white
+    }
+    FragColor = color;
 }
