@@ -73,7 +73,7 @@ bool Application::Initialize() {
 
     // Register editor layout with input system
     m_InputSystem->RegisterEventReceiver(m_EditorLayout.get());
-
+    m_InputSystem->RegisterEventReceiver(m_Scene.get());
     // Save component drawers
     ComponentDrawers::RegisterAllDrawers();
 
@@ -102,7 +102,7 @@ int Application::Run() const {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Update and draw the scene
-        //m_Scene->UpdateAll(deltaTime);
+        m_Scene->UpdateAll(deltaTime);
         //m_Scene->DrawAll();
 
         // Render UI

@@ -5,12 +5,17 @@
 #include <memory>
 #include <string>
 #include <glm/glm.hpp>
+#include <unordered_map>
 #include "Engine/Entity/GameObject.h"
 #include "Core/Math/Ray.h"
 #include "Engine/render/Texture/Texture.h"
 #include "Core/Camera/Camera.h"
+#include "Physics/btBulletDynamicsCommon.h"
+#include "Core/InputManager/IInputEventReceiver.h"
+#include <glm/gtc/quaternion.hpp>
+#include "Core/InputManager/IInputEventReceiver.h"
 
-class Scene
+class Scene : public IInputEventReceiver
 {
 public:
     Scene() = default;
@@ -30,11 +35,11 @@ public:
     std::shared_ptr<GameObject> CreateGameObject(const std::string& name);
 
     bool HasGameObject(const std::shared_ptr<GameObject>& obj) const;
-    
+
     // Create primitive game objects
     std::shared_ptr<GameObject> CreatePrimitive(const std::string& primitiveType);
     std::shared_ptr<GameObject> CreatePrimitive(const std::string& primitiveType, const glm::vec3& position);
-    
+
     // Tüm objeleri update et
     void UpdateAll(float dt);
 
@@ -50,7 +55,7 @@ public:
 
     //shadowMap için çizim fonksiyonu
     void DrawAll2ShadowMap();
-    
+
     const std::string& GetName() const { return m_SceneName; }
     void SetName(const std::string& name) { m_SceneName = name; }
 
@@ -71,13 +76,24 @@ public:
     void SetDefaultShader(const std::shared_ptr<Shader>& shader) { m_DefaultShader = shader; }
     //**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
 
+    void ProcessInput(const InputEvent& event) override;
 private:
     std::string m_SceneName = "New Scene";
     glm::mat4 m_ViewMatrix = glm::mat4(1.0f);
     glm::mat4 m_ProjectionMatrix = glm::mat4(1.0f);
 
+
+    //Fizik icin
+    btDiscreteDynamicsWorld* m_DynamicsWorld = nullptr;
+    btBroadphaseInterface* m_Broadphase = nullptr;
+    btDefaultCollisionConfiguration* m_CollisionConfiguration = nullptr;
+    btCollisionDispatcher* m_Dispatcher = nullptr;
+    btSequentialImpulseConstraintSolver* m_Solver = nullptr;
+    std::vector<btRigidBody*> m_RigidBodies;
+
     // Sahnedeki tüm objeler
     std::vector<std::shared_ptr<GameObject>> m_GameObjects;
+    std::unordered_map<std::shared_ptr<GameObject>, btRigidBody*> m_PhysicsObjectMap;
 
     //**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
     // Gölge haritası shader'ı için yeni üye değişken

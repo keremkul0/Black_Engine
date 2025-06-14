@@ -9,7 +9,7 @@
 #include <iostream>
 #include <algorithm>
 #include <filesystem>
-
+#include "../external/glfw/include/GLFW/glfw3.h"
 // Initialize static member
 Scene* Scene::s_ActiveScene = nullptr;
 
@@ -29,6 +29,15 @@ std::shared_ptr<GameObject> Scene::CreateGameObject(const std::string &name) {
 }
 
 void Scene::LoadDefaultScene() {
+
+    // Bullet Physics init
+    m_Broadphase = new btDbvtBroadphase();
+    m_CollisionConfiguration = new btDefaultCollisionConfiguration();
+    m_Dispatcher = new btCollisionDispatcher(m_CollisionConfiguration);
+    m_Solver = new btSequentialImpulseConstraintSolver();
+    m_DynamicsWorld = new btDiscreteDynamicsWorld(m_Dispatcher, m_Broadphase, m_Solver, m_CollisionConfiguration);
+    m_DynamicsWorld->setGravity(btVector3(0, -9.81f, 0));
+
     // Set up shader for all objects
     const std::string shaderPath = "../src/shaders/";
     const auto defaultShader = std::make_shared<Shader>(
@@ -80,7 +89,7 @@ void Scene::LoadDefaultScene() {
     // 1. Cube
     auto cubeObj = CreateGameObject("Cube");
     auto cubeTransform = cubeObj->AddComponent<TransformComponent>();
-    cubeTransform->position = glm::vec3(-10.0f, 0.0f, 0.0f);
+    cubeTransform->position = glm::vec3(-10.0f, 0.5f, 0.0f);
     auto cubeMesh = cubeObj->AddComponent<MeshComponent>();
     cubeMesh->SetMesh(Primitives::CreateCube());
     auto cubeRenderer = cubeObj->AddComponent<MeshRendererComponent>();
@@ -94,7 +103,7 @@ void Scene::LoadDefaultScene() {
     // 2. Sphere
     auto sphereObj = CreateGameObject("Sphere");
     auto sphereTransform = sphereObj->AddComponent<TransformComponent>();
-    sphereTransform->position = glm::vec3(-6.0f, 0.0f, 0.0f);
+    sphereTransform->position = glm::vec3(-6.0f, 5.0f, 0.0f);
     auto sphereMesh = sphereObj->AddComponent<MeshComponent>();
     sphereMesh->SetMesh(Primitives::CreateSphere(1.0f, 32));
     auto sphereRenderer = sphereObj->AddComponent<MeshRendererComponent>();
@@ -105,10 +114,42 @@ void Scene::LoadDefaultScene() {
         sphereRenderer->SetMaterial(material);
     }
 
+    // --- 1. Çarpışma şekli
+    btCollisionShape* sphereShape = new btSphereShape(1.0f);
+
+    // --- 2. Başlangıç transform'u (kürenin pozisyonu)
+    btTransform startTransform;
+    startTransform.setIdentity();
+    startTransform.setOrigin(btVector3(sphereTransform->position.x, sphereTransform->position.y, sphereTransform->position.z));
+
+    // --- 3. Kütle ve atalet hesaplama
+    btScalar mass = 1.0f;
+    btVector3 inertia(0, 0, 0);
+    sphereShape->calculateLocalInertia(mass, inertia);
+
+    // --- 4. MotionState ve RigidBody oluştur
+    btDefaultMotionState* motionState = new btDefaultMotionState(startTransform);
+    btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motionState, sphereShape, inertia);
+    btRigidBody* sphereBody = new btRigidBody(rbInfo);
+
+    // --- 5. Fiziksel özellikler (opsiyonel)
+    sphereBody->setDamping(0.1f, 0.1f); // biraz hava sürtünmesi
+    sphereBody->setActivationState(DISABLE_DEACTIVATION); // hep aktif kalsın
+    //sürtünme
+    sphereBody->setFriction(1.0f);            // yüzeyle sürtünme
+    sphereBody->setRollingFriction(0.3f);     // yuvarlanmaya etki eder
+
+    // --- 6. Bullet dünyasına ekle
+    m_DynamicsWorld->addRigidBody(sphereBody);
+
+    // --- 7. Listeye kaydet (Update'de erişebilmek için)
+    m_RigidBodies.push_back(sphereBody);
+
+
     // 3. Plane
     auto planeObj = CreateGameObject("Plane");
     auto planeTransform = planeObj->AddComponent<TransformComponent>();
-    planeTransform->position = glm::vec3(-2.0f, -1.0f, 0.0f);
+    planeTransform->position = glm::vec3(-2.0f, 0.0f, 0.0f);
     planeTransform->scale = glm::vec3(20.0f, 0.0f, 20.0f);
     auto planeMesh = planeObj->AddComponent<MeshComponent>();
     planeMesh->SetMesh(Primitives::CreatePlane(2.0f, 2.0f, 1));
@@ -121,6 +162,25 @@ void Scene::LoadDefaultScene() {
         material->SetTexture(planeTexture);
         planeRenderer->SetMaterial(material);
     }
+
+    // Plane için rigidbody oluşturma
+    btCollisionShape* planeShape = new btStaticPlaneShape(btVector3(0, 1, 0), -planeTransform->position.y);
+    btTransform planeBtTransform;
+    planeBtTransform.setIdentity();
+    planeBtTransform.setOrigin(btVector3(planeTransform->position.x, planeTransform->position.y, planeTransform->position.z));
+
+    btScalar planeMass = 0.0f;
+    btVector3 planeInertia(0, 0, 0);
+
+    btDefaultMotionState* planeMotionState = new btDefaultMotionState(planeBtTransform);
+    btRigidBody::btRigidBodyConstructionInfo planeRbInfo(planeMass, planeMotionState, planeShape, planeInertia);
+    btRigidBody* planeBody = new btRigidBody(planeRbInfo);
+
+    //sürtünme
+    planeBody->setFriction(0.8f);
+
+    m_DynamicsWorld->addRigidBody(planeBody);
+    m_RigidBodies.push_back(planeBody);
 
     // 4. Quad
     auto quadObj = CreateGameObject("Quad");
@@ -141,7 +201,7 @@ void Scene::LoadDefaultScene() {
     // 5. Cylinder
     auto cylinderObj = CreateGameObject("Cylinder");
     auto cylinderTransform = cylinderObj->AddComponent<TransformComponent>();
-    cylinderTransform->position = glm::vec3(6.0f, 0.0f, 0.0f);
+    cylinderTransform->position = glm::vec3(6.0f, 1.0f, 0.0f);
     auto cylinderMesh = cylinderObj->AddComponent<MeshComponent>();
     cylinderMesh->SetMesh(Primitives::CreateCylinder(1.0f, 2.0f, 32));
     auto cylinderRenderer = cylinderObj->AddComponent<MeshRendererComponent>();
@@ -155,7 +215,7 @@ void Scene::LoadDefaultScene() {
     // 6. Capsule
     auto capsuleObj = CreateGameObject("Capsule");
     auto capsuleTransform = capsuleObj->AddComponent<TransformComponent>();
-    capsuleTransform->position = glm::vec3(10.0f, 0.0f, 0.0f);
+    capsuleTransform->position = glm::vec3(10.0f, 1.0f, 0.0f);
     auto capsuleMesh = capsuleObj->AddComponent<MeshComponent>();
     capsuleMesh->SetMesh(Primitives::CreateCapsule(1.0f, 2.0f, 32));
     auto capsuleRenderer = capsuleObj->AddComponent<MeshRendererComponent>();
@@ -245,9 +305,32 @@ bool Scene::LoadSceneFromFile(const std::string &path) {
 }
 
 void Scene::UpdateAll(const float dt) {
+
+    // Fizik dünyasını güncelle
+    if (m_DynamicsWorld)
+        m_DynamicsWorld->stepSimulation(dt);
+
     for (const auto &obj: m_GameObjects) {
         obj->Update(dt);
     }
+
+    if (!m_RigidBodies.empty()) {
+        btTransform trans;
+        m_RigidBodies[0]->getMotionState()->getWorldTransform(trans);
+        btVector3 pos = trans.getOrigin();
+
+        auto sphereTransform = m_GameObjects[1]->GetComponent<TransformComponent>();
+        sphereTransform->SetPosition(glm::vec3(pos.getX(), pos.getY(), pos.getZ()));
+        btQuaternion rot = trans.getRotation();
+        glm::quat glmRot(rot.getW(), rot.getX(), rot.getY(), rot.getZ());
+        glm::vec3 euler = glm::eulerAngles(glmRot);
+        sphereTransform->SetRotation(glm::degrees(euler));
+    }
+
+
+    // Kuvveti uygula (her karede sağa doğru)
+    //m_RigidBodies[0]->applyCentralForce(btVector3(11.0f, 0.0f, 0.0f)); // sağa doğru kuvvet
+
 }
 
 void Scene::DrawAll() {
@@ -335,13 +418,13 @@ std::shared_ptr<GameObject> Scene::PickObjectWithRay(const Math::Ray& ray) const
         std::cout << "[PickObjectWithRay] No objects in the scene." << std::endl;
         return nullptr;
     }
-    
+
     std::shared_ptr<GameObject> closestObject = nullptr;
     float closestDistance = std::numeric_limits<float>::max();
-    
+
     // Log all the objects that will be tested
     std::cout << "Testing ray intersection with " << m_GameObjects.size() << " objects:" << std::endl;
-    
+
     // Iterate through all game objects
     for (const auto& gameObject : m_GameObjects) {
         // Skip inactive objects
@@ -349,13 +432,13 @@ std::shared_ptr<GameObject> Scene::PickObjectWithRay(const Math::Ray& ray) const
             std::cout << "  Skipping inactive object: " << gameObject->GetName() << std::endl;
             continue;
         }
-        
+
         std::cout << "  Testing object: " << gameObject->GetName() << std::endl;
-        
+
         // Test ray intersection with this object's transformed AABB
         float hitDistance = std::numeric_limits<float>::max();
         bool hit = false;
-        
+
         try {
             hit = gameObject->IntersectsRay(ray, hitDistance);
         }
@@ -367,29 +450,29 @@ std::shared_ptr<GameObject> Scene::PickObjectWithRay(const Math::Ray& ray) const
             std::cerr << "    Unknown exception during intersection test" << std::endl;
             continue;
         }
-        
+
         if (hit) {
             std::cout << "    HIT at distance: " << hitDistance << std::endl;
-            
+
             // Keep track of the closest hit
             if (hitDistance < closestDistance) {
                 closestDistance = hitDistance;
                 closestObject = gameObject;
-                std::cout << "    New closest object: " << gameObject->GetName() << 
+                std::cout << "    New closest object: " << gameObject->GetName() <<
                           " (distance: " << hitDistance << ")" << std::endl;
             }
         } else {
             std::cout << "    No intersection" << std::endl;
         }
     }
-    
+
     if (closestObject) {
-        std::cout << "Final selected object: " << closestObject->GetName() << 
+        std::cout << "Final selected object: " << closestObject->GetName() <<
                   " at distance " << closestDistance << std::endl;
     } else {
         std::cout << "No object was hit by the ray" << std::endl;
     }
-    
+
     return closestObject;
 }
 
@@ -397,4 +480,32 @@ std::shared_ptr<GameObject> Scene::PickObjectWithRay(const glm::vec3& origin, co
     // Create a Ray object from origin and direction
     Math::Ray ray(origin, glm::normalize(direction));
     return PickObjectWithRay(ray);
+}
+
+
+void Scene::ProcessInput(const InputEvent& event) {
+    if (event.type != InputEventType::KeyHeld) return;
+    if (m_RigidBodies.empty()) return;
+
+    auto* body = m_RigidBodies[0]; // İlk rigidbody top olarak kabul
+    // Lokal yönlere göre dünya uzayı vektörleri
+    btVector3 localForward = btVector3(0, 0, -1);
+    btVector3 localBackward = btVector3(0, 0, 1);
+    btVector3 localLeft = btVector3(-1, 0, 0);
+    btVector3 localRight = btVector3(1, 0, 0);
+
+    float forceMag = 11.0f;
+    btVector3 force(0, 0, 0);
+
+    switch (event.key) {
+        case GLFW_KEY_W: force += localForward * forceMag; break;
+        case GLFW_KEY_S: force += localBackward * forceMag; break;
+        case GLFW_KEY_A: force += localLeft * forceMag; break;
+        case GLFW_KEY_D: force += localRight * forceMag; break;
+    }
+
+    if (force.length2() > 0.0f) {
+        body->activate(); // Uyandıralım
+        body->applyCentralForce(force);
+    }
 }
