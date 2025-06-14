@@ -22,6 +22,8 @@ ScenePanel::ScenePanel(const std::string &title)
     SetupFramebuffer();
     SetupCamera();
     CustomizeImGuizmoStyle();
+
+
 }
 
 ScenePanel::~ScenePanel() {
@@ -33,7 +35,21 @@ void ScenePanel::SetScene(const std::shared_ptr<Scene> &scene) {
     if (m_Scene && m_Camera)
     {
         m_Scene->SetCamera(m_Camera.get());
+
     }
+    //**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
+    InitializeShadowMap();
+    //set default shader for all objects in the scene
+    if (m_Scene) {
+        const std::string shaderPath = "../src/shaders/";
+        auto defaultShader = std::make_shared<Shader>(
+            (shaderPath + "default.vert").c_str(),
+            (shaderPath + "default.frag").c_str()
+        );
+        m_Scene->SetDefaultShader(defaultShader);
+    }
+    //**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
+
 }
 
 void ScenePanel::OnUpdate(float deltaTime) {
@@ -290,6 +306,60 @@ void ScenePanel::DrawContent() {
         lastHeight = static_cast<int>(contentRegionAvail.y);
     }
 
+    //**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
+    //**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
+    // Işık pozisyonunuzu ve view matrisini güncelleyin (büyük projenizde ışık yönetimi nerede yapılıyorsa oradan alın)
+    // Örnek: Sahneye ışık eklediyseniz, ışık objesinin pozisyonundan almalısınız.
+    /*glm::vec3 currentLightPos = glm::vec3(-1.0f, 1.0f, -1.0f);//m_Scene->GetLightSourcePosition(); // Örnek fonksiyon
+
+    m_LightView = glm::lookAt(currentLightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // Hedef noktayı sahnenin merkezi olarak varsaydım
+    m_LightSpaceMatrix = m_LightProjection * m_LightView;*/
+
+    // --- Gölge Haritasını Render Etme Adımı ---
+    if (m_ShadowMapFBO > 0) {
+        glEnable(GL_DEPTH_TEST); // Derinlik testini aç
+        glViewport(0, 0, m_ShadowMapWidth, m_ShadowMapHeight);
+        glBindFramebuffer(GL_FRAMEBUFFER, m_ShadowMapFBO);
+        glClear(GL_DEPTH_BUFFER_BIT); // Sadece derinlik buffer'ını temizle
+
+
+        // Shadow Map Shader'ı aktif et
+        // Buradaki m_Scene->DrawAll() çağrısı muhtemelen Scene sınıfınızda objelerin shader'ını set ediyordur.
+        // Eğer Scene sınıfınız bir DrawShadowMap fonksiyonu içeriyorsa onu kullanmak daha iyi olur.
+        // Aksi takdirde, her objeyi tek tek ışığın bakış açısından doğru shader ile çizmelisiniz.
+        // Geçici olarak:
+        if (m_Scene) {
+            // Scene sınıfınızın bir ShadowMapShader'ı set edebilmesi ve objeleri bu shader ile çizebilmesi gerekir.
+            // Örnek:
+            // m_Scene->SetCurrentShader(m_ShadowMapShader); // ShadowMapShader'ı aktif et
+            // m_Scene->SetLightSpaceMatrix(m_LightSpaceMatrix); // Shader'a lightSpaceMatrix'i gönder
+            // m_Scene->DrawAllForShadowMap(); // Sadece objeleri çiz
+
+            // Ya da daha kaba bir yaklaşım (Mesh'leriniz draw fonksiyonunda kendi shader'larını aktif ediyorsa):
+            // ** DİKKAT: Küçük projenizdeki Draw(shaderProgram, camera) çağrısı burada kamerayı kullanmamalı.**
+            // Gölge haritasını çizerken kamera değil, ışığın bakış açısı kullanılmalıdır.
+            // Bu nedenle, m_Scene->DrawAll() fonksiyonunuzun içeride nasıl çalıştığı kritik.
+            // Eğer m_Scene->DrawAll() her objeyi iterate edip kendi shader'ı ile çiziyorsa,
+            // Scene sınıfında bir 'ShadowMapPass()' fonksiyonu oluşturmanız en temizi olacaktır.
+            // Bu fonksiyon, tüm objeleri gölge haritası shader'ı ile çizerken sadece lightSpaceMatrix'i kullanır.
+
+            // Geçici ve test amaçlı (eğer objeleri doğrudan burada yönetebiliyorsanız):
+            // m_ShadowMapShader.Activate(); // Bu shader'ı bir ScenePanel üyesi olarak tanımlamanız gerekir
+            // glUniformMatrix4fv(glGetUniformLocation(m_ShadowMapShader.ID, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(m_LightSpaceMatrix));
+            // m_Scene->DrawObjectsWithSpecificShader(m_ShadowMapShader); // Bu Scene'deki tüm objeleri lightSpaceMatrix ile çizsin
+
+            m_Scene->DrawAll2ShadowMap(); // Bu fonksiyonun Scene sınıfınızda gölge haritası için objeleri çizen bir versiyon olması gerekir.
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        }
+    }
+    // Varsayılan framebuffer'a geri dön
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glViewport(0, 0, static_cast<int>(contentRegionAvail.x), static_cast<int>(contentRegionAvail.y)); // Viewport'u panel boyutuna geri getir
+    // --- Gölge Haritası Render Etme Adımı Sonu ---
+    //**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
+    //**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
+
+
     if (m_FramebufferID > 0) {
         glBindFramebuffer(GL_FRAMEBUFFER, m_FramebufferID);
         glViewport(0, 0, static_cast<int>(contentRegionAvail.x), static_cast<int>(contentRegionAvail.y));
@@ -297,6 +367,16 @@ void ScenePanel::DrawContent() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         if (m_Scene) {
+            //**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
+            //default shader'ı aktif et ve lightSpaceMatrix uniformunu ayarla
+            m_Scene->GetDefaultShader()->use();
+            glUniformMatrix4fv(glGetUniformLocation(m_Scene->GetDefaultShader()->ID, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(m_LightSpaceMatrix));
+            glActiveTexture(GL_TEXTURE0 + 2);
+            glBindTexture(GL_TEXTURE_2D, m_ShadowMapTexture); // Gölge haritasını bağla
+            glUniform1i(glGetUniformLocation(m_Scene->GetDefaultShader()->ID, "shadowMap"), 2); // ShadowMap uniformunu ayarla
+            glActiveTexture(GL_TEXTURE0);
+            //**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
+
             // Update camera matrices consistently for both rendering and ImGuizmo
             m_ViewMatrix = glm::lookAt(m_CameraPosition, m_CameraPosition + m_CameraFront, m_CameraUp);
             gViewMatrix = m_ViewMatrix; // Use the exact same matrix for global reference
@@ -312,6 +392,21 @@ void ScenePanel::DrawContent() {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         ImGui::Image(reinterpret_cast<ImTextureID>(reinterpret_cast<void *>(static_cast<intptr_t>(m_TextureID))),
                      contentRegionAvail, ImVec2(0, 1), ImVec2(1, 0));
+
+
+        //**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
+        //**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
+        // --- Gölge Haritasını Debug Etme Amacıyla Göster ---
+        // Yeni bir ImGui penceresinde veya mevcut pencerede farklı bir yerde
+        ImGui::Begin("Shadow Map Debug"); // Yeni bir pencere aç
+        // Pencerenin boyutunu ayarlayabilirsiniz, örneğin 256x256
+        ImVec2 shadowMapDisplaySize(1024, 1024);
+        ImGui::Image(static_cast<ImTextureID>(m_ShadowMapTexture), // Sadece static_cast yeterli!
+             shadowMapDisplaySize, ImVec2(0, 1), ImVec2(1, 0));
+        ImGui::End();
+        // --- Gölge Haritasını Debug Etme Amacıyla Gösterme Sonu ---
+        //**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
+        //**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
 
         // Draw ImGuizmo if object is selected
         DrawGuizmo();
@@ -569,3 +664,68 @@ void ScenePanel::CustomizeImGuizmoStyle() {
     style.ScaleLineCircleSize = 7.0f;
     style.CenterCircleSize = 7.0f;
 }
+
+//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
+// ScenePanel::Initialize() veya constructor içinde
+void ScenePanel::InitializeShadowMap() {
+    // Gölge haritası framebuffer'ı oluştur
+    glGenFramebuffers(1, &m_ShadowMapFBO);
+
+    // Gölge haritası dokusu oluştur
+    glGenTextures(1, &m_ShadowMapTexture);
+    glBindTexture(GL_TEXTURE_2D, m_ShadowMapTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_ShadowMapWidth, m_ShadowMapHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f }; // Frustum dışını beyaz yapar
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+
+    // Framebuffer'a derinlik dokusunu ata
+    glBindFramebuffer(GL_FRAMEBUFFER, m_ShadowMapFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_ShadowMapTexture, 0);
+
+    // Sadece derinlik yazacağımız için renk buffer'larına yazmayı devre dışı bırak
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
+
+    /*
+    // Framebuffer'ın tamamlanıp tamamlanmadığını kontrol et
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    if (status != GL_FRAMEBUFFER_COMPLETE) {
+        std::cout<<"Shadow Map Framebuffer incomplete! Status:" << status << std::endl;
+    }*/
+
+    // Varsayılan framebuffer'a geri dön
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    // Işık projeksiyon matrisini hesapla (ışık kaynağınızın türüne göre)
+    // Bu değerleri sahnenizdeki objelerin kapsadığı alanı düşünerek ayarlayın.
+    // Küçük projenizdeki lightPos'u kullanarak bir örnek:
+    // Bu kısım ışığınızın konumuna ve sahnenizin boyutuna göre dinamik olarak güncellenmelidir.
+    m_LightProjection = glm::ortho(-35.0f, 35.0f, -35.0f, 35.0f, 0.1f, 75.0f);
+    // m_LightView ve m_LightSpaceMatrix her karede ışık hareket ettikçe güncellenecek.
+
+    // Işık pozisyonunuzu ve view matrisini güncelleyin (büyük projenizde ışık yönetimi nerede yapılıyorsa oradan alın)
+    // Örnek: Sahneye ışık eklediyseniz, ışık objesinin pozisyonundan almalısınız.
+    glm::vec3 currentLightPos = glm::vec3(-1.0f, 1.0f, 1.0f);//m_Scene->GetLightSourcePosition(); // Örnek fonksiyon
+
+    m_LightView = glm::lookAt(20.0f*currentLightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // Hedef noktayı sahnenin merkezi olarak varsaydım
+    m_LightSpaceMatrix = m_LightProjection * m_LightView;
+
+
+    const std::string shaderPath = "../src/shaders/";
+    const auto shadowMapProgram = std::make_shared<Shader>(
+    (shaderPath + "shadowMap.vert").c_str(),
+    (shaderPath + "shadowMap.frag").c_str()
+    );
+    m_Scene->SetShadowMapShader(shadowMapProgram);
+
+    // 3. Hesaplanan lightSpaceMatrix'i shadowMapProgram'a uniform olarak gönder
+    if (m_Scene && m_Scene->GetShadowMapShader()) { // m_Scene ve shader'ın varlığını kontrol et
+        m_Scene->GetShadowMapShader()->use(); // Shader'ı aktif et
+        glUniformMatrix4fv(glGetUniformLocation(m_Scene->GetShadowMapShader()->ID, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(m_LightSpaceMatrix));
+    }
+}
+//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//

@@ -48,7 +48,8 @@ public:
         m_ProjectionMatrix = projMatrix;
     }
 
-
+    //shadowMap için çizim fonksiyonu
+    void DrawAll2ShadowMap();
     
     const std::string& GetName() const { return m_SceneName; }
     void SetName(const std::string& name) { m_SceneName = name; }
@@ -61,6 +62,15 @@ public:
     std::shared_ptr<GameObject> PickObjectWithRay(const glm::vec3& origin, const glm::vec3& direction) const;
     void SetCamera(Camera* camera) { m_Camera = camera; }
 
+    //**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
+    // ScenePanel'ın shadowMapProgram'a erişebilmesi için getter
+    std::shared_ptr<Shader> GetShadowMapShader() const { return m_ShadowMapProgram; }
+    void SetShadowMapShader(const std::shared_ptr<Shader>& shader) { m_ShadowMapProgram = shader; }
+    // ScenePanel'ın default shader'a erişebilmesi için getter
+    std::shared_ptr<Shader> GetDefaultShader() const { return m_DefaultShader; }
+    void SetDefaultShader(const std::shared_ptr<Shader>& shader) { m_DefaultShader = shader; }
+    //**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
+
 private:
     std::string m_SceneName = "New Scene";
     glm::mat4 m_ViewMatrix = glm::mat4(1.0f);
@@ -69,6 +79,12 @@ private:
     // Sahnedeki tüm objeler
     std::vector<std::shared_ptr<GameObject>> m_GameObjects;
 
+    //**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
+    // Gölge haritası shader'ı için yeni üye değişken
+    std::shared_ptr<Shader> m_ShadowMapProgram;
+    //default shader'ı için yeni üye değişken
+    std::shared_ptr<Shader> m_DefaultShader;
+    //**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
 
     bool RemoveChildRecursive(const std::shared_ptr<GameObject>& parent, const std::shared_ptr<GameObject>& childToRemove);
     

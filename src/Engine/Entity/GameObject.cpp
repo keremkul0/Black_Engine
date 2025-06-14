@@ -45,6 +45,20 @@ void GameObject::Draw() {
         child->Draw();
     }
 }
+//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
+void GameObject::Draw2ShadowMap() {
+    if (!active) return;
+
+    for (const auto& comp : components) {
+        comp->Draw2ShadowMap();
+    }
+
+    // Draw children recursively
+    for (const auto& child : m_Children) {
+        child->Draw2ShadowMap();
+    }
+}
+//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
 
 void GameObject::DrawWireframe() {
     if (!active) return;

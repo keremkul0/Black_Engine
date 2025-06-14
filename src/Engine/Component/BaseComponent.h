@@ -32,6 +32,12 @@ public:
     virtual void Draw() {
     }
 
+    //**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
+    // Her karede gölge haritası için çizim metodu
+    virtual void Draw2ShadowMap() {
+    }
+    //**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
+
     // Her karede çağrılabilecek tel çerçeve çizim metodu
     virtual void DrawWireframe() {
     }

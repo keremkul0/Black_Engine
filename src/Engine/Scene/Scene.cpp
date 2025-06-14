@@ -37,11 +37,45 @@ void Scene::LoadDefaultScene() {
     );
 
 
-    const std::string shaderPath0 = "../src/shaders/";
-    const auto defaultShader0 = std::make_shared<Shader>(
+    /*const auto defaultShader0 = std::make_shared<Shader>(
         (shaderPath + "default.vert").c_str(),
         (shaderPath + "default.frag").c_str()
-    );
+    );*/
+
+
+/*
+    // 3. Plane
+    auto planeObj = CreateGameObject("Plane");
+    auto planeTransform = planeObj->AddComponent<TransformComponent>();
+    planeTransform->position = glm::vec3(-2.0f, -1.0f, 0.0f);
+    planeTransform->scale = glm::vec3(20.0f, 0.0f, 20.0f);
+    auto planeMesh = planeObj->AddComponent<MeshComponent>();
+    planeMesh->SetMesh(Primitives::CreatePlane(2.0f, 2.0f, 1));
+    auto planeRenderer = planeObj->AddComponent<MeshRendererComponent>();
+    {
+        auto material = std::make_shared<Material>();
+        material->SetShadowMapShader(m_ShadowMapProgram);
+        material->SetShader(defaultShader0);
+        auto planeTexture = std::make_shared<Texture>("../src/Engine/Render/Texture/TextureImages/planks.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+        material->SetTexture(planeTexture);
+        planeRenderer->SetMaterial(material);
+    }
+
+    // 2. Sphere
+    auto sphereObj = CreateGameObject("Sphere");
+    auto sphereTransform = sphereObj->AddComponent<TransformComponent>();
+    sphereTransform->position = glm::vec3(-6.0f, 0.0f, 0.0f);
+    auto sphereMesh = sphereObj->AddComponent<MeshComponent>();
+    sphereMesh->SetMesh(Primitives::CreateSphere(1.0f, 32));
+    auto sphereRenderer = sphereObj->AddComponent<MeshRendererComponent>();
+    {
+        auto material = std::make_shared<Material>();
+        material->SetShadowMapShader(m_ShadowMapProgram);
+        material->SetShader(defaultShader0);
+        sphereRenderer->SetMaterial(material);
+    }*/
+
+
 
     // 1. Cube
     auto cubeObj = CreateGameObject("Cube");
@@ -52,7 +86,8 @@ void Scene::LoadDefaultScene() {
     auto cubeRenderer = cubeObj->AddComponent<MeshRendererComponent>();
     {
         auto material = std::make_shared<Material>();
-        material->SetShader(defaultShader0);
+        material->SetShadowMapShader(m_ShadowMapProgram);
+        material->SetShader(m_DefaultShader);
         cubeRenderer->SetMaterial(material);
     }
 
@@ -65,7 +100,8 @@ void Scene::LoadDefaultScene() {
     auto sphereRenderer = sphereObj->AddComponent<MeshRendererComponent>();
     {
         auto material = std::make_shared<Material>();
-        material->SetShader(defaultShader0);
+        material->SetShadowMapShader(m_ShadowMapProgram);
+        material->SetShader(m_DefaultShader);
         sphereRenderer->SetMaterial(material);
     }
 
@@ -79,7 +115,8 @@ void Scene::LoadDefaultScene() {
     auto planeRenderer = planeObj->AddComponent<MeshRendererComponent>();
     {
         auto material = std::make_shared<Material>();
-        material->SetShader(defaultShader0);
+        material->SetShadowMapShader(m_ShadowMapProgram);
+        material->SetShader(m_DefaultShader);
         auto planeTexture = std::make_shared<Texture>("../src/Engine/Render/Texture/TextureImages/planks.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
         material->SetTexture(planeTexture);
         planeRenderer->SetMaterial(material);
@@ -94,7 +131,8 @@ void Scene::LoadDefaultScene() {
     auto quadRenderer = quadObj->AddComponent<MeshRendererComponent>();
     {
         auto material = std::make_shared<Material>();
-        material->SetShader(defaultShader0);
+        material->SetShadowMapShader(m_ShadowMapProgram);
+        material->SetShader(m_DefaultShader);
         auto quadTexture = std::make_shared<Texture>("../src/Engine/Render/Texture/TextureImages/brick.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
         material->SetTexture(quadTexture);
         quadRenderer->SetMaterial(material);
@@ -109,7 +147,8 @@ void Scene::LoadDefaultScene() {
     auto cylinderRenderer = cylinderObj->AddComponent<MeshRendererComponent>();
     {
         auto material = std::make_shared<Material>();
-        material->SetShader(defaultShader0);
+        material->SetShadowMapShader(m_ShadowMapProgram);
+        material->SetShader(m_DefaultShader);
         cylinderRenderer->SetMaterial(material);
     }
 
@@ -122,7 +161,8 @@ void Scene::LoadDefaultScene() {
     auto capsuleRenderer = capsuleObj->AddComponent<MeshRendererComponent>();
     {
         auto material = std::make_shared<Material>();
-        material->SetShader(defaultShader0);
+        material->SetShadowMapShader(m_ShadowMapProgram);
+        material->SetShader(m_DefaultShader);
         capsuleRenderer->SetMaterial(material);
     }
 
@@ -221,6 +261,16 @@ void Scene::DrawAll() {
         obj->Draw();
     }
 }
+//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
+//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
+void Scene::DrawAll2ShadowMap() {
+
+    for (const auto &obj: m_GameObjects) {
+        obj->Draw2ShadowMap();
+    }
+}
+//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
+//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
 
 bool Scene::HasGameObject(const std::shared_ptr<GameObject>& obj) const {
     for (const auto& existing : m_GameObjects) {

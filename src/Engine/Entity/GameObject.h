@@ -84,6 +84,9 @@ public:
 
     void Update(float deltaTime);
     void Draw();
+    //**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
+    void Draw2ShadowMap(); // Added declaration for Draw2ShadowMap method
+    //**//**//**//**//**//**//**//**//**//**//**//**//**//
     void DrawWireframe();  // Added declaration for DrawWireframe method
 
     /**

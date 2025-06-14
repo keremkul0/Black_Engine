@@ -69,6 +69,18 @@ private:
     unsigned int m_TextureID = 0;
     unsigned int m_DepthRenderBuffer = 0;
 
+    //**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
+    //shadowMap properties
+    unsigned int m_ShadowMapFBO = 0;
+    unsigned int m_ShadowMapTexture = 0; // Bu bizim shadow map'imiz olacak
+    unsigned int m_ShadowMapWidth = 2048; // Yüksek çözünürlük önerilir, test için 1024, 2048 de olabilir
+    unsigned int m_ShadowMapHeight = 2048;
+
+    glm::mat4 m_LightProjection; // Işığın bakış açısındaki projeksiyon matrisi
+    glm::mat4 m_LightView;       // Işığın bakış açısındaki view matrisi
+    glm::mat4 m_LightSpaceMatrix; // LightProjection * LightView
+    //**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
+
     // Cursor durumu
     InputManager::CursorType m_CurrentCursor = InputManager::DEFAULT_CURSOR;
 
@@ -90,4 +102,8 @@ private:
     void UpdateCursor();
     std::shared_ptr<GameObject> FindObjectUnderMouse(const Math::Ray& ray);
     void HighlightSelectedObject();
+
+    //**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
+    void InitializeShadowMap();
+    //**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
 };

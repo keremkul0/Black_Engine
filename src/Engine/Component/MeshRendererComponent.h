@@ -36,6 +36,10 @@ public:
     void OnEnable() override;
     void OnDisable() override;
 
+    //**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
+    void Draw2ShadowMap() override; // Override for shadow map drawing
+    //**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//
+
     // Bileşen tipi bilgisi
     [[nodiscard]] std::string GetTypeName() const override { return "MeshRendererComponent"; }
 

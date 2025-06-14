@@ -73,3 +73,13 @@ void Material::Apply() {
         }
     }
 }
+
+//**//**//**//**//**//**//**//**//**//**//**//**//
+void Material::Apply2ShadowMap() {
+    if (m_shadowMapShader) {
+        m_shadowMapShader->use();
+
+    }
+
+}
+//**//**//**//**//**//**//**//**//**//**//**//**//

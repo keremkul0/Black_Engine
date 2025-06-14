@@ -56,6 +56,35 @@ void MeshRendererComponent::Draw() {
     mesh->Draw();
 }
 
+//**//**//**//**//**//**//**//**//**//**//**//**//
+void MeshRendererComponent::Draw2ShadowMap() {
+    if (!owner || !m_material) return;
+
+    // Bileşenler önbellekte yoksa, tekrar dene
+    if (!m_cachedMeshComponent || !m_cachedTransform) {
+        CacheComponents();
+    }
+
+    // Önbelleğe alınmış bileşenleri kullan
+    if (!m_cachedMeshComponent || !m_cachedMeshComponent->IsLoaded()) return;
+
+    const auto mesh = m_cachedMeshComponent->GetMesh();
+    if (!mesh || !m_cachedTransform) return;
+
+    // Material'ı aktif et (shader'ı aktif eder ve varsa texture'u bağlar)
+    m_material->Apply2ShadowMap();
+
+    // Material'ın shader'ı üzerinden uniform'ları güncelle
+    if (auto shader = m_material->GetShadowMapShader()) {
+        const glm::mat4 model = m_cachedTransform->GetModelMatrix();
+        shader->setMat4("model", model);
+    }
+
+    // Mesh'i çiz
+    mesh->Draw();
+}
+//**//**//**//**//**//**//**//**//**//**//**//**//
+
 void MeshRendererComponent::DrawWireframe() {
     if (!owner || !m_material) return;
 
