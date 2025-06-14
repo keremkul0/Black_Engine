@@ -193,11 +193,11 @@ bool MeshImporter::WriteBinaryData(const std::string& filePath, const std::vecto
     }
     
     // Write the number of vertices as a header
-    uint32_t vertexCount = static_cast<uint32_t>(data.size() / 8); // 8 = 3 pos + 2 uv + 3 normal
+    auto vertexCount = static_cast<uint32_t>(data.size() / 8); // 8 = 3 pos + 2 uv + 3 normal
     outFile.write(reinterpret_cast<char*>(&vertexCount), sizeof(uint32_t));
     
     // Write the vertex data
-    outFile.write(reinterpret_cast<const char*>(data.data()), data.size() * sizeof(float));
+    outFile.write(reinterpret_cast<const char*>(data.data()), static_cast<std::streamsize>(data.size() * sizeof(float)));
     
     outFile.close();
     

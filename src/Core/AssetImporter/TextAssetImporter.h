@@ -6,13 +6,13 @@
 namespace BlackEngine {
 
 /**
- * @class TextureImporter
- * @brief Importer for texture assets (PNG, JPG, etc.)
+ * @class TextAssetImporter
+ * @brief Importer for text assets (TXT, JSON, XML, LUA, etc.)
  * 
- * This importer handles texture files by copying the raw file bytes
- * to the Library directory as binary data.
+ * This importer handles text files by encoding their content
+ * as raw text in the binary file.
  */
-class TextureImporter final : public IAssetImporter {
+class TextAssetImporter final : public IAssetImporter {
 public:
     /**
      * @brief Returns the file extensions supported by this importer
@@ -22,9 +22,9 @@ public:
     [[nodiscard]] std::vector<std::string> SupportedExtensions() const override;
     
     /**
-     * @brief Imports a texture file
+     * @brief Imports a text file
      * 
-     * Simply copies the raw file bytes to Library/{guid}.bin
+     * Reads the text content and stores it in the binary file.
      * 
      * @param ctx The import context
      * @return True if import was successful, false otherwise
@@ -33,6 +33,6 @@ public:
 };
 
 // Register the importer using the registration macro
-BE_REGISTER_IMPORTER(TextureImporter);
+BE_REGISTER_IMPORTER(TextAssetImporter);
 
 } // namespace BlackEngine

@@ -12,14 +12,14 @@ namespace BlackEngine {
  * This importer handles mesh files by parsing basic geometry data
  * and converting it to a binary format.
  */
-class MeshImporter : public IAssetImporter {
+class MeshImporter final : public IAssetImporter {
 public:
     /**
      * @brief Returns the file extensions supported by this importer
      * 
      * @return Vector of supported file extensions
      */
-    std::vector<std::string> SupportedExtensions() const override;
+    [[nodiscard]] std::vector<std::string> SupportedExtensions() const override;
     
     /**
      * @brief Imports a mesh file

@@ -1,6 +1,10 @@
 #include "MetaFile.h"
+
+#include "Core/AssetDatabase/Asset.h"
+#include "Core/AssetDatabase/AssetDatabase.h"
 #include "Core/FileSystem/FileSystem.h"
 #include "Core/Logger/LogMacros.h"
+#include "Core/Utils/GuidUtils.h"
 
 // Define log category for MetaFile
 BE_DEFINE_LOG_CATEGORY(MetaFileLog, "MetaFile");
@@ -56,6 +60,24 @@ json MetaFile::Load(const std::string& assetPath) {
     try {
         std::string metaContent = FileSystem::BE_Read_Text_File(metaFilePath);
         return json::parse(metaContent);
+    } catch (const nlohmann::json::parse_error& e) {
+        BE_LOG_ERROR(MetaFileLog, "JSON parse error in meta file: {} - {}", metaFilePath, e.what());
+
+        // If meta file is corrupted, attempt to regenerate it
+        BE_LOG_INFO(MetaFileLog, "Attempting to regenerate corrupted meta file: {}", metaFilePath);
+        
+        // Create a new meta file with the same type and importer
+        const std::string assetType = BlackEngine::AssetDatabase::DetectType(assetPath);
+        const std::string importerType = BlackEngine::AssetDatabase::DetectImporter(assetPath);
+        
+        if (Create(assetPath, assetType, importerType)) {
+            BE_LOG_INFO(MetaFileLog, "Successfully regenerated meta file: {}", metaFilePath);
+            // Return the newly created meta data
+            return FileSystem::BE_Read_JSON(metaFilePath);
+        } else {
+            BE_LOG_ERROR(MetaFileLog, "Failed to regenerate meta file: {}", metaFilePath);
+            return {};
+        }
     } catch (const std::exception& e) {
         BE_LOG_ERROR(MetaFileLog, "Error parsing meta file for asset {}: {}", assetPath, e.what());
         return json::object();

@@ -204,28 +204,6 @@ namespace BlackEngine {
                 }
             }
 
-            // Spam control settings
-            if (config.contains("spamControl") && config["spamControl"].is_object()) {
-                for (auto &[categoryName, settings]: config["spamControl"].items()) {
-                    if (settings.is_object()) {
-                        bool enabled = false;
-                        int intervalMs = 0;
-
-                        if (settings.contains("enabled") && settings["enabled"].is_boolean()) {
-                            enabled = settings["enabled"];
-                        }
-
-                        if (settings.contains("intervalMs") && settings["intervalMs"].is_number()) {
-                            intervalMs = settings["intervalMs"];
-                        }
-
-                        if (enabled) {
-                            SetCategorySpamControl(categoryName, enabled, std::chrono::milliseconds(intervalMs));
-                        }
-                    }
-                }
-            }
-
             // Asynchronous configuration
             size_t queueSize = 8192;
             size_t threadCount = 1;

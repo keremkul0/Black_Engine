@@ -77,7 +77,7 @@ set(CORE_FILES
         src/Core/AssetDatabase/AssetDatabase.h
         src/Core/AssetDatabase/AssetDatabase.cpp
         src/Core/AssetDatabase/Asset.h
-          # Logger sistemi
+        # Logger sistemi
         src/Core/Logger/LogMacros.h
         src/Core/Logger/MockLogger.h
         src/Core/Logger/LogTypes.h
@@ -91,13 +91,21 @@ set(CORE_FILES
         src/Core/Utils/GuidUtils.h
         src/Core/Utils/GuidUtils.cpp
         src/Core/Utils/MetaFile.h
-        src/Core/Utils/MetaFile.cpp
-
-        # Asset Importer
+        src/Core/Utils/MetaFile.cpp        # Asset Importer
+        src/Core/AssetImporter/IAssetImporter.h
+        src/Core/AssetImporter/ImportContext.h
         src/Core/AssetImporter/ImporterRegistry.cpp
+        src/Core/AssetImporter/ImporterRegistry.h
         src/Core/AssetImporter/MeshImporter.cpp
+        src/Core/AssetImporter/MeshImporter.h
         src/Core/AssetImporter/ShaderImporter.cpp
+        src/Core/AssetImporter/ShaderImporter.h
         src/Core/AssetImporter/TextureImporter.cpp
+        src/Core/AssetImporter/TextureImporter.h
+        src/Core/AssetImporter/LuaScriptImporter.cpp
+        src/Core/AssetImporter/LuaScriptImporter.h
+        src/Core/AssetImporter/TextAssetImporter.cpp
+        src/Core/AssetImporter/AssetImporterRegistry.cpp
 )
 
 # Engine dosyaları

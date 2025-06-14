@@ -1,7 +1,11 @@
 #pragma once
 #include <string>
 #include <nlohmann/json.hpp>
-#include "GuidUtils.h"
+
+// Forward declaration of AssetDatabase to avoid circular dependency
+namespace BlackEngine {
+class AssetDatabase;
+}
 
 using json = nlohmann::json;
 

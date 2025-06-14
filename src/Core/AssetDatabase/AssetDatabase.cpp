@@ -24,6 +24,39 @@ AssetDatabase::AssetDatabase() : m_Initialized(false) {
     LoadAssetMap();
 }
 
+    void AssetDatabase::SaveAssetMap() {
+    // Get the path to the asset map
+    const std::string projectPath = ProjectManager::GetInstance().GetProjectPath();
+    if (projectPath.empty()) {
+        BE_LOG_WARNING(AssetDatabaseLog, "Cannot save asset map: No active project");
+        return;
+    }
+
+    // Create Library directory if it doesn't exist
+    const std::string libraryDir = FileSystem::BE_Combine_Paths(projectPath, "Library");
+    if (!FileSystem::BE_Directory_Exists(libraryDir)) {
+        if (!FileSystem::BE_Create_Directory(libraryDir)) {
+            BE_LOG_ERROR(AssetDatabaseLog, "Failed to create Library directory: {}", libraryDir);
+            return;
+        }
+    }
+
+    // Create JSON object from the map
+    nlohmann::json assetMap;
+    for (const auto& [guid, path] : m_GuidToPathMap) {
+        assetMap[guid] = path;
+    }
+
+    // Write to file
+    const std::string assetMapPath = FileSystem::BE_Combine_Paths(projectPath, "Library/asset_map.json");
+    try {
+        FileSystem::BE_Write_JSON(assetMapPath, assetMap);
+        BE_LOG_INFO(AssetDatabaseLog, "Saved asset map with {} entries", m_GuidToPathMap.size());
+    } catch (const std::exception& e) {
+        BE_LOG_ERROR(AssetDatabaseLog, "Error saving asset map: {}", e.what());
+    }
+    }
+
 void AssetDatabase::LoadAssetMap() {
     // Clear the current mapping
     m_GuidToPathMap.clear();
@@ -76,7 +109,29 @@ bool AssetDatabase::ImportAsset(const std::string& srcPath) {
     const std::string fileName = FileSystem::BE_Get_File_Name(srcPath);
       // Create the destination path in the Assets directory
     const std::string assetsDir = FileSystem::BE_Combine_Paths(projectPath, "Assets");
+    
+    // Ensure Assets directory exists
+    if (!FileSystem::BE_Directory_Exists(assetsDir)) {
+        if (!FileSystem::BE_Create_Directory(assetsDir)) {
+            BE_LOG_ERROR(AssetDatabaseLog, "Failed to create Assets directory: {}", assetsDir);
+            return false;
+        }
+    }
+    
     const std::string dstPath = FileSystem::BE_Combine_Paths(assetsDir, fileName);
+    
+    // Get the file extension to find the appropriate importer
+    std::string extension = FileSystem::BE_Get_File_Extension(srcPath);
+      IAssetImporter* importer = ImporterRegistry::GetInstance().GetImporterForExtension(extension);
+    if (!importer) {
+        BE_LOG_ERROR(AssetDatabaseLog, "No importer found for extension: {}", extension);
+        return false;
+    }
+    // Warn and reject unsupported scripting formats
+    if (extension == ".cs" || extension == ".js" || extension == ".py") {
+        BE_LOG_WARNING(AssetDatabaseLog, "Rejected unsupported script format: {}. Only .lua is supported for scripting.", extension);
+        return false;
+    }
     
     // Check if the destination file and meta file already exist (reimport case)
     const std::string metaPath = dstPath + ".meta";
@@ -138,8 +193,27 @@ bool AssetDatabase::ImportAsset(const std::string& srcPath) {
     const std::string relativePath = "Assets/" + fileName;
     m_GuidToPathMap[guid] = relativePath;
     
+    // Now import the asset to library using the appropriate importer
+    ImportContext ctx;
+    ctx.guid = guid;
+    ctx.assetPath = dstPath;
+    if (!metaExists || !ctx.importSettings.contains("importSettings")) {
+        ctx.importSettings = {}; // Default settings
+    } else {
+        // Load settings from meta file
+        nlohmann::json metaData = MetaFile::Load(dstPath);
+        if (metaData.contains("importSettings")) {
+            ctx.importSettings = metaData["importSettings"];
+        }
+    }
+    
+    if (!importer->Import(ctx)) {
+        BE_LOG_ERROR(AssetDatabaseLog, "Failed to import asset to library: {}", dstPath);
+        return false;
+    }
+    
     // Save the updated asset map
-    RefreshAssetCache();
+    SaveAssetMap();
     
     BE_LOG_INFO(AssetDatabaseLog, "Asset imported successfully: {} -> {} (GUID: {})", 
                 srcPath, relativePath, guid);
@@ -164,7 +238,22 @@ void AssetDatabase::RefreshAssetCache() {
     // Check if Assets directory exists
     if (!FileSystem::BE_Directory_Exists(assetsDir)) {
         BE_LOG_WARNING(AssetDatabaseLog, "Assets directory does not exist: {}", assetsDir);
-        return;
+        // Create it
+        if (!FileSystem::BE_Create_Directory(assetsDir)) {
+            BE_LOG_ERROR(AssetDatabaseLog, "Failed to create Assets directory: {}", assetsDir);
+            return;
+        }
+        BE_LOG_INFO(AssetDatabaseLog, "Created Assets directory: {}", assetsDir);
+    }
+    
+    // Create Library directory if it doesn't exist
+    const std::string libraryDir = FileSystem::BE_Combine_Paths(projectPath, "Library");
+    if (!FileSystem::BE_Directory_Exists(libraryDir)) {
+        if (!FileSystem::BE_Create_Directory(libraryDir)) {
+            BE_LOG_ERROR(AssetDatabaseLog, "Failed to create Library directory: {}", libraryDir);
+            return;
+        }
+        BE_LOG_INFO(AssetDatabaseLog, "Created Library directory: {}", libraryDir);
     }
     
     // Recursively scan the Assets directory
@@ -186,14 +275,35 @@ void AssetDatabase::RefreshAssetCache() {
                         
                         // Calculate the relative path from the project root
                         std::string relativePath = assetPath.substr(projectPath.length() + 1);
-                        // Replace backslashes with forward slashes for consistency
-                        std::ranges::replace(relativePath, '\\', '/');
+                        // Normalize path (use forward slashes for consistency)
+                        relativePath = NormalizePath(relativePath);
                         
                         // Add to the mapping
                         m_GuidToPathMap[guid] = relativePath;
                         BE_LOG_DEBUG(AssetDatabaseLog, "Added to asset map: {} -> {}", guid, relativePath);
+                        
+                        // Check if we need to reimport this asset (binary file doesn't exist)
+                        const std::string binaryPath = FileSystem::BE_Combine_Paths(libraryDir, guid + ".bin");
+                        if (!FileSystem::BE_File_Exists(binaryPath)) {
+                            BE_LOG_INFO(AssetDatabaseLog, "Binary file missing for {}, triggering reimport", relativePath);
+                            Reimport(guid);
+                        }
                     } else {
                         BE_LOG_WARNING(AssetDatabaseLog, "Meta file for {} does not contain a valid GUID", assetPath);
+                        // Try to fix the meta file
+                        const std::string assetType = DetectType(assetPath);
+                        const std::string importerType = DetectImporter(assetPath);
+                        if (MetaFile::Create(assetPath, assetType, importerType)) {
+                            BE_LOG_INFO(AssetDatabaseLog, "Regenerated meta file for {}", assetPath);
+                            // Reload the meta file
+                            nlohmann::json newMetaData = MetaFile::Load(assetPath);
+                            if (!newMetaData.empty() && newMetaData.contains("guid")) {
+                                const std::string guid = newMetaData["guid"];
+                                std::string relativePath = assetPath.substr(projectPath.length() + 1);
+                                relativePath = NormalizePath(relativePath);
+                                m_GuidToPathMap[guid] = relativePath;
+                            }
+                        }
                     }
                 } else {
                     // Create a meta file if one doesn't exist
@@ -211,12 +321,15 @@ void AssetDatabase::RefreshAssetCache() {
                             
                             // Calculate the relative path from the project root
                             std::string relativePath = assetPath.substr(projectPath.length() + 1);
-                            // Replace backslashes with forward slashes for consistency
-                            std::ranges::replace(relativePath, '\\', '/');
+                            // Normalize path
+                            relativePath = NormalizePath(relativePath);
                             
                             // Add to the mapping
                             m_GuidToPathMap[guid] = relativePath;
                             BE_LOG_DEBUG(AssetDatabaseLog, "Added to asset map: {} -> {}", guid, relativePath);
+                            
+                            // Import this asset since it's new
+                            ImportAsset(assetPath);
                         }
                     } else {
                         BE_LOG_ERROR(AssetDatabaseLog, "Failed to create meta file for {}", assetPath);
@@ -225,32 +338,8 @@ void AssetDatabase::RefreshAssetCache() {
             }
         }
         
-        // Create Library directory if it doesn't exist
-        const std::string libraryDir = FileSystem::BE_Combine_Paths(projectPath, "Library");
-        if (!FileSystem::BE_Directory_Exists(libraryDir)) {
-            if (!FileSystem::BE_Create_Directory(libraryDir)) {
-                BE_LOG_ERROR(AssetDatabaseLog, "Failed to create Library directory: {}", libraryDir);
-                return;
-            }
-        }
-        
-        // Save the mapping to asset_map.json
-        const std::string assetMapPath = FileSystem::BE_Combine_Paths(libraryDir, "asset_map.json");
-        
-        // Convert the map to JSON
-        nlohmann::json assetMap = nlohmann::json::object();
-        for (const auto& [guid, path] : m_GuidToPathMap) {
-            assetMap[guid] = path;
-        }
-        
-        // Write to file
-        if (FileSystem::BE_Write_JSON(assetMapPath, assetMap)) {
-            BE_LOG_INFO(AssetDatabaseLog, "Asset map with {} entries saved to {}", 
-                        m_GuidToPathMap.size(), assetMapPath);
-            m_Initialized = true;
-        } else {
-            BE_LOG_ERROR(AssetDatabaseLog, "Failed to save asset map to {}", assetMapPath);
-        }
+        // Save the asset map
+        SaveAssetMap();
     } catch (const std::exception& e) {
         BE_LOG_ERROR(AssetDatabaseLog, "Error refreshing asset cache: {}", e.what());
     }
@@ -315,6 +404,15 @@ bool AssetDatabase::Reimport(const std::string& guid) const {
         importSettings = metaData["importSettings"];
     }
     
+    // Check for Library directory
+    const std::string libraryDir = FileSystem::BE_Combine_Paths(projectPath, "Library");
+    if (!FileSystem::BE_Directory_Exists(libraryDir)) {
+        if (!FileSystem::BE_Create_Directory(libraryDir)) {
+            BE_LOG_ERROR(AssetDatabaseLog, "Failed to create Library directory: {}", libraryDir);
+            return false;
+        }
+    }
+    
     // Create import context
     ImportContext ctx;
     ctx.guid = guid;
@@ -328,7 +426,14 @@ bool AssetDatabase::Reimport(const std::string& guid) const {
         return false;
     }
     
-    // Asset import was successful, refresh the cache
+    // Verify binary file was created
+    const std::string binaryFilePath = FileSystem::BE_Combine_Paths(libraryDir, guid + ".bin");
+    if (!FileSystem::BE_File_Exists(binaryFilePath)) {
+        BE_LOG_ERROR(AssetDatabaseLog, "Binary file was not created during reimport: {}", binaryFilePath);
+        return false;
+    }
+    
+    // Asset import was successful
     BE_LOG_INFO(AssetDatabaseLog, "Successfully reimported {}", assetPath);
     return true;
 }
@@ -338,7 +443,6 @@ std::string AssetDatabase::DetectType(const std::string& path) {
     std::string extension = FileSystem::BE_Get_File_Extension(path);
     std::ranges::transform(extension, extension.begin(), ::tolower);
     
-    // Map common extensions to asset types
     if (extension == ".png" || extension == ".jpg" || extension == ".jpeg" || 
         extension == ".tga" || extension == ".bmp" || extension == ".psd") {
         return "Texture";
@@ -364,17 +468,35 @@ std::string AssetDatabase::DetectType(const std::string& path) {
     } else if (extension == ".scene") {
         return "Scene";
     }
-    
+    else if (extension == ".lua") {
+        return "Script";
+    }
     // Default type for unknown extensions
     return "GenericAsset";
 }
+
+
+    std::string AssetDatabase::NormalizePath(const std::string& path) {
+    std::string result = path;
+
+    // Windows yollarındaki ters eğik çizgileri ileri eğik çizgilere çevirme
+    std::ranges::replace(result, '\\', '/');
+
+    // Tekrarlayan eğik çizgileri kaldırma
+    size_t pos = result.find("//");
+    while (pos != std::string::npos) {
+        result.replace(pos, 2, "/");
+        pos = result.find("//", pos);
+    }
+
+    return result;
+    }
 
 std::string AssetDatabase::DetectImporter(const std::string& path) {
     // Get the file extension
     std::string extension = FileSystem::BE_Get_File_Extension(path);
     std::ranges::transform(extension, extension.begin(), ::tolower);
     
-    // Map common extensions to importers
     if (extension == ".png" || extension == ".jpg" || extension == ".jpeg" || 
         extension == ".tga" || extension == ".bmp" || extension == ".psd") {
         return "TextureImporter";
@@ -400,9 +522,13 @@ std::string AssetDatabase::DetectImporter(const std::string& path) {
     } else if (extension == ".scene") {
         return "SceneImporter";
     }
+    else if (extension == ".lua") {
+        return "LuaScriptImporter";
+    }
     
     // Default importer for unknown extensions
     return "DefaultImporter";
 }
+
 
 } // namespace BlackEngine

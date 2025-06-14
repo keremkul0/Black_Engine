@@ -12,14 +12,14 @@ namespace BlackEngine {
  * This importer handles shader files by encoding their text content
  * as base64 and storing it in a binary file.
  */
-class ShaderImporter : public IAssetImporter {
+class ShaderImporter final : public IAssetImporter {
 public:
     /**
      * @brief Returns the file extensions supported by this importer
      * 
      * @return Vector of supported file extensions
      */
-    std::vector<std::string> SupportedExtensions() const override;
+    [[nodiscard]] std::vector<std::string> SupportedExtensions() const override;
     
     /**
      * @brief Imports a shader file

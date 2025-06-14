@@ -6,13 +6,13 @@
 namespace BlackEngine {
 
 /**
- * @class TextureImporter
- * @brief Importer for texture assets (PNG, JPG, etc.)
+ * @class LuaImporter
+ * @brief Importer for Lua script assets (.lua files)
  * 
- * This importer handles texture files by copying the raw file bytes
+ * This importer handles Lua script files by copying their content
  * to the Library directory as binary data.
  */
-class TextureImporter final : public IAssetImporter {
+class LuaImporter final : public IAssetImporter {
 public:
     /**
      * @brief Returns the file extensions supported by this importer
@@ -22,9 +22,9 @@ public:
     [[nodiscard]] std::vector<std::string> SupportedExtensions() const override;
     
     /**
-     * @brief Imports a texture file
+     * @brief Imports a Lua script file
      * 
-     * Simply copies the raw file bytes to Library/{guid}.bin
+     * Copies the Lua script content to Library/{guid}.bin
      * 
      * @param ctx The import context
      * @return True if import was successful, false otherwise
@@ -33,6 +33,6 @@ public:
 };
 
 // Register the importer using the registration macro
-BE_REGISTER_IMPORTER(TextureImporter);
+// BE_REGISTER_IMPORTER(LuaImporter);
 
 } // namespace BlackEngine

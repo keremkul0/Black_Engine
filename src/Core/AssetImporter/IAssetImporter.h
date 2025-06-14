@@ -25,7 +25,7 @@ public:
      * 
      * @return Vector of supported file extensions (e.g., ".png", ".obj")
      */
-    virtual std::vector<std::string> SupportedExtensions() const = 0;
+    [[nodiscard]] virtual std::vector<std::string> SupportedExtensions() const = 0;
     
     /**
      * @brief Imports an asset and generates a binary representation

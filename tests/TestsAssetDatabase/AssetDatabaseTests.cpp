@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "Core/AssetDatabase/AssetDatabase.h"
+#include "Core/AssetImporter/AssetImporterRegistry.h"
 #include "Core/ProjectManager/ProjectManager.h"
 #include "Core/FileSystem/FileSystem.h"
 #include "Core/Utils/MetaFile.h"
@@ -8,8 +9,7 @@
 
 namespace BlackEngine::Tests {
     class AssetDatabaseTests : public ::testing::Test {
-    protected:
-        void SetUp() override {
+    protected:        void SetUp() override {
             // Create a temporary test directory
             m_TestDir = std::filesystem::temp_directory_path().string() + "/BlackEngineAssetTest";
 
@@ -26,6 +26,9 @@ namespace BlackEngine::Tests {
             auto &projectManager = ProjectManager::GetInstance();
             ASSERT_TRUE(projectManager.CreateNewProject(projectPath));
 
+            // Initialize asset importers to ensure all importers are registered
+            BlackEngine::InitializeAssetImporters();
+
             // Create some test assets
             m_TestAssetDir = m_TestDir + "/TestAssets";
             ASSERT_TRUE(FileSystem::BE_Create_Directory(m_TestAssetDir));
@@ -34,9 +37,7 @@ namespace BlackEngine::Tests {
             m_TestTexturePath = m_TestAssetDir + "/test_texture.png";
             ASSERT_TRUE(FileSystem::BE_Write_Text_File(m_TestTexturePath, "Fake PNG content"));
 
-            // Create a test script file
-            m_TestScriptPath = m_TestAssetDir + "/test_script.cs";
-            ASSERT_TRUE(FileSystem::BE_Write_Text_File(m_TestScriptPath, "public class TestScript {}"));
+            // (Removed .cs test script creation)
         }
 
         void TearDown() override {
@@ -125,7 +126,10 @@ namespace BlackEngine::Tests {
 
         // Import multiple assets
         ASSERT_TRUE(assetDatabase.ImportAsset(m_TestTexturePath));
-        ASSERT_TRUE(assetDatabase.ImportAsset(m_TestScriptPath));
+        // Import a .lua script instead
+        std::string testLuaPath = m_TestAssetDir + "/test_script.lua";
+        ASSERT_TRUE(FileSystem::BE_Write_Text_File(testLuaPath, "print('Hello from Lua!')"));
+        ASSERT_TRUE(assetDatabase.ImportAsset(testLuaPath));
 
         // Act
         assetDatabase.RefreshAssetCache();
@@ -141,18 +145,18 @@ namespace BlackEngine::Tests {
 
         // Get the GUIDs from the meta files
         json textureMetaData = MetaFile::Load(assetsPath + "/test_texture.png");
-        json scriptMetaData = MetaFile::Load(assetsPath + "/test_script.cs");
+        json luaMetaData = MetaFile::Load(assetsPath + "/test_script.lua");
 
         std::string textureGuid = textureMetaData["guid"];
-        std::string scriptGuid = scriptMetaData["guid"];
+        std::string luaGuid = luaMetaData["guid"];
 
         // Verify that the asset map contains entries for both assets
         EXPECT_TRUE(assetMap.contains(textureGuid));
-        EXPECT_TRUE(assetMap.contains(scriptGuid));
+        EXPECT_TRUE(assetMap.contains(luaGuid));
 
         // Verify that the paths are correct
         EXPECT_EQ("Assets/test_texture.png", assetMap[textureGuid]);
-        EXPECT_EQ("Assets/test_script.cs", assetMap[scriptGuid]);
+        EXPECT_EQ("Assets/test_script.lua", assetMap[luaGuid]);
     }
 
     // Test that GetAssetPath returns the correct path for a GUID

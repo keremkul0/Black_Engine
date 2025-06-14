@@ -5,6 +5,7 @@
 #include "Editor/UI/Layout/EditorLayout.h"
 #include "Core/SceneManager/SceneManager.h"
 #include "Core/Logger/LogMacros.h"
+#include "Core/AssetImporter/AssetImporterRegistry.h"
 #include <iostream>
 
 // Log kategorisini doğru formatla tanımla
@@ -55,6 +56,9 @@ bool Application::Initialize() {
     }
 
     BE_LOG_INFO(EngineLog, "Initializing application components");
+    
+    // Initialize asset importers
+    BlackEngine::InitializeAssetImporters();
 
     // Pencereyi başlat
     BE_LOG_DEBUG(EngineLog, "Initializing window manager");

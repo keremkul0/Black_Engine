@@ -75,7 +75,7 @@ bool ShaderImporter::Import(const ImportContext& ctx) {
         return false;
     }
     
-    outFile.write(encodedSource.c_str(), encodedSource.size());
+    outFile.write(encodedSource.c_str(), static_cast<std::streamsize>(encodedSource.size()));
     outFile.close();
     
     BE_LOG_INFO(ShaderImporterLog, "Shader imported successfully to {}", dstPath);
@@ -93,7 +93,7 @@ std::string ShaderImporter::Base64Encode(const std::string& input) {
     unsigned char array3[3];
     unsigned char array4[4];
     
-    for (char c : input) {
+    for (const char c : input) {
         array3[i++] = c;
         if (i == 3) {
             array4[0] = (array3[0] & 0xfc) >> 2;

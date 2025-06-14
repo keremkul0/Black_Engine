@@ -22,11 +22,13 @@ target_link_libraries(unit_tests
 
 target_include_directories(unit_tests PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}
-        ${CMAKE_CURRENT_SOURCE_DIR}/TestsComponents
         ${CMAKE_CURRENT_SOURCE_DIR}/TestLogger
+        ${CMAKE_CURRENT_SOURCE_DIR}/TestsAssetDatabase
+        ${CMAKE_CURRENT_SOURCE_DIR}/TestsAssetImporter
+        ${CMAKE_CURRENT_SOURCE_DIR}/TestsComponents
         ${CMAKE_CURRENT_SOURCE_DIR}/TestsFileSystem
         ${CMAKE_CURRENT_SOURCE_DIR}/TestsProjectManager
-        ${CMAKE_CURRENT_SOURCE_DIR}/TestsAssetImporter
+
 )
 
 include(GoogleTest)

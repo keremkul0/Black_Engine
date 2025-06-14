@@ -57,15 +57,13 @@ public:
      */
     bool Reimport(const std::string& guid) const;
 
-private:
-    AssetDatabase();
-    ~AssetDatabase() = default;
-    
-    // Delete copy and move constructors/assignments
-    AssetDatabase(const AssetDatabase&) = delete;
-    AssetDatabase& operator=(const AssetDatabase&) = delete;
-    AssetDatabase(AssetDatabase&&) = delete;
-    AssetDatabase& operator=(AssetDatabase&&) = delete;
+    /**
+     * @brief Normalize a path string to use consistent separators
+     * 
+     * @param path The path to normalize
+     * @return Normalized path string using forward slashes
+     */
+    static std::string NormalizePath(const std::string& path);
 
     /**
      * @brief Detects asset type based on file extension
@@ -81,12 +79,27 @@ private:
      * @param path Path to the asset
      * @return String representing the importer type
      */
-    static std::string DetectImporter(const std::string& path) ;
+    static std::string DetectImporter(const std::string& path);
+
+private:
+    AssetDatabase();
+    ~AssetDatabase() = default;
+
+    // Delete copy and move constructors/assignments
+    AssetDatabase(const AssetDatabase&) = delete;
+    AssetDatabase& operator=(const AssetDatabase&) = delete;
+    AssetDatabase(AssetDatabase&&) = delete;
+    AssetDatabase& operator=(AssetDatabase&&) = delete;
 
     /**
      * @brief Loads asset map from Library/asset_map.json
      */
     void LoadAssetMap();
+
+    /**
+     * @brief Saves asset map to Library/asset_map.json
+     */
+    void SaveAssetMap();
 
     // GUID to asset path mapping
     std::unordered_map<std::string, std::string> m_GuidToPathMap;

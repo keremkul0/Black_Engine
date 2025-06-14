@@ -178,4 +178,12 @@ public:
      * @return The parsed JSON data, or empty JSON object if file doesn't exist or is invalid
      */
     static nlohmann::json BE_Read_JSON(const std::string& path);
+
+    /**
+     * @brief Updates the last modified timestamp of a file to current time
+     * 
+     * @param path Path to the file
+     * @return True if successful, false otherwise
+     */
+    static bool BE_Update_File_Timestamp(const std::string& path);
 };

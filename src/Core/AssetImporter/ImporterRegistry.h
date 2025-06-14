@@ -44,20 +44,20 @@ public:
      */
     void Cleanup();
 
-private:
-    ImporterRegistry() = default;
-    ~ImporterRegistry();
-    
     // Delete copy and move constructors/assignments
     ImporterRegistry(const ImporterRegistry&) = delete;
     ImporterRegistry& operator=(const ImporterRegistry&) = delete;
     ImporterRegistry(ImporterRegistry&&) = delete;
     ImporterRegistry& operator=(ImporterRegistry&&) = delete;
-    
-    // Map of file extensions to importers
+
+private:
+    ImporterRegistry() = default;
+    ~ImporterRegistry();
+
+    // Map of file extensions to importers - using raw pointers but ownership in m_RegisteredImporters
     std::unordered_map<std::string, IAssetImporter*> m_ExtensionToImporterMap;
     
-    // Collection of all registered importers for cleanup
+    // Collection of all registered importers for cleanup - owns the memory
     std::vector<std::unique_ptr<IAssetImporter>> m_RegisteredImporters;
 };
 

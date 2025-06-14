@@ -44,8 +44,20 @@ bool ImporterRegistry::RegisterImporter(IAssetImporter* importer) {
         
         // Check if this extension is already registered
         if (registry.m_ExtensionToImporterMap.contains(extension)) {
-            BE_LOG_WARNING(ImporterRegistryLog, "Extension '{}' already has a registered importer, overriding", extension);
+            BE_LOG_ERROR(ImporterRegistryLog, "Extension '{}' already has a registered importer, registration rejected", extension);
+            return false;
         }
+    }
+    
+    // If we get here, all extensions are available, so register them
+    for (const auto& ext : extensions) {
+        // Make sure the extension starts with a dot
+        std::string extension = ext;
+        if (!extension.empty() && extension[0] != '.') {
+            extension = "." + extension;
+        }
+          // Convert to lowercase for case-insensitive matching
+        std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
         
         // Register the importer for this extension
         registry.m_ExtensionToImporterMap[extension] = importer;
